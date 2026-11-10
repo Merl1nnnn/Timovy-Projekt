@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+{% block title %}IT jobs in Slovakia – page {{ page }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1 class="results-context-header__context">{{ total_jobs }} IT jobs in Slovakia</h1>
+  <ul class="jobs-search__results-list">
+  {% for job in jobs %}
+    <li>
+      <div class="base-card job-search-card" data-entity-urn="urn:li:jobPosting:{{ job.id }}" data-job-id="{{ job.id }}">
+        <a class="base-card__full-link" href="{{ detail_path(job) }}"><span class="sr-only">{{ job.title }}</span>
+          <h3 class="base-search-card__title">{{ job.title }}</h3>
+        </a>
+        <h4 class="base-search-card__subtitle">{{ job.company }}</h4>
+        <div class="base-search-card__metadata">
+          <span class="job-search-card__location">{{ job.location_display }}{% if job.workplace != "On-site" %} ({{ job.workplace }}){% endif %}</span>
+          {% if job.salary_display and not job.salary_in_text %}<span class="job-search-card__salary-info">{{ job.salary_display }}</span>{% endif %}
+          <time datetime="{{ job.posted.isoformat() }}">{{ days_ago(job.posted) }}</time>
+        </div>
+      </div>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+<ul class="artdeco-pagination">
+  {% if page > 1 %}<li><a aria-label="Previous" href="{{ list_path(page - 1) }}">‹ Previous</a></li>{% endif %}
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}<li class="active"><span aria-current="true">{{ p }}</span></li>{% else %}<li><a aria-label="Page {{ p }}" href="{{ list_path(p) }}">{{ p }}</a></li>{% endif %}
+  {% endfor %}
+  {% if page < total_pages %}<li><a class="pagination-next" aria-label="Next" href="{{ list_path(page + 1) }}">Next ›</a></li>{% endif %}
+</ul>
+{% endblock %}

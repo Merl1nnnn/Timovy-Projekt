@@ -1,0 +1,59 @@
+{% extends "_base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<p><a href="{{ list_path(1) }}">« Späť na ponuky</a></p>
+<div class="offer-detail" id="detail" data-offer-id="{{ job.id }}">
+  <h1 class="no-margin"><span itemprop="title">{{ job.title }}</span></h1>
+  <h2 class="employer"><a href="#">{{ job.company }}</a></h2>
+
+  <div class="details-section overall-info">
+    <h4>Miesto práce</h4>
+    <span itemprop="jobLocation">{{ job.location_display }}</span>
+    <h4>Druh pracovného pomeru</h4>
+    <span>{{ job.employment_display }}</span>
+    <h4>Termín nástupu</h4>
+    <span>dohodou</span>
+    <h4>Dátum zverejnenia</h4>
+    <span>{{ job.posted.strftime("%d.%m.%Y") }}</span>
+  </div>
+
+  <div class="details-section">
+    <h3>Náplň práce, právomoci a zodpovednosti</h3>
+    <p>{{ job.intro }}</p>
+    <ul>{% for d in job.duties %}<li>{{ d }}</li>{% endfor %}</ul>
+  </div>
+
+  {% if job.salary_display and not job.salary_in_text %}
+  <div class="details-section salary-section">
+    <h3>Základná zložka mzdy (brutto)</h3>
+    <span class="salary-range">{{ job.salary_display }}</span>
+  </div>
+  {% endif %}
+
+  <div class="details-section requirements">
+    <h3>Požiadavky na zamestnanca</h3>
+    <p><strong>Vzdelanie:</strong> {{ job.education }}</p>
+    {% for b in job.requirements %}
+      {% if b.kind == "h" %}<p><strong>{{ b.text }}</strong></p>
+      {% elif b.kind == "p" %}<p>{{ b.text }}</p>
+      {% else %}<ul>{% for it in b["items"] %}<li>{{ it }}</li>{% endfor %}</ul>{% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="details-section benefits">
+    <h3>Zamestnanecké výhody, benefity</h3>
+    <ul>{% for b in job.benefits %}<li>{{ b }}</li>{% endfor %}</ul>
+    {% for line in job.extra_lines %}<p>{{ line }}</p>{% endfor %}
+  </div>
+
+  <div class="details-section">
+    <h3>Informácie o výberovom konaní</h3>
+    <p>Svoj životopis posielajte cez tlačidlo „Reagovať na ponuku“. Kontaktovať budeme len vybraných uchádzačov.</p>
+  </div>
+</div>
+
+<div class="similar">
+  <h3>Podobné ponuky</h3>
+  <ul>{% for s in job.similar %}<li><a href="{{ detail_path(s) }}">{{ s.title }}</a> – {{ s.company }}</li>{% endfor %}</ul>
+</div>
+{% endblock %}

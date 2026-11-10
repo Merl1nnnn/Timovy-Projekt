@@ -3,3 +3,9 @@
 __pycache__/
 *.pyc
 *.tmp
+.pytest_cache/
+data/raw/
+data/parsed/
+data/db/
+data/ground_truth.json
+mock_sites/*/site/

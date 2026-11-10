@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}{% endblock %} | Profesia MOCK</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f2f4f7; color: #222; }
+  .mock-banner { background: #ffd54a; text-align: center; padding: 4px; font-size: 12px; font-weight: bold; }
+  header.top-bar { background: #0b3d91; color: #fff; padding: 12px 24px; display: flex; gap: 24px; align-items: center; }
+  header.top-bar .brand { font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+  header.top-bar nav a { color: #cfe0ff; margin-right: 16px; text-decoration: none; font-size: 14px; }
+  .container { max-width: 960px; margin: 0 auto; padding: 16px; }
+  .cookie-bar { background: #333; color: #eee; font-size: 12px; padding: 6px 24px; }
+  .list-row { background: #fff; border: 1px solid #dde3ea; border-radius: 4px; padding: 12px 16px; margin-bottom: 8px; }
+  .list-row h2 { margin: 0 0 4px; font-size: 18px; }
+  .list-row h2 a.title { color: #0b3d91; text-decoration: none; }
+  .list-row .employer { font-weight: bold; margin-right: 12px; }
+  .list-row .job-location { color: #555; margin-right: 12px; }
+  .label { display: inline-block; border: 1px solid #2e7d32; color: #2e7d32; border-radius: 3px; padding: 1px 6px; font-size: 12px; }
+  .info { color: #888; font-size: 12px; float: right; }
+  ul.pagination { list-style: none; padding: 0; display: flex; gap: 6px; }
+  ul.pagination li a, ul.pagination li span { display: inline-block; padding: 4px 10px; border: 1px solid #ccd; background: #fff; text-decoration: none; }
+  ul.pagination li.active span { background: #0b3d91; color: #fff; }
+  .offer-detail { background: #fff; padding: 20px 28px; border: 1px solid #dde3ea; }
+  .details-section { margin-top: 18px; }
+  .details-section h3 { font-size: 16px; color: #0b3d91; border-bottom: 1px solid #e5e9ef; padding-bottom: 4px; }
+  .overall-info h4 { margin: 8px 0 2px; font-size: 13px; color: #666; }
+  .salary-range { font-size: 18px; font-weight: bold; color: #2e7d32; }
+  .similar { margin-top: 24px; font-size: 14px; }
+  footer { text-align: center; color: #999; font-size: 12px; padding: 24px; }
+</style>
+</head>
+<body>
+<div class="mock-banner">MOCK — študentský prototyp SkillMiner. Vymyslené dáta, nie je to skutočná stránka.</div>
+<div class="cookie-bar">Táto stránka používa cookies. <a href="#">Súhlasím</a></div>
+<header class="top-bar">
+  <span class="brand">PROFESIA&nbsp;MOCK</span>
+  <nav><a href="{{ list_path(1) }}">Ponuky práce</a><a href="#">Zamestnávatelia</a><a href="#">Platy</a><a href="#">Prihlásiť</a></nav>
+</header>
+<div class="container">
+{% block content %}{% endblock %}
+</div>
+<footer>© 2026 Profesia MOCK · Študentský projekt · Všetky firmy sú vymyslené</footer>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+{% block title %}Ponuky práce IT – strana {{ page }}{% endblock %}
+{% block content %}
+<h1>Ponuky práce: IT a programovanie <small>({{ total_jobs }} ponúk)</small></h1>
+<div id="results">
+{% for job in jobs %}
+  <div class="list-row">
+    <span class="info">Pridané {{ job.posted.strftime("%d.%m.%Y") }}</span>
+    <h2><a class="title" href="{{ detail_path(job) }}" id="offer{{ job.id }}">{{ job.title }}</a></h2>
+    <span class="employer">{{ job.company }}</span>
+    <span class="job-location">{{ job.location_display }}</span>
+    {% if job.salary_display and not job.salary_in_text %}<span class="label label-bordered green">{{ job.salary_display }}</span>{% endif %}
+  </div>
+{% endfor %}
+</div>
+<ul class="pagination">
+  {% if page > 1 %}<li><a class="prev" href="{{ list_path(page - 1) }}">Späť</a></li>{% endif %}
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}<li class="active"><span>{{ p }}</span></li>{% else %}<li><a href="{{ list_path(p) }}">{{ p }}</a></li>{% endif %}
+  {% endfor %}
+  {% if page < total_pages %}<li><a class="next" href="{{ list_path(page + 1) }}">Ďalej</a></li>{% endif %}
+</ul>
+{% endblock %}
