@@ -1,0 +1,3879 @@
+{
+  "schema_version": 1,
+  "dataset_kind": "synthetic",
+  "generated_at": "2026-11-10T16:18:39.807534+00:00",
+  "jobs": [
+    {
+      "title": "Senior Data Engineer",
+      "company": "PixelPress Digital",
+      "location": "Košice",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Data",
+      "required_skills": [
+        "Azure",
+        "SQL",
+        "Kafka",
+        "Databricks",
+        "Pandas"
+      ],
+      "nice_to_have_skills": [
+        "dbt",
+        "Airflow",
+        "Apache Spark"
+      ],
+      "technologies": [
+        "Azure",
+        "SQL",
+        "Kafka",
+        "Databricks",
+        "dbt",
+        "Airflow",
+        "Apache Spark",
+        "Pandas"
+      ],
+      "salary_min": 3800,
+      "salary_max": 4600,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4009826165.html",
+      "site": "linkedin",
+      "id": "4009826165",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:37+00:00"
+    },
+    {
+      "title": "DevOps špecialista Tech Lead",
+      "company": "Koala Byte s.r.o.",
+      "location": "Žilina",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Grafana",
+        "Kubernetes",
+        "Linux"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Grafana",
+        "Kubernetes",
+        "Linux"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8002/jobs/view/4010487018.html",
+      "site": "linkedin",
+      "id": "4010487018",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:40+00:00"
+    },
+    {
+      "title": "Data Wizard (Junior)",
+      "company": "Sigma Kódex s.r.o.",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Communication"
+      ],
+      "nice_to_have_skills": [
+        "Python",
+        "Kafka",
+        "Power BI"
+      ],
+      "technologies": [
+        "SQL",
+        "Databricks",
+        "dbt",
+        "Azure",
+        "Python",
+        "Kafka",
+        "Power BI"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4018456795.html",
+      "site": "linkedin",
+      "id": "4018456795",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:44+00:00"
+    },
+    {
+      "title": "Senior Python Developer",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Python",
+      "required_skills": [
+        "Git",
+        "AWS",
+        "Flask",
+        "Python",
+        "REST API"
+      ],
+      "nice_to_have_skills": [
+        "Docker",
+        "Django",
+        "Celery"
+      ],
+      "technologies": [
+        "Git",
+        "AWS",
+        "Flask",
+        "Python",
+        "Django",
+        "REST API",
+        "Celery",
+        "Docker"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3926968399.html",
+      "site": "linkedin",
+      "id": "3926968399",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:48+00:00"
+    },
+    {
+      "title": "UI Developer - Senior",
+      "company": "Danubia Data a.s.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "Next.js",
+        "CSS",
+        "JavaScript"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Next.js",
+        "JavaScript",
+        "CSS"
+      ],
+      "salary_min": 3500,
+      "salary_max": 5000,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4004886188.html",
+      "site": "linkedin",
+      "id": "4004886188",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:51+00:00"
+    },
+    {
+      "title": "Medior Data Engineer – nový projekt",
+      "company": "Lipa Logistics IT",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Kafka",
+        "Azure"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "SQL",
+        "Kafka",
+        "Azure"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3903298555.html",
+      "site": "linkedin",
+      "id": "3903298555",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:54+00:00"
+    },
+    {
+      "title": "Senior Frontend Rockstar",
+      "company": "Danubia Data a.s.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "Redux",
+        "CSS",
+        "Jest"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "JavaScript",
+        "Redux",
+        "CSS",
+        "PostgreSQL",
+        "Jest"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4076443658.html",
+      "site": "linkedin",
+      "id": "4076443658",
+      "confidence": 0.85,
+      "low_confidence": false,
+      "quality_issues": [
+        "technology not found in text: PostgreSQL"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:18:57+00:00"
+    },
+    {
+      "title": "Mid-level Front-End Engineer",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Žilina",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "HTML",
+        "Git",
+        "Webpack"
+      ],
+      "nice_to_have_skills": [
+        "React"
+      ],
+      "technologies": [
+        "JavaScript",
+        "HTML",
+        "Git",
+        "Webpack",
+        "React"
+      ],
+      "salary_min": 2200,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3924272172.html",
+      "site": "linkedin",
+      "id": "3924272172",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:00+00:00"
+    },
+    {
+      "title": "QA Analyst - Sr.",
+      "company": "Mostík Software s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Selenium",
+        "REST API",
+        "Cypress",
+        "Jira"
+      ],
+      "nice_to_have_skills": [
+        "Postman",
+        "SQL"
+      ],
+      "technologies": [
+        "Selenium",
+        "REST API",
+        "Cypress",
+        "Jira",
+        "PostgreSQL",
+        "Postman",
+        "SQL"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3939897940.html",
+      "site": "linkedin",
+      "id": "3939897940",
+      "confidence": 0.85,
+      "low_confidence": false,
+      "quality_issues": [
+        "technology not found in text: PostgreSQL"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:04+00:00"
+    },
+    {
+      "title": "Sr. Frontend Developer",
+      "company": "Lipa Logistics IT",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "CSS"
+      ],
+      "nice_to_have_skills": [
+        "Redux",
+        "TypeScript"
+      ],
+      "technologies": [
+        "JavaScript",
+        "CSS",
+        "TypeScript",
+        "Redux"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4059053245.html",
+      "site": "linkedin",
+      "id": "4059053245",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:07+00:00"
+    },
+    {
+      "title": "Senior Front-End Engineer",
+      "company": "Koala Byte s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "Next.js",
+        "Vue.js",
+        "Webpack"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "JavaScript",
+        "Next.js",
+        "Vue.js",
+        "Webpack"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3947070594.html",
+      "site": "linkedin",
+      "id": "3947070594",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:09+00:00"
+    },
+    {
+      "title": "Entry-level Front-End Engineer",
+      "company": "PixelPress Digital",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "Webpack",
+        "Git",
+        "JavaScript",
+        "Angular"
+      ],
+      "nice_to_have_skills": [
+        "TypeScript",
+        "Vue.js",
+        "Redux"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Vue.js",
+        "Webpack",
+        "Git",
+        "Redux",
+        "JavaScript",
+        "Angular"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4055170589.html",
+      "site": "linkedin",
+      "id": "4055170589",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:13+00:00"
+    },
+    {
+      "title": "Data Wizard (Mid-level)",
+      "company": "Lipa Logistics IT",
+      "location": "Žilina",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Snowflake",
+        "Kafka",
+        "dbt"
+      ],
+      "nice_to_have_skills": [
+        "Airflow"
+      ],
+      "technologies": [
+        "SQL",
+        "Snowflake",
+        "Kafka",
+        "dbt",
+        "Airflow"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3931006691.html",
+      "site": "linkedin",
+      "id": "3931006691",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:16+00:00"
+    },
+    {
+      "title": "Lead Python Developer",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "part_time",
+      "seniority": "lead",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Django",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "AWS",
+        "Flask",
+        "Celery"
+      ],
+      "technologies": [
+        "Python",
+        "Django",
+        "Git",
+        "AWS",
+        "Flask",
+        "Celery"
+      ],
+      "salary_min": 5800,
+      "salary_max": 7300,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3933872797.html",
+      "site": "linkedin",
+      "id": "3933872797",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:20+00:00"
+    },
+    {
+      "title": "Junior Frontend Rockstar",
+      "company": "Zelený Kód a.s.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "part_time",
+      "seniority": "junior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "TypeScript",
+        "Jest",
+        "Angular",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "Next.js",
+        "Vue.js"
+      ],
+      "technologies": [
+        "JavaScript",
+        "TypeScript",
+        "Jest",
+        "Angular",
+        "Git",
+        "Next.js",
+        "Vue.js"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8002/jobs/view/4031968027.html",
+      "site": "linkedin",
+      "id": "4031968027",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:24+00:00"
+    },
+    {
+      "title": "Principal/Lead Java Developer",
+      "company": "BlueOx Fintech",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Hibernate",
+        "Kafka",
+        "Kubernetes",
+        "REST API"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Hibernate",
+        "Kafka",
+        "Kubernetes",
+        "REST API"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3907368684.html",
+      "site": "linkedin",
+      "id": "3907368684",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:27+00:00"
+    },
+    {
+      "title": "UI Developer - Principal/Lead",
+      "company": "Mostík Software s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "lead",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "Git",
+        "HTML",
+        "React"
+      ],
+      "nice_to_have_skills": [
+        "Webpack",
+        "Vue.js",
+        "TypeScript"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Git",
+        "HTML",
+        "React",
+        "Webpack",
+        "Vue.js",
+        "TypeScript"
+      ],
+      "salary_min": 4700,
+      "salary_max": 6000,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3974325732.html",
+      "site": "linkedin",
+      "id": "3974325732",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:31+00:00"
+    },
+    {
+      "title": "Junior Java Engineer",
+      "company": "Hronbit Solutions",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Oracle",
+        "Docker",
+        "PostgreSQL"
+      ],
+      "nice_to_have_skills": [
+        "Spring Boot"
+      ],
+      "technologies": [
+        "Java",
+        "Oracle",
+        "Docker",
+        "PostgreSQL",
+        "Spring Boot"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3980089262.html",
+      "site": "linkedin",
+      "id": "3980089262",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:34+00:00"
+    },
+    {
+      "title": "Dátový inžinier Medior",
+      "company": "Hronbit Solutions",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "dbt",
+        "Databricks",
+        "Kafka",
+        "SQL",
+        "Apache Spark"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "dbt",
+        "Databricks",
+        "Kafka",
+        "SQL",
+        "Apache Spark"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8002/jobs/view/3992001644.html",
+      "site": "linkedin",
+      "id": "3992001644",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:37+00:00"
+    },
+    {
+      "title": "Software Engineer (Java)",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "medior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Microservices",
+        "Hibernate"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Microservices",
+        "Hibernate"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3970596891.html",
+      "site": "linkedin",
+      "id": "3970596891",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:40+00:00"
+    },
+    {
+      "title": "Mid-level Python programátor (m/ž)",
+      "company": "Carpathia Cloud s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Git",
+        "PostgreSQL",
+        "Redis",
+        "Docker"
+      ],
+      "nice_to_have_skills": [
+        "REST API",
+        "FastAPI",
+        "Django"
+      ],
+      "technologies": [
+        "Python",
+        "Git",
+        "PostgreSQL",
+        "Redis",
+        "Docker",
+        "REST API",
+        "FastAPI",
+        "Django"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8002/jobs/view/3972023755.html",
+      "site": "linkedin",
+      "id": "3972023755",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:43+00:00"
+    },
+    {
+      "title": "Senior QA Engineer",
+      "company": "Bystrica Labs",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "JavaScript",
+        "Scrum",
+        "REST API"
+      ],
+      "nice_to_have_skills": [
+        "JMeter",
+        "Playwright",
+        "Postman",
+        "Selenium"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Selenium",
+        "REST API",
+        "JMeter",
+        "Playwright",
+        "Postman"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3913515916.html",
+      "site": "linkedin",
+      "id": "3913515916",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:46+00:00"
+    },
+    {
+      "title": "Senior Java Engineer",
+      "company": "Danubia Data a.s.",
+      "location": "Žilina",
+      "remote": true,
+      "employment_type": "part_time",
+      "seniority": "senior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "PostgreSQL",
+        "Spring Boot",
+        "Git",
+        "Kafka"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "PostgreSQL",
+        "Spring Boot",
+        "Git",
+        "Kafka"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4005467349.html",
+      "site": "linkedin",
+      "id": "4005467349",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:50+00:00"
+    },
+    {
+      "title": "Senior Front-End Engineer",
+      "company": "Mostík Software s.r.o.",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ],
+      "nice_to_have_skills": [
+        "Angular",
+        "Git"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Angular",
+        "HTML",
+        "CSS",
+        "Git"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4056445867.html",
+      "site": "linkedin",
+      "id": "4056445867",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:53+00:00"
+    },
+    {
+      "title": "Senior Java Engineer",
+      "company": "Danubia Data a.s.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Kubernetes",
+        "Docker",
+        "Maven",
+        "Microservices"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Kubernetes",
+        "Docker",
+        "Maven",
+        "Microservices"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4083249841.html",
+      "site": "linkedin",
+      "id": "4083249841",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:56+00:00"
+    },
+    {
+      "title": "Senior QA Engineer",
+      "company": "TatraSoft s.r.o.",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "REST API",
+        "JavaScript",
+        "Python"
+      ],
+      "nice_to_have_skills": [
+        "Playwright"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Python",
+        "REST API",
+        "Playwright"
+      ],
+      "salary_min": 4000,
+      "salary_max": 5300,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3930433609.html",
+      "site": "linkedin",
+      "id": "3930433609",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:19:59+00:00"
+    },
+    {
+      "title": "Sr. DevOps Engineer",
+      "company": "PixelPress Digital",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Python",
+        "Bash"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Linux",
+        "Python",
+        "Bash"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3980893214.html",
+      "site": "linkedin",
+      "id": "3980893214",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:02+00:00"
+    },
+    {
+      "title": "Medior Frontend Developer",
+      "company": "Orava Analytics",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "medior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "HTML",
+        "Jest",
+        "Next.js",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "Webpack",
+        "React"
+      ],
+      "technologies": [
+        "JavaScript",
+        "HTML",
+        "Jest",
+        "Next.js",
+        "Git",
+        "Webpack",
+        "React"
+      ],
+      "salary_min": 2400,
+      "salary_max": 2800,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4020969359.html",
+      "site": "linkedin",
+      "id": "4020969359",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:06+00:00"
+    },
+    {
+      "title": "Sr. Test Automation Engineer",
+      "company": "BlueOx Fintech",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Playwright",
+        "SQL",
+        "JavaScript",
+        "JMeter"
+      ],
+      "nice_to_have_skills": [
+        "REST API"
+      ],
+      "technologies": [
+        "Playwright",
+        "SQL",
+        "JavaScript",
+        "JMeter",
+        "REST API"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4077886402.html",
+      "site": "linkedin",
+      "id": "4077886402",
+      "confidence": 0.65,
+      "low_confidence": true,
+      "quality_issues": [
+        "remote=false but text mentions remote/hybrid/home office"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:09+00:00"
+    },
+    {
+      "title": "Entry-level Java Engineer",
+      "company": "Mostík Software s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Java",
+      "required_skills": [
+        "Oracle",
+        "Microservices",
+        "Java",
+        "Git",
+        "Kafka"
+      ],
+      "nice_to_have_skills": [
+        "REST API"
+      ],
+      "technologies": [
+        "Oracle",
+        "Microservices",
+        "Java",
+        "Git",
+        "Kafka",
+        "REST API"
+      ],
+      "salary_min": 1700,
+      "salary_max": 2200,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3937304020.html",
+      "site": "linkedin",
+      "id": "3937304020",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:13+00:00"
+    },
+    {
+      "title": "Sr. Java Engineer",
+      "company": "Koala Byte s.r.o.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "senior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Docker",
+        "Oracle",
+        "Kafka",
+        "Spring Boot"
+      ],
+      "nice_to_have_skills": [
+        "Kubernetes",
+        "Maven",
+        "PostgreSQL"
+      ],
+      "technologies": [
+        "Java",
+        "Docker",
+        "Oracle",
+        "Kafka",
+        "Spring Boot",
+        "Kubernetes",
+        "Maven",
+        "PostgreSQL"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4035387978.html",
+      "site": "linkedin",
+      "id": "4035387978",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:16+00:00"
+    },
+    {
+      "title": "Mid-level Front-End Engineer",
+      "company": "Hronbit Solutions",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "React",
+        "TypeScript",
+        "CSS",
+        "Vue.js"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "JavaScript",
+        "React",
+        "TypeScript",
+        "CSS",
+        "Vue.js"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3998151839.html",
+      "site": "linkedin",
+      "id": "3998151839",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:20+00:00"
+    },
+    {
+      "title": "Software Engineer (Java)",
+      "company": "Mostík Software s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "senior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Scrum",
+        "Git",
+        "Spring Boot",
+        "REST API",
+        "Kafka"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Git",
+        "Spring Boot",
+        "REST API",
+        "Kafka"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4037049144.html",
+      "site": "linkedin",
+      "id": "4037049144",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:23+00:00"
+    },
+    {
+      "title": "Python Software Engineer - Mid-level",
+      "company": "BlueOx Fintech",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "PostgreSQL",
+        "AWS",
+        "Redis",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "FastAPI",
+        "Flask"
+      ],
+      "technologies": [
+        "FastAPI",
+        "Python",
+        "PostgreSQL",
+        "Flask",
+        "AWS",
+        "Redis",
+        "Git"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4029377881.html",
+      "site": "linkedin",
+      "id": "4029377881",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:27+00:00"
+    },
+    {
+      "title": "Jr. Java Developer",
+      "company": "BlueOx Fintech",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Microservices",
+        "Spring Boot"
+      ],
+      "nice_to_have_skills": [
+        "Git"
+      ],
+      "technologies": [
+        "Java",
+        "Spring Boot",
+        "Microservices",
+        "Git"
+      ],
+      "salary_min": 1500,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3959617576.html",
+      "site": "linkedin",
+      "id": "3959617576",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:30+00:00"
+    },
+    {
+      "title": "Front-End Engineer",
+      "company": "PixelPress Digital",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "Next.js",
+        "Webpack"
+      ],
+      "technologies": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Git",
+        "Next.js",
+        "Webpack"
+      ],
+      "salary_min": 2100,
+      "salary_max": 3400,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4069289352.html",
+      "site": "linkedin",
+      "id": "4069289352",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:33+00:00"
+    },
+    {
+      "title": "Junior Dátový analytik",
+      "company": "Zelený Kód a.s.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "junior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Kafka",
+        "Databricks"
+      ],
+      "nice_to_have_skills": [
+        "Snowflake",
+        "Azure",
+        "Pandas"
+      ],
+      "technologies": [
+        "SQL",
+        "Kafka",
+        "Databricks",
+        "Azure",
+        "Pandas",
+        "Snowflake"
+      ],
+      "salary_min": 1400,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8002/jobs/view/4039837609.html",
+      "site": "linkedin",
+      "id": "4039837609",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:37+00:00"
+    },
+    {
+      "title": "Jr. Cloud/DevOps Engineer",
+      "company": "TatraSoft s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Unix",
+        "Linux",
+        "Docker",
+        "Azure"
+      ],
+      "nice_to_have_skills": [
+        "AWS",
+        "Jenkins"
+      ],
+      "technologies": [
+        "Unix",
+        "Linux",
+        "Docker",
+        "Azure",
+        "AWS",
+        "Jenkins"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3982642736.html",
+      "site": "linkedin",
+      "id": "3982642736",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:40+00:00"
+    },
+    {
+      "title": "Sr. Java Engineer",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Hibernate",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "Microservices",
+        "REST API"
+      ],
+      "technologies": [
+        "Java",
+        "Hibernate",
+        "Git",
+        "Microservices",
+        "REST API"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3927453830.html",
+      "site": "linkedin",
+      "id": "3927453830",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:44+00:00"
+    },
+    {
+      "title": "Junior Cloud/DevOps Engineer",
+      "company": "BlueOx Fintech",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Prometheus",
+        "Bash",
+        "AWS",
+        "Ansible"
+      ],
+      "nice_to_have_skills": [
+        "Docker",
+        "Python"
+      ],
+      "technologies": [
+        "Linux",
+        "Prometheus",
+        "Bash",
+        "AWS",
+        "Ansible",
+        "Docker",
+        "Python"
+      ],
+      "salary_min": 1400,
+      "salary_max": 2900,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3963341597.html",
+      "site": "linkedin",
+      "id": "3963341597",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:48+00:00"
+    },
+    {
+      "title": "Software Engineer (Java)",
+      "company": "PixelPress Digital",
+      "location": "Žilina",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Kafka"
+      ],
+      "nice_to_have_skills": [
+        "Kubernetes",
+        "PostgreSQL"
+      ],
+      "technologies": [
+        "Java",
+        "Kafka",
+        "PostgreSQL",
+        "Kubernetes"
+      ],
+      "salary_min": 2000,
+      "salary_max": 2900,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4044675038.html",
+      "site": "linkedin",
+      "id": "4044675038",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:51+00:00"
+    },
+    {
+      "title": "Medior Java Developer",
+      "company": "Hronbit Solutions",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Hibernate",
+        "Kafka",
+        "Oracle",
+        "Spring Boot"
+      ],
+      "nice_to_have_skills": [
+        "PostgreSQL",
+        "Docker",
+        "Microservices"
+      ],
+      "technologies": [
+        "Java",
+        "Hibernate",
+        "Kafka",
+        "Oracle",
+        "Spring Boot",
+        "PostgreSQL",
+        "Docker",
+        "Microservices"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4042716676.html",
+      "site": "linkedin",
+      "id": "4042716676",
+      "confidence": 0.65,
+      "low_confidence": true,
+      "quality_issues": [
+        "remote=false but text mentions remote/hybrid/home office"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:55+00:00"
+    },
+    {
+      "title": "QA Analyst",
+      "company": "Orava Analytics",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "QA",
+      "required_skills": [
+        "Cypress",
+        "SQL",
+        "Python",
+        "Selenium"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Cypress",
+        "SQL",
+        "Python",
+        "Selenium"
+      ],
+      "salary_min": 2500,
+      "salary_max": 3000,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4085145083.html",
+      "site": "linkedin",
+      "id": "4085145083",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:20:58+00:00"
+    },
+    {
+      "title": "Jr. Front-End Engineer",
+      "company": "TatraSoft s.r.o.",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "part_time",
+      "seniority": "junior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ],
+      "nice_to_have_skills": [
+        "TypeScript",
+        "Git",
+        "Redux"
+      ],
+      "technologies": [
+        "JavaScript",
+        "CSS",
+        "Redux",
+        "HTML",
+        "TypeScript",
+        "Git"
+      ],
+      "salary_min": 1600,
+      "salary_max": 3100,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/3940152580.html",
+      "site": "linkedin",
+      "id": "3940152580",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:01+00:00"
+    },
+    {
+      "title": "Software Engineer (Java)",
+      "company": "Zelený Kód a.s.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "REST API",
+        "Git",
+        "Kafka",
+        "Docker"
+      ],
+      "nice_to_have_skills": [
+        "Hibernate",
+        "Oracle",
+        "Microservices"
+      ],
+      "technologies": [
+        "Java",
+        "REST API",
+        "Git",
+        "Kafka",
+        "Docker",
+        "Hibernate",
+        "Oracle",
+        "Microservices"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8002/jobs/view/3965242782.html",
+      "site": "linkedin",
+      "id": "3965242782",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:05+00:00"
+    },
+    {
+      "title": "Senior Backend Engineer (Python)",
+      "company": "Carpathia Cloud s.r.o.",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Django",
+        "Kubernetes",
+        "PostgreSQL"
+      ],
+      "nice_to_have_skills": [
+        "Docker"
+      ],
+      "technologies": [
+        "Python",
+        "Django",
+        "Kubernetes",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4100000001.html",
+      "site": "linkedin",
+      "id": "4100000001",
+      "confidence": 0.4,
+      "low_confidence": true,
+      "quality_issues": [
+        "technology not found in text: Django",
+        "technology not found in text: Kubernetes",
+        "technology not found in text: PostgreSQL",
+        "technology not found in text: Docker"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:08+00:00"
+    },
+    {
+      "title": "Developer",
+      "company": "Mostík Software s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4100000002.html",
+      "site": "linkedin",
+      "id": "4100000002",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:11+00:00"
+    },
+    {
+      "title": "Java Developer",
+      "company": "BlueOx Fintech",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Spring Boot",
+        "Kafka"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Spring Boot",
+        "Kafka"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4100000003.html",
+      "site": "linkedin",
+      "id": "4100000003",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:13+00:00"
+    },
+    {
+      "title": "Medior Data Analyst",
+      "company": "Orava Analytics",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Power BI",
+        "Python"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "SQL",
+        "Power BI",
+        "Python"
+      ],
+      "salary_min": 85000,
+      "salary_max": 110000,
+      "salary_currency": "CZK",
+      "language": "en",
+      "source_url": "http://localhost:8002/jobs/view/4100000004.html",
+      "site": "linkedin",
+      "id": "4100000004",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:16+00:00"
+    },
+    {
+      "title": "UI Developer - Medior",
+      "company": "Hronbit Solutions",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "CSS",
+        "Vue.js",
+        "Angular",
+        "Next.js"
+      ],
+      "nice_to_have_skills": [
+        "HTML",
+        "Git",
+        "Webpack"
+      ],
+      "technologies": [
+        "JavaScript",
+        "CSS",
+        "Vue.js",
+        "Angular",
+        "Next.js",
+        "HTML",
+        "Git",
+        "Webpack"
+      ],
+      "salary_min": 2000,
+      "salary_max": 2500,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4835243.html",
+      "site": "profesia",
+      "id": "4835243",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:20+00:00"
+    },
+    {
+      "title": "Webový vývojár – frontend Sr.",
+      "company": "Orava Analytics",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "Git",
+        "Webpack",
+        "Jest"
+      ],
+      "nice_to_have_skills": [
+        "React",
+        "TypeScript"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Git",
+        "Webpack",
+        "Jest",
+        "React",
+        "TypeScript"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4851364.html",
+      "site": "profesia",
+      "id": "4851364",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:23+00:00"
+    },
+    {
+      "title": "Skúsený Python vývojár",
+      "company": "Danubia Data a.s.",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "part_time",
+      "seniority": "senior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Linux",
+        "Flask",
+        "REST API",
+        "AWS"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Python",
+        "Linux",
+        "Flask",
+        "REST API",
+        "AWS"
+      ],
+      "salary_min": 4200,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4790049.html",
+      "site": "profesia",
+      "id": "4790049",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:27+00:00"
+    },
+    {
+      "title": "Junior Site Reliability Engineer (TOP ponuka)",
+      "company": "Vrchol Systems a.s.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Jenkins",
+        "GitLab CI"
+      ],
+      "nice_to_have_skills": [
+        "Bash"
+      ],
+      "technologies": [
+        "Linux",
+        "Jenkins",
+        "GitLab CI",
+        "Bash"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4629973.html",
+      "site": "profesia",
+      "id": "4629973",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:30+00:00"
+    },
+    {
+      "title": "Data Wizard (Junior)",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Snowflake",
+        "Power BI",
+        "Pandas",
+        "Python"
+      ],
+      "nice_to_have_skills": [
+        "Databricks",
+        "Azure"
+      ],
+      "technologies": [
+        "SQL",
+        "Snowflake",
+        "Power BI",
+        "Pandas",
+        "Python",
+        "Databricks",
+        "Azure"
+      ],
+      "salary_min": 1700,
+      "salary_max": 2800,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4973139.html",
+      "site": "profesia",
+      "id": "4973139",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:34+00:00"
+    },
+    {
+      "title": "Senior Dátový analytik",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Databricks",
+        "Power BI",
+        "Pandas"
+      ],
+      "nice_to_have_skills": [
+        "Azure",
+        "Python"
+      ],
+      "technologies": [
+        "SQL",
+        "Databricks",
+        "Power BI",
+        "Pandas",
+        "Azure",
+        "Python"
+      ],
+      "salary_min": 4000,
+      "salary_max": 4700,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4693738.html",
+      "site": "profesia",
+      "id": "4693738",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:38+00:00"
+    },
+    {
+      "title": "Senior QA tester",
+      "company": "Lipa Logistics IT",
+      "location": null,
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Selenium",
+        "SQL",
+        "REST API",
+        "JavaScript",
+        "Playwright"
+      ],
+      "nice_to_have_skills": [
+        "Scrum"
+      ],
+      "technologies": [
+        "Selenium",
+        "SQL",
+        "REST API",
+        "JavaScript",
+        "Playwright"
+      ],
+      "salary_min": 4300,
+      "salary_max": 5100,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4958601.html",
+      "site": "profesia",
+      "id": "4958601",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:42+00:00"
+    },
+    {
+      "title": "Webový vývojár – frontend Senior",
+      "company": "Hronbit Solutions",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "TypeScript",
+        "Webpack",
+        "JavaScript",
+        "Redux",
+        "Jest"
+      ],
+      "nice_to_have_skills": [
+        "Scrum",
+        "Angular"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Webpack",
+        "JavaScript",
+        "Angular",
+        "Redux",
+        "Jest"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4782303.html",
+      "site": "profesia",
+      "id": "4782303",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:46+00:00"
+    },
+    {
+      "title": "Software Engineer (Java) - Principal/Lead",
+      "company": "Orava Analytics",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Maven",
+        "Spring Boot"
+      ],
+      "nice_to_have_skills": [
+        "Kafka",
+        "Oracle",
+        "Hibernate"
+      ],
+      "technologies": [
+        "Java",
+        "Maven",
+        "Spring Boot",
+        "Kafka",
+        "Oracle",
+        "Hibernate"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4577255.html",
+      "site": "profesia",
+      "id": "4577255",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:49+00:00"
+    },
+    {
+      "title": "Webový vývojár – frontend Jr.",
+      "company": "PixelPress Digital",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "CSS",
+        "Webpack",
+        "TypeScript",
+        "JavaScript"
+      ],
+      "nice_to_have_skills": [
+        "Redux",
+        "English",
+        "HTML"
+      ],
+      "technologies": [
+        "CSS",
+        "HTML",
+        "Webpack",
+        "TypeScript",
+        "JavaScript",
+        "Redux"
+      ],
+      "salary_min": 1600,
+      "salary_max": 3100,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4907725.html",
+      "site": "profesia",
+      "id": "4907725",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:53+00:00"
+    },
+    {
+      "title": "Medior Data Engineer",
+      "company": "Zelený Kód a.s.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Databricks",
+        "Airflow"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "SQL",
+        "Databricks",
+        "Airflow"
+      ],
+      "salary_min": 2100,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4738393.html",
+      "site": "profesia",
+      "id": "4738393",
+      "confidence": 0.7,
+      "low_confidence": false,
+      "quality_issues": [
+        "text has a salary range, but salary_max not extracted"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:56+00:00"
+    },
+    {
+      "title": "Junior Data Engineer",
+      "company": "Carpathia Cloud s.r.o.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Pandas",
+        "Python"
+      ],
+      "nice_to_have_skills": [
+        "Apache Spark",
+        "Airflow"
+      ],
+      "technologies": [
+        "SQL",
+        "Pandas",
+        "Python",
+        "Apache Spark",
+        "Airflow"
+      ],
+      "salary_min": 1800,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4945422.html",
+      "site": "profesia",
+      "id": "4945422",
+      "confidence": 0.7,
+      "low_confidence": false,
+      "quality_issues": [
+        "text has a salary range, but salary_max not extracted"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:21:59+00:00"
+    },
+    {
+      "title": "DevOps Ninja - Entry-level",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "junior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Prometheus",
+        "Kubernetes",
+        "Docker",
+        "Linux"
+      ],
+      "nice_to_have_skills": [
+        "Jenkins"
+      ],
+      "technologies": [
+        "Prometheus",
+        "Kubernetes",
+        "Jenkins",
+        "Docker",
+        "Linux"
+      ],
+      "salary_min": 1700,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4737893.html",
+      "site": "profesia",
+      "id": "4737893",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:03+00:00"
+    },
+    {
+      "title": "Dátový analytik",
+      "company": "Orava Analytics",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "dbt",
+        "Airflow"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "SQL",
+        "dbt",
+        "Airflow"
+      ],
+      "salary_min": 2300,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4655898.html",
+      "site": "profesia",
+      "id": "4655898",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:06+00:00"
+    },
+    {
+      "title": "Sr. Data Analyst",
+      "company": "Orava Analytics",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Airflow",
+        "Kafka",
+        "Pandas",
+        "dbt"
+      ],
+      "nice_to_have_skills": [
+        "Power BI",
+        "Apache Spark",
+        "Databricks"
+      ],
+      "technologies": [
+        "SQL",
+        "Airflow",
+        "Kafka",
+        "Pandas",
+        "dbt",
+        "Power BI",
+        "Apache Spark",
+        "Databricks"
+      ],
+      "salary_min": 3500,
+      "salary_max": 3900,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4813543.html",
+      "site": "profesia",
+      "id": "4813543",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:10+00:00"
+    },
+    {
+      "title": "Senior Python Dev",
+      "company": "Koala Byte s.r.o.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Celery",
+        "Django"
+      ],
+      "nice_to_have_skills": [
+        "Flask",
+        "Docker"
+      ],
+      "technologies": [
+        "Python",
+        "Celery",
+        "Django",
+        "Flask",
+        "Docker"
+      ],
+      "salary_min": 3000,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4978638.html",
+      "site": "profesia",
+      "id": "4978638",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:14+00:00"
+    },
+    {
+      "title": "Junior Data Engineer",
+      "company": "Lipa Logistics IT",
+      "location": "Košice",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "junior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Python",
+        "Snowflake",
+        "Scrum"
+      ],
+      "nice_to_have_skills": [
+        "Power BI",
+        "Pandas",
+        "Azure"
+      ],
+      "technologies": [
+        "SQL",
+        "Python",
+        "Snowflake",
+        "Power BI",
+        "Pandas",
+        "Azure"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4552619.html",
+      "site": "profesia",
+      "id": "4552619",
+      "confidence": 0.65,
+      "low_confidence": true,
+      "quality_issues": [
+        "remote=true but no remote/hybrid hint in text"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:17+00:00"
+    },
+    {
+      "title": "Data Wizard (Principal/Lead)",
+      "company": "Mostík Software s.r.o.",
+      "location": "Košice",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "lead",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Pandas",
+        "Python",
+        "Scrum",
+        "Communication"
+      ],
+      "nice_to_have_skills": [
+        "Kafka",
+        "dbt",
+        "Apache Spark"
+      ],
+      "technologies": [
+        "SQL",
+        "Pandas",
+        "Python",
+        "Kafka",
+        "dbt",
+        "Apache Spark"
+      ],
+      "salary_min": 5200,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4849616.html",
+      "site": "profesia",
+      "id": "4849616",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:21+00:00"
+    },
+    {
+      "title": "Team Lead Java vývojár",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Kubernetes",
+        "REST API"
+      ],
+      "nice_to_have_skills": [
+        "Microservices"
+      ],
+      "technologies": [
+        "Java",
+        "Kubernetes",
+        "REST API",
+        "Microservices"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4573797.html",
+      "site": "profesia",
+      "id": "4573797",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:24+00:00"
+    },
+    {
+      "title": "Junior Site Reliability Engineer",
+      "company": "PixelPress Digital",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "GitLab CI",
+        "AWS",
+        "Jenkins",
+        "Grafana",
+        "Linux"
+      ],
+      "nice_to_have_skills": [
+        "English",
+        "Docker"
+      ],
+      "technologies": [
+        "GitLab",
+        "AWS",
+        "Docker",
+        "Jenkins",
+        "Grafana",
+        "Linux",
+        "GitLab CI"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4646664.html",
+      "site": "profesia",
+      "id": "4646664",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:28+00:00"
+    },
+    {
+      "title": "DevOps Engineer (m/ž)",
+      "company": "Danubia Data a.s.",
+      "location": "Košice",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Docker",
+        "Jenkins",
+        "Terraform"
+      ],
+      "nice_to_have_skills": [
+        "Grafana",
+        "Azure",
+        "Ansible"
+      ],
+      "technologies": [
+        "Linux",
+        "Docker",
+        "Jenkins",
+        "Terraform",
+        "Grafana",
+        "Azure",
+        "Ansible"
+      ],
+      "salary_min": 2200,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4533322.html",
+      "site": "profesia",
+      "id": "4533322",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:32+00:00"
+    },
+    {
+      "title": "Tester softvéru Začínajúci",
+      "company": "Vrchol Systems a.s.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "QA",
+      "required_skills": [
+        "programovaním",
+        "Playwright",
+        "Cypress",
+        "Python"
+      ],
+      "nice_to_have_skills": [
+        "SQL",
+        "REST API",
+        "Postman"
+      ],
+      "technologies": [
+        "Cypress",
+        "Python",
+        "SQL",
+        "REST API",
+        "Postman",
+        "programovaním",
+        "Playwright"
+      ],
+      "salary_min": 1700,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4695374.html",
+      "site": "profesia",
+      "id": "4695374",
+      "confidence": 0.7,
+      "low_confidence": false,
+      "quality_issues": [
+        "text has a salary range, but salary_max not extracted"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:36+00:00"
+    },
+    {
+      "title": "Senior Test Automation Engineer",
+      "company": "Lipa Logistics IT",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Selenium",
+        "Java",
+        "Cypress",
+        "Playwright",
+        "Postman",
+        "Scrum"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Selenium",
+        "Java",
+        "Cypress",
+        "Playwright",
+        "Postman"
+      ],
+      "salary_min": 4000,
+      "salary_max": 5100,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4878324.html",
+      "site": "profesia",
+      "id": "4878324",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:39+00:00"
+    },
+    {
+      "title": "Mid-level QA tester",
+      "company": "Bystrica Labs",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "QA",
+      "required_skills": [
+        "Cypress",
+        "JavaScript",
+        "SQL",
+        "REST API",
+        "Playwright"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Cypress",
+        "JavaScript",
+        "SQL",
+        "REST API",
+        "Playwright"
+      ],
+      "salary_min": 2200,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4540822.html",
+      "site": "profesia",
+      "id": "4540822",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:43+00:00"
+    },
+    {
+      "title": "Senior Site Reliability Engineer",
+      "company": "Danubia Data a.s.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Grafana",
+        "Azure",
+        "Bash",
+        "Terraform"
+      ],
+      "nice_to_have_skills": [
+        "Docker"
+      ],
+      "technologies": [
+        "Linux",
+        "Grafana",
+        "Azure",
+        "Bash",
+        "Terraform",
+        "Docker"
+      ],
+      "salary_min": 4400,
+      "salary_max": 5800,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4736933.html",
+      "site": "profesia",
+      "id": "4736933",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:47+00:00"
+    },
+    {
+      "title": "Junior Dátový analytik",
+      "company": "Sigma Kódex s.r.o.",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Snowflake",
+        "Kafka",
+        "Python"
+      ],
+      "nice_to_have_skills": [
+        "dbt"
+      ],
+      "technologies": [
+        "SQL",
+        "Snowflake",
+        "Kafka",
+        "Python",
+        "dbt"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4843961.html",
+      "site": "profesia",
+      "id": "4843961",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:50+00:00"
+    },
+    {
+      "title": "Mid-level Dátový analytik",
+      "company": "Bystrica Labs",
+      "location": null,
+      "remote": true,
+      "employment_type": "part_time",
+      "seniority": "medior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Apache Spark",
+        "Databricks",
+        "dbt",
+        "Scrum"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "SQL",
+        "Apache Spark",
+        "Databricks",
+        "dbt"
+      ],
+      "salary_min": 2800,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4742053.html",
+      "site": "profesia",
+      "id": "4742053",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:53+00:00"
+    },
+    {
+      "title": "Java Engineer",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Kafka",
+        "Git",
+        "Kubernetes",
+        "REST API"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Kafka",
+        "Git",
+        "Kubernetes",
+        "REST API"
+      ],
+      "salary_min": 2000,
+      "salary_max": 2600,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4634177.html",
+      "site": "profesia",
+      "id": "4634177",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:22:57+00:00"
+    },
+    {
+      "title": "Medior Python Dev",
+      "company": "TatraSoft s.r.o.",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "contract",
+      "seniority": "medior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "PostgreSQL",
+        "Docker",
+        "Redis",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "FastAPI",
+        "Django"
+      ],
+      "technologies": [
+        "Python",
+        "PostgreSQL",
+        "Docker",
+        "Redis",
+        "Git",
+        "FastAPI",
+        "Django"
+      ],
+      "salary_min": 2600,
+      "salary_max": 3500,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4906947.html",
+      "site": "profesia",
+      "id": "4906947",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:01+00:00"
+    },
+    {
+      "title": "Sr. Front-End Engineer",
+      "company": "TatraSoft s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "Angular",
+        "Webpack",
+        "Redux"
+      ],
+      "nice_to_have_skills": [
+        "TypeScript",
+        "Git"
+      ],
+      "technologies": [
+        "TypeScript",
+        "JavaScript",
+        "Angular",
+        "Git",
+        "Webpack",
+        "Redux"
+      ],
+      "salary_min": 3600,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4690479.html",
+      "site": "profesia",
+      "id": "4690479",
+      "confidence": 0.7,
+      "low_confidence": false,
+      "quality_issues": [
+        "text has a salary range, but salary_max not extracted"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:05+00:00"
+    },
+    {
+      "title": "Mid-level Python programátor (m/ž)",
+      "company": "Orava Analytics",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Python",
+      "required_skills": [
+        "Django",
+        "Python",
+        "Flask"
+      ],
+      "nice_to_have_skills": [
+        "Scrum",
+        "REST API",
+        "Git"
+      ],
+      "technologies": [
+        "Django",
+        "Python",
+        "Flask",
+        "REST API",
+        "Git"
+      ],
+      "salary_min": 2800,
+      "salary_max": 4300,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4624117.html",
+      "site": "profesia",
+      "id": "4624117",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:09+00:00"
+    },
+    {
+      "title": "Sr. Front-End Engineer",
+      "company": "NovaSlav Tech",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "Git",
+        "Jest",
+        "Redux"
+      ],
+      "nice_to_have_skills": [
+        "React",
+        "Vue.js",
+        "Angular"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Git",
+        "Jest",
+        "Redux",
+        "React",
+        "Vue.js",
+        "Angular"
+      ],
+      "salary_min": 3600,
+      "salary_max": 4200,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4542584.html",
+      "site": "profesia",
+      "id": "4542584",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:13+00:00"
+    },
+    {
+      "title": "Software Engineer (Java) - Jr.",
+      "company": "Carpathia Cloud s.r.o.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "junior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Microservices",
+        "Kafka",
+        "Maven"
+      ],
+      "nice_to_have_skills": [
+        "Hibernate",
+        "PostgreSQL"
+      ],
+      "technologies": [
+        "Java",
+        "Hibernate",
+        "Microservices",
+        "Kafka",
+        "Maven",
+        "PostgreSQL"
+      ],
+      "salary_min": 1700,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4706172.html",
+      "site": "profesia",
+      "id": "4706172",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:16+00:00"
+    },
+    {
+      "title": "Medior DevOps Engineer",
+      "company": "Vrchol Systems a.s.",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Grafana",
+        "GitLab CI",
+        "Prometheus",
+        "Ansible",
+        "English",
+        "Scrum"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Linux",
+        "Grafana",
+        "GitLab CI",
+        "Prometheus",
+        "Ansible"
+      ],
+      "salary_min": 2300,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4941766.html",
+      "site": "profesia",
+      "id": "4941766",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:20+00:00"
+    },
+    {
+      "title": "Sr. DevOps Engineer (m/ž)",
+      "company": "Sigma Kódex s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Azure",
+        "Grafana",
+        "GitLab CI",
+        "Kubernetes"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Linux",
+        "Azure",
+        "Grafana",
+        "GitLab CI",
+        "Kubernetes"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4993609.html",
+      "site": "profesia",
+      "id": "4993609",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:24+00:00"
+    },
+    {
+      "title": "Tester softvéru Senior",
+      "company": "Zelený Kód a.s.",
+      "location": "null",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Selenium",
+        "JavaScript",
+        "REST API",
+        "Python",
+        "SQL"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Selenium",
+        "JavaScript",
+        "REST API",
+        "Python",
+        "SQL"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4841992.html",
+      "site": "profesia",
+      "id": "4841992",
+      "confidence": 0.8,
+      "low_confidence": false,
+      "quality_issues": [
+        "location not found in text: null"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:27+00:00"
+    },
+    {
+      "title": "Medior Site Reliability Engineer",
+      "company": "PixelPress Digital",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Python",
+        "Docker"
+      ],
+      "nice_to_have_skills": [
+        "GitLab CI",
+        "Jenkins"
+      ],
+      "technologies": [
+        "Linux",
+        "Python",
+        "Docker",
+        "GitLab CI",
+        "Jenkins"
+      ],
+      "salary_min": 2300,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4990642.html",
+      "site": "profesia",
+      "id": "4990642",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:30+00:00"
+    },
+    {
+      "title": "DevOps špecialista Senior",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Grafana",
+        "AWS",
+        "Scrum"
+      ],
+      "nice_to_have_skills": [
+        "Prometheus",
+        "Terraform",
+        "Bash"
+      ],
+      "technologies": [
+        "Linux",
+        "Grafana",
+        "AWS",
+        "Prometheus",
+        "Terraform",
+        "Bash"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4792970.html",
+      "site": "profesia",
+      "id": "4792970",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:34+00:00"
+    },
+    {
+      "title": "Začínajúci Python programátor (m/ž)",
+      "company": "Danubia Data a.s.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "AWS",
+        "Flask",
+        "REST API",
+        "Docker"
+      ],
+      "nice_to_have_skills": [
+        "Redis",
+        "FastAPI"
+      ],
+      "technologies": [
+        "Python",
+        "AWS",
+        "Flask",
+        "REST API",
+        "Docker",
+        "Redis",
+        "FastAPI"
+      ],
+      "salary_min": 1700,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4846133.html",
+      "site": "profesia",
+      "id": "4846133",
+      "confidence": 0.7,
+      "low_confidence": false,
+      "quality_issues": [
+        "text has a salary range, but salary_max not extracted"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:38+00:00"
+    },
+    {
+      "title": "Entry-level Frontend Developer",
+      "company": "PixelPress Digital",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "React",
+        "Angular",
+        "Git",
+        "Jest"
+      ],
+      "nice_to_have_skills": [
+        "Webpack"
+      ],
+      "technologies": [
+        "JavaScript",
+        "React",
+        "Angular",
+        "Git",
+        "Jest",
+        "Webpack"
+      ],
+      "salary_min": 1300,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/4633691.html",
+      "site": "profesia",
+      "id": "4633691",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:42+00:00"
+    },
+    {
+      "title": "Senior QA Engineer",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Selenium",
+        "JMeter",
+        "Playwright"
+      ],
+      "nice_to_have_skills": [
+        "Cypress"
+      ],
+      "technologies": [
+        "Selenium",
+        "JMeter",
+        "Playwright",
+        "Cypress"
+      ],
+      "salary_min": 4300,
+      "salary_max": 5600,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4508503.html",
+      "site": "profesia",
+      "id": "4508503",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:45+00:00"
+    },
+    {
+      "title": "DevOps inžinier",
+      "company": "Bystrica Labs",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Jenkins",
+        "Prometheus"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Linux",
+        "Jenkins",
+        "Prometheus"
+      ],
+      "salary_min": 2600,
+      "salary_max": 3400,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4824943.html",
+      "site": "profesia",
+      "id": "4824943",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:48+00:00"
+    },
+    {
+      "title": "Webový vývojár – frontend Tech Lead",
+      "company": "Carpathia Cloud s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "HTML",
+        "Git",
+        "Webpack",
+        "Vue.js"
+      ],
+      "nice_to_have_skills": [
+        "Angular",
+        "Jest"
+      ],
+      "technologies": [
+        "JavaScript",
+        "HTML",
+        "Git",
+        "Webpack",
+        "Vue.js",
+        "Angular",
+        "Jest"
+      ],
+      "salary_min": 5200,
+      "salary_max": 6500,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4937597.html",
+      "site": "profesia",
+      "id": "4937597",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:52+00:00"
+    },
+    {
+      "title": "Sr. Backend Developer (Java)",
+      "company": "Koala Byte s.r.o.",
+      "location": "Žilina",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Oracle",
+        "Spring Boot",
+        "Microservices"
+      ],
+      "nice_to_have_skills": [
+        "Maven",
+        "Docker"
+      ],
+      "technologies": [
+        "Java",
+        "Oracle",
+        "Spring Boot",
+        "Microservices",
+        "Maven",
+        "Docker"
+      ],
+      "salary_min": 3900,
+      "salary_max": 4900,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4972454.html",
+      "site": "profesia",
+      "id": "4972454",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:23:56+00:00"
+    },
+    {
+      "title": "Tester softvéru Začínajúci",
+      "company": "BlueOx Fintech",
+      "location": "Košice",
+      "remote": true,
+      "employment_type": "contract",
+      "seniority": "junior",
+      "specialization": "QA",
+      "required_skills": [
+        "Selenium",
+        "Cypress",
+        "REST API"
+      ],
+      "nice_to_have_skills": [
+        "Java",
+        "SQL"
+      ],
+      "technologies": [
+        "Selenium",
+        "Cypress",
+        "REST API",
+        "Java",
+        "SQL"
+      ],
+      "salary_min": 1600,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/4604752.html",
+      "site": "profesia",
+      "id": "4604752",
+      "confidence": 0.65,
+      "low_confidence": true,
+      "quality_issues": [
+        "remote=true but no remote/hybrid hint in text"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:00+00:00"
+    },
+    {
+      "title": "Java vývojár (m/ž)",
+      "company": "TatraSoft s.r.o.",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "Java",
+      "required_skills": [
+        "Java",
+        "Spring Boot",
+        "PostgreSQL"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Java",
+        "Spring Boot",
+        "PostgreSQL"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/5000001.html",
+      "site": "profesia",
+      "id": "5000001",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:03+00:00"
+    },
+    {
+      "title": "Medior DevOps inžinier",
+      "company": "Vrchol Systems a.s.",
+      "location": "Žilina",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "medior",
+      "specialization": "DevOps",
+      "required_skills": [
+        "Linux",
+        "Docker",
+        "Ansible"
+      ],
+      "nice_to_have_skills": [
+        "Terraform"
+      ],
+      "technologies": [
+        "Linux",
+        "Docker",
+        "Ansible",
+        "Terraform"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/5000002.html",
+      "site": "profesia",
+      "id": "5000002",
+      "confidence": 0.65,
+      "low_confidence": true,
+      "quality_issues": [
+        "remote=false but text mentions remote/hybrid/home office"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:06+00:00"
+    },
+    {
+      "title": "Senior Data Engineer",
+      "company": "Danubia Data a.s.",
+      "location": "Bratislava",
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Data",
+      "required_skills": [
+        "SQL",
+        "Python",
+        "Airflow"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "SQL",
+        "Python",
+        "Airflow"
+      ],
+      "salary_min": 42000,
+      "salary_max": 48000,
+      "salary_currency": "EUR",
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/5000003.html",
+      "site": "profesia",
+      "id": "5000003",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:09+00:00"
+    },
+    {
+      "title": "Senior Python vývojár",
+      "company": "Bystrica Labs",
+      "location": "Košice",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Django"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "Python",
+        "Django"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/5000004.html",
+      "site": "profesia",
+      "id": "5000004",
+      "confidence": 1.0,
+      "low_confidence": false,
+      "quality_issues": [],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:12+00:00"
+    },
+    {
+      "title": "Medior Frontend vývojár",
+      "company": "PixelPress Digital",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "lead",
+      "specialization": "Frontend",
+      "required_skills": [
+        "JavaScript",
+        "React",
+        "CSS"
+      ],
+      "nice_to_have_skills": [],
+      "technologies": [
+        "JavaScript",
+        "React",
+        "CSS"
+      ],
+      "salary_min": 99999,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "language": "en",
+      "source_url": "http://localhost:8001/offer/5000005.html",
+      "site": "profesia",
+      "id": "5000005",
+      "confidence": 0.7,
+      "low_confidence": false,
+      "quality_issues": [
+        "seniority 'lead' contradicts title (medior)"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:15+00:00"
+    },
+    {
+      "title": "Junior Python programátor",
+      "company": "Hronbit Solutions",
+      "location": "Bratislava",
+      "remote": false,
+      "employment_type": "full_time",
+      "seniority": "junior",
+      "specialization": "Python",
+      "required_skills": [
+        "Python",
+        "Django",
+        "Git"
+      ],
+      "nice_to_have_skills": [
+        "Docker"
+      ],
+      "technologies": [
+        "Python",
+        "Django",
+        "Git",
+        "Docker"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/5000006.html",
+      "site": "profesia",
+      "id": "5000006",
+      "confidence": 0.4,
+      "low_confidence": true,
+      "quality_issues": [
+        "title not found verbatim in text (translated or invented?)",
+        "company not found in text",
+        "location not found in text: Bratislava"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:18+00:00"
+    },
+    {
+      "title": "Senior QA Tester",
+      "company": "Lipa Logistics IT",
+      "location": null,
+      "remote": true,
+      "employment_type": "full_time",
+      "seniority": "senior",
+      "specialization": "QA",
+      "required_skills": [
+        "Test planning and execution",
+        "Bug tracking and reporting",
+        "Automated testing tools",
+        "Manual testing",
+        "Test case development",
+        "Test environment setup",
+        "Experience with CI/CD pipelines",
+        "Familiarity with testing methodologies",
+        "Attention to detail",
+        "Problem-solving skills"
+      ],
+      "nice_to_have_skills": [
+        "Experience with cloud testing",
+        "Experience with mobile testing",
+        "Experience with performance testing",
+        "Experience with security testing",
+        "Experience with API testing",
+        "Experience with test automation frameworks"
+      ],
+      "technologies": [
+        "Selenium",
+        "JUnit",
+        "TestNG",
+        "Cucumber",
+        "Postman",
+        "Jira",
+        "Confluence",
+        "Git",
+        "Docker",
+        "Kubernetes",
+        "Test planning and execution",
+        "Bug tracking and reporting",
+        "Automated testing tools",
+        "Manual testing",
+        "Test case development",
+        "Test environment setup",
+        "Experience with CI/CD pipelines",
+        "Familiarity with testing methodologies",
+        "Attention to detail",
+        "Problem-solving skills",
+        "Experience with cloud testing",
+        "Experience with mobile testing",
+        "Experience with performance testing",
+        "Experience with security testing",
+        "Experience with API testing",
+        "Experience with test automation frameworks"
+      ],
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "language": "sk",
+      "source_url": "http://localhost:8001/offer/5000007.html",
+      "site": "profesia",
+      "id": "5000007",
+      "confidence": 0.0,
+      "low_confidence": true,
+      "quality_issues": [
+        "technology not found in text: JUnit",
+        "technology not found in text: TestNG",
+        "technology not found in text: Cucumber",
+        "technology not found in text: Postman",
+        "technology not found in text: Confluence",
+        "technology not found in text: Git",
+        "technology not found in text: Docker",
+        "technology not found in text: Kubernetes",
+        "technology not found in text: Test planning and execution",
+        "technology not found in text: Bug tracking and reporting",
+        "technology not found in text: Automated testing tools",
+        "technology not found in text: Manual testing",
+        "technology not found in text: Test case development",
+        "technology not found in text: Test environment setup",
+        "technology not found in text: Experience with CI/CD pipelines",
+        "technology not found in text: Familiarity with testing methodologies",
+        "technology not found in text: Attention to detail",
+        "technology not found in text: Problem-solving skills",
+        "technology not found in text: Experience with cloud testing",
+        "technology not found in text: Experience with mobile testing",
+        "technology not found in text: Experience with performance testing",
+        "technology not found in text: Experience with security testing",
+        "technology not found in text: Experience with API testing",
+        "technology not found in text: Experience with test automation frameworks",
+        "remote=true but no remote/hybrid hint in text"
+      ],
+      "model": "ollama:qwen2.5:7b",
+      "parsed_at": "2026-11-03T12:24:24+00:00"
+    }
+  ]
+}
