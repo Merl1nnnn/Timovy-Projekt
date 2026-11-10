@@ -1,45 +1,64 @@
 # SkillMiner
 
-Командний проєкт аналізу IT-вакансій. Специфікація: `docs/SRS_SkillMiner_EN.docx` і `docs/SRS_SkillMiner_SK.docx`.
+A student team project for analysing IT job postings and mapping skills to ESCO. Requirements: [English SRS](docs/SRS_SkillMiner_EN.docx) · [Slovak SRS](docs/SRS_SkillMiner_SK.docx).
 
-## Публічний фронтенд
+## Public dashboard
 
-`frontend/` — статичний сайт без збірки: пошук, фільтри, частоти технологій, деталі вакансій, позначки якості та CSV. Початковий набір — 101 **синтетична** вакансія з мок-сайтів; результати LLM можуть містити помилки. Це не статистика реального попиту.
+**Live site: https://merl1nnnn.github.io/Timovy-Projekt/**
 
-Схема: локальний NLP-пайплайн → публічний JSON у GitHub → GitHub Actions → GitHub Pages. Ноутбук не потрібен для перегляду вже опублікованих даних. Публікація оновлює весь знімок; це не база даних і не realtime API.
+The static dashboard in `frontend/` supports search, filters, technology frequencies, job details, quality flags and CSV export. The interface is available in **Slovak, English and Ukrainian**, with **light and dark themes**. Preferences are saved in the browser. Job titles and extracted data remain in their original language.
 
-### Перша публікація
+The initial dataset contains **101 synthetic postings from local mock sites**. LLM results may contain errors. These are not statistics from the real labour market.
 
-У GitHub відкрийте **Settings → Pages → Build and deployment → Source: GitHub Actions**. Workflow `.github/workflows/pages.yml` публікує тільки `frontend/` після змін у `main`. Сайт: `https://merl1nnnn.github.io/Timovy-Projekt/` (доступний після успішного deployment).
+## How publishing works
 
-### Локальний перегляд
+Local NLP pipeline → public JSON in GitHub → GitHub Actions → GitHub Pages.
+
+The laptop is needed only to process and upload new results. Published data stays available when the laptop is off. Each upload replaces the complete dataset snapshot; this is not a database or a realtime API.
+
+The workflow in `.github/workflows/pages.yml` publishes only `frontend/` when that directory changes on `main`. GitHub Pages is configured to use GitHub Actions. To set this up in another repository, select **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+## Local preview
+
+No frontend build step or JavaScript dependencies are required. Use Python 3.11 or newer:
 
 ```sh
 python3 -m http.server 8765 --directory frontend
 ```
 
-Відкрийте `http://localhost:8765`. Запуск через `file://` не підтримується через fetch JSON.
+Open http://localhost:8765. Opening `index.html` through `file://` is not supported because the dashboard loads its JSON with `fetch`.
 
-### Локальне оновлення результатів
+## Publish local NLP results
 
-Потрібні Python 3.11+ і GitHub CLI (`gh`), авторизована з правом запису в цей репозиторій:
+Install [GitHub CLI](https://cli.github.com/) and sign in with write access to this repository:
 
 ```sh
 gh auth login
 python3 scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl' --dry-run
-# Після перевірки сформованого frontend/data/jobs.json:
+```
+
+Review `frontend/data/jobs.json`, then publish:
+
+```sh
 python3 scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl'
 ```
 
-За замовчуванням набір позначається як синтетичний. Для перевірених реальних даних використовуйте `--kind real` після перевірки дозволу на публікацію та персональних даних. Скрипт передає тільки явно дозволені поля, не передає HTML або .env, прибирає email та міжнародні номери телефонів. Це не повна анонімізація: імена та інші персональні дані потрібно прибрати в пайплайні до експорту.
+The script updates only `frontend/data/jobs.json` on `main`. GitHub Actions then deploys the updated site. Earlier snapshots remain in Git history. A concurrent update causes a SHA conflict instead of silently overwriting someone else's changes; rerun the command after reviewing the latest data.
 
-`GITHUB_TOKEN` із правом Contents: write може замінити gh-авторизацію. Токен ніколи не додавайте у frontend чи git. Оновлення змінює тільки `frontend/data/jobs.json`; інші файли не перезаписуються. Попередній знімок лишається в Git-історії. Якщо інший учасник одночасно оновив JSON, SHA-конфлікт зупиняє запис — запустіть повторно.
+Datasets are marked as synthetic by default. Use `--kind real` only after checking publication permissions and removing personal data upstream.
 
-Лише підготовка без мережевих запитів:
+Authentication uses GitHub CLI or `GITHUB_TOKEN` with **Contents: write** access. Never put tokens in frontend files or commit them. The export includes only explicitly allowed fields, excludes raw HTML and `.env`, and redacts email addresses and international phone numbers. This is not complete anonymisation: names and other personal information must be removed in the processing pipeline before export.
+
+To prepare JSON without making network requests:
 
 ```sh
 python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
+```
+
+## Tests
+
+```sh
 python3 -m unittest discover -s tests -v
 ```
 
-Тести перевіряють whitelist, видалення email/телефону, дедуплікацію й збереження попередньої публікації при некоректному вході.
+The export tests cover the field allowlist, email and phone redaction, URL deduplication, and preservation of the previous published file when input is invalid. Browser checks cover language and theme switching, saved preferences, filters and job details.
