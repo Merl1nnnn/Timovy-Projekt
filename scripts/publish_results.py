@@ -1,4 +1,4 @@
-"""Публікація локальних результатів на спільному сайті GitHub Pages."""
+"""Publishes local results to the shared GitHub Pages site."""
 import argparse
 import base64
 from datetime import datetime, timezone
@@ -68,7 +68,7 @@ def merge_snapshots(previous, local):
         raise RuntimeError('Невідома схема опублікованих даних; запис зупинено')
     if previous['jobs'] and previous.get('dataset_kind') != local['dataset_kind']:
         raise RuntimeError('Не можна змішувати синтетичні та реальні дані в одному наборі')
-    # Зберігаємо вакансії інших учасників. Для однакового URL перемагає новіший parsed_at.
+    # Keep other members' postings. For the same URL the newer parsed_at wins.
     by_url = {}
     for job in previous['jobs'] + local['jobs']:
         url = job.get('source_url')

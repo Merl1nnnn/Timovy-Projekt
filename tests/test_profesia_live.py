@@ -1,4 +1,4 @@
-"""Тести скрапера реальної Profesia на синтетичних HTML (структура як на сайті, мережі немає)."""
+"""Tests for the real Profesia scraper on synthetic HTML (same structure as the site, no network)."""
 
 import json
 from pathlib import Path
@@ -46,10 +46,10 @@ def test_extract_detail_removes_contacts_and_personal_data() -> None:
     assert content is not None
     text = html_to_text(content)
     assert "Python developer 7" in text and "Python, Django" in text
-    assert "Nováková" not in text and "Kontakt" not in text  # розділ контактів вирізано
+    assert "Nováková" not in text and "Kontakt" not in text  # contact section removed
     assert "hr.osoba@firma.sk" not in text and "911 525 022" not in text
     assert "[email removed]" in text and "[phone removed]" in text
-    assert "menu" not in text and "päta" not in text  # лише <main>
+    assert "menu" not in text and "päta" not in text  # only <main>
     assert pl.extract_detail("<html><body><div>інший шаблон</div></body></html>") is None
 
 
@@ -62,7 +62,7 @@ def test_branded_template_contact_name_removed() -> None:
 
 
 class FakeSite:
-    """Дві сторінки списку по 3 вакансії; одна вакансія з нестандартним шаблоном."""
+    """Two list pages with 3 postings each; one posting uses a non-standard template."""
 
     def __init__(self, status: int = 200) -> None:
         self.requests: list[str] = []
@@ -89,12 +89,12 @@ def client(site: FakeSite) -> pl.PoliteClient:
 def test_scrape_is_limited_and_incremental(tmp_path: Path) -> None:
     site = FakeSite()
     added = pl.scrape(client(site), raw_dir=tmp_path, limit=3, log=lambda *_: None)
-    assert [e["id"] for e in added] == ["1", "3", "4"]  # 2 — невідомий шаблон, пропущено
+    assert [e["id"] for e in added] == ["1", "3", "4"]  # 2 has an unknown template and is skipped
     index = json.loads((tmp_path / "profesia" / "index.json").read_text(encoding="utf-8"))
     assert index == added
     assert (tmp_path / "profesia" / "1.html").exists()
 
-    site2 = FakeSite()  # повторний запуск: старі вакансії (і пропущена) не завантажуються знову
+    site2 = FakeSite()  # second run: old postings (and the skipped one) are not downloaded again
     added2 = pl.scrape(client(site2), raw_dir=tmp_path, limit=10, log=lambda *_: None)
     assert [e["id"] for e in added2] == ["5", "6"]
     assert not any(u.endswith(("/O1", "/O2", "/O3", "/O4")) for u in site2.requests)

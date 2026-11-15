@@ -1,8 +1,8 @@
-"""Складні та навмисно зламані вакансії для перевірки стійкості парсера.
+"""Hard and deliberately broken job postings for testing parser robustness.
 
-Кожна вакансія містить одну «пастку» (поле edge_case у ground truth описує, що саме
-перевіряється і яка відповідь правильна). Дописуються в кінець кожного сайту генератором.
-ID лежать поза діапазонами випадкових ID, тож не перетинаються з основними вакансіями.
+Each posting contains one "trap" (the edge_case field in the ground truth describes what exactly
+is tested and what the correct answer is). The generator appends them to the end of each site.
+Their IDs lie outside the random ID ranges, so they never collide with the regular postings.
 """
 
 from mock_sites.generate import Job, base_url, detail_path
@@ -32,7 +32,7 @@ def _gdpr_text(paragraphs: int = 45) -> list[str]:
 
 
 def _broken_html() -> str:
-    # Незакриті теги, таблиця замість секцій, вимоги одним рядком через «;», без заголовків розділів.
+    # Unclosed tags, a table instead of sections, requirements on one line separated by ";", no section headings.
     return """<html><head><meta charset="utf-8"><title>Junior Python programátor | Profesia MOCK</title></head>
 <body><div class="mock-banner">MOCK — študentský prototyp SkillMiner. Vymyslené dáta.
 <div class="offer-detail" id="detail"><table><tr><td><b>Junior Python programátor<td>Hronbit Solutions

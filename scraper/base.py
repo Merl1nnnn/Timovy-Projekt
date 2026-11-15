@@ -1,4 +1,4 @@
-"""Спільний інтерфейс адаптера сайту для скрапера."""
+"""Common site adapter interface for the scraper."""
 
 from typing import Protocol
 
@@ -11,22 +11,22 @@ class SiteAdapter(Protocol):
 
     @property
     def start_url(self) -> str:
-        """Перша сторінка списку вакансій."""
+        """First page of the job list."""
         ...
 
     def detail_links(self, page: Page) -> list[str]:
-        """Абсолютні URL сторінок деталей на поточній сторінці списку."""
+        """Absolute detail-page URLs on the current list page."""
         ...
 
     def next_page(self, page: Page) -> str | None:
-        """URL наступної сторінки списку або None, якщо це остання."""
+        """URL of the next list page, or None if this is the last one."""
         ...
 
     def job_id(self, url: str) -> str:
-        """Ідентифікатор вакансії з URL деталей (ім'я файлу в data/raw)."""
+        """Job ID from the detail URL (the file name in data/raw)."""
         ...
 
 
 def links(page: Page, selector: str) -> list[str]:
-    """Абсолютні href усіх елементів за селектором (браузер сам розв'язує відносні шляхи)."""
+    """Absolute hrefs of all elements matching the selector (the browser resolves relative paths)."""
     return page.eval_on_selector_all(selector, "els => els.map(e => e.href)")

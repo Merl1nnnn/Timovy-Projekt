@@ -1,6 +1,6 @@
-# Словники для генератора мок-вакансій.
-# Канонічні назви технологій — це ground truth. Аліаси використовуються лише
-# для «брудного» відображення в тексті вакансії.
+# Vocabularies for the mock job generator.
+# Canonical technology names are the ground truth. Aliases are used only
+# for the "messy" rendering in the posting text.
 
 SPECIALIZATIONS: dict[str, dict[str, list[str]]] = {
     "Python": {
@@ -35,7 +35,7 @@ SPECIALIZATIONS: dict[str, dict[str, list[str]]] = {
     },
 }
 
-# Для QA одна з цих технологій завжди обов'язкова.
+# For QA one of these technologies is always required.
 QA_CORE_CHOICES = ["Selenium", "Cypress", "Playwright"]
 
 ALIASES: dict[str, list[str]] = {
@@ -70,7 +70,7 @@ ALIASES: dict[str, list[str]] = {
     "Git": ["git", "GIT"],
 }
 
-# Нетехнічні навички: входять у required_skills, але не в technologies.
+# Non-technical skills: part of required_skills but not of technologies.
 SOFT_SKILLS: dict[str, dict[str, list[str]]] = {
     "English": {
         "sk": ["angličtina min. B2", "aktívna znalosť anglického jazyka", "English (B2+)"],
@@ -92,7 +92,7 @@ SOFT_SKILLS: dict[str, dict[str, list[str]]] = {
 
 SENIORITY_TITLE_WORDS: dict[str, dict[str, list[str]]] = {
     "junior": {"sk": ["Junior", "Jr.", "Začínajúci"], "en": ["Junior", "Jr.", "Entry-level"]},
-    # Порожній рядок: seniority не видно в заголовку, лише з досвіду в тексті.
+    # Empty string: seniority is not in the title, only inferable from the experience in the text.
     "medior": {"sk": ["Medior", "Mid-level", ""], "en": ["Mid-level", "Medior", ""]},
     "senior": {"sk": ["Senior", "Sr.", "Skúsený"], "en": ["Senior", "Sr.", "Senior"]},
     "lead": {"sk": ["Lead", "Tech Lead", "Team Lead"], "en": ["Lead", "Tech Lead", "Principal/Lead"]},
@@ -230,7 +230,7 @@ BENEFITS: dict[str, list[str]] = {
            "pension contribution"],
 }
 
-# Канонічне місто -> варіанти відображення.
+# Canonical city -> display variants.
 CITY_DISPLAY: dict[str, list[str]] = {
     "Bratislava": ["Bratislava", "Bratislava - Staré Mesto", "Bratislava, Slovensko",
                    "Bratislava, Bratislavský kraj, Slovakia", "BA"],
@@ -249,7 +249,7 @@ EMPLOYMENT_DISPLAY: dict[str, dict[str, list[str]]] = {
     "contract": {"sk": ["živnosť", "kontrakt / živnosť"], "en": ["Contract", "Contractor (B2B)"]},
 }
 
-# Як LinkedIn показує seniority в criteria (навмисно з втратою інформації).
+# How LinkedIn shows seniority in criteria (deliberately lossy).
 LINKEDIN_LEVEL: dict[str, str] = {
     "junior": "Entry level",
     "medior": "Associate",

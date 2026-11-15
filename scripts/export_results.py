@@ -1,4 +1,4 @@
-"""Підготувати публічний JSON для фронтенду з локального jobs.jsonl."""
+"""Builds the public JSON for the frontend from the local jobs.jsonl."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -14,7 +14,7 @@ PHONE = re.compile(r'(?<!\w)(?:\+|00)\d[\d ()-]{7,}\d')
 
 
 def redact(value):
-    # Сирі HTML/тексти й довільні службові поля ніколи не експортуються.
+    # Raw HTML/text and arbitrary internal fields are never exported.
     if isinstance(value, str):
         return PHONE.sub('[phone removed]', EMAIL.sub('[email removed]', value))
     if isinstance(value, list):

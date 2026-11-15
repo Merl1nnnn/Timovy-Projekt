@@ -1,11 +1,11 @@
-"""Pydantic-схеми вакансії.
+"""Pydantic schemas for a job posting.
 
-JobExtraction — те, що повертає LLM (її JSON Schema передається моделі як structured output).
-  Поля сформульовано так, як їх буквально видно на сторінці (workplace_type замість remote: bool):
-  7B-модель на таких полях помиляється значно рідше, ніж на похідних.
-JobPosting — фінальний запис за ТЗ (remote: bool, language: sk|en, source_url).
-  Перетворення JobExtraction -> JobPosting робить parser/normalize.py.
-Семантика полів JobPosting збігається з data/ground_truth.json (docs/JOURNAL.md, етап 1).
+JobExtraction is what the LLM returns (its JSON Schema is passed to the model as structured output).
+  Fields are phrased the way they literally appear on the page (workplace_type instead of remote: bool):
+  a 7B model makes far fewer mistakes on such fields than on derived ones.
+JobPosting is the final record per the spec (remote: bool, language: sk|en, source_url).
+  parser/normalize.py converts JobExtraction -> JobPosting.
+JobPosting field semantics match data/ground_truth.json (docs/JOURNAL.md, stage 1).
 """
 
 from typing import Any, Literal
@@ -33,9 +33,9 @@ class _SalaryCheck(BaseModel):
 
 
 class JobExtraction(_SalaryCheck):
-    # extra="forbid" -> additionalProperties: false у схемі (вимога structured outputs).
-    # Усі поля без значень за замовчуванням -> усі в "required"; nullable через `| None`.
-    # Порядок полів = порядок генерації JSON моделлю.
+    # extra="forbid" -> additionalProperties: false in the schema (required by structured outputs).
+    # No field has a default -> all of them are in "required"; nullable via `| None`.
+    # Field order = the order in which the model generates the JSON.
     model_config = ConfigDict(extra="forbid")
 
     title: str = Field(description="Job title exactly as written on the page, not translated")
@@ -51,15 +51,15 @@ class JobExtraction(_SalaryCheck):
     salary_min: int | None = Field(description="Monthly gross salary lower bound")
     salary_max: int | None = Field(description="Monthly gross salary upper bound; null for 'from X'")
     salary_currency: str | None = Field(description="ISO 4217 code, e.g. EUR")
-    # language навмисно не питаємо в LLM: qwen2.5:7b стабільно ставила "Slovak" для англійських
-    # вакансій (0.38-0.56 accuracy). Мову визначає правило parser/normalize.py:detect_language.
+    # language is deliberately not requested from the LLM: qwen2.5:7b kept answering "Slovak" for English
+    # postings (0.38-0.56 accuracy). The rule parser/normalize.py:detect_language sets the language.
 
 
 class JobPosting(_SalaryCheck):
     title: str
     company: str
     location: str | None
-    remote: bool  # true для повністю віддаленої і для гібридної роботи
+    remote: bool  # true for both fully remote and hybrid work
     employment_type: EmploymentType | None
     seniority: Seniority | None
     specialization: Specialization | None
@@ -74,5 +74,5 @@ class JobPosting(_SalaryCheck):
 
 
 def llm_json_schema() -> dict[str, Any]:
-    """JSON Schema для structured output (спільна для Ollama і Claude)."""
+    """JSON Schema for structured output (shared by Ollama and Claude)."""
     return JobExtraction.model_json_schema()

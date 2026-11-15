@@ -1,7 +1,7 @@
-"""Детермінована нормалізація після LLM: аліаси технологій, міста, узгодженість списків.
+"""Deterministic post-LLM normalization: technology aliases, cities, list consistency.
 
-Словник аліасів — окремий від генератора мок-сайтів (mock_sites/vocab.py) і описує
-загальновживані варіанти назв, а не конкретні шаблони генератора.
+The alias dictionary is separate from the mock site generator (mock_sites/vocab.py) and lists
+commonly used name variants, not the generator's specific templates.
 """
 
 import re
@@ -9,7 +9,7 @@ import unicodedata
 
 from parser.schema import JobExtraction, JobPosting
 
-# Канонічна назва -> варіанти написання (порівняння без урахування регістру).
+# Canonical name -> spelling variants (case-insensitive comparison).
 CANONICAL: dict[str, list[str]] = {
     "JavaScript": ["js", "javascript", "java script", "ecmascript", "es6"],
     "TypeScript": ["ts", "typescript"],
@@ -65,7 +65,7 @@ CANONICAL: dict[str, list[str]] = {
     "Hibernate": ["hibernate", "jpa/hibernate"],
     "Oracle": ["oracle", "oracle db", "oracle database"],
     "Maven": ["maven"],
-    # нетехнічні навички
+    # non-technical skills
     "English": ["english", "angličtina", "anglický jazyk", "english language", "fluent english"],
     "Slovak": ["slovak", "slovenčina", "slovak language", "slovak or czech", "slovenský jazyk"],
     "Scrum": ["scrum", "agile", "agile/scrum", "agilný vývoj", "agile scrum", "scrum/agile"],
@@ -73,7 +73,7 @@ CANONICAL: dict[str, list[str]] = {
                       "komunikačné schopnosti", "strong communication skills"],
 }
 SOFT_SKILLS = {"English", "Slovak", "Scrum", "Communication"}
-# Основи слів (без діакритики) для розпізнавання нетехнічних навичок у вільному формулюванні.
+# Word stems (without diacritics) for recognising non-technical skills in free-form wording.
 SOFT_STEMS: dict[str, list[str]] = {
     "Slovak": ["slovak", "slovensk", "slovencin"],
     "English": ["english", "anglick", "anglictin"],
@@ -96,16 +96,16 @@ REMOTE_WORDS = ["remote", "home office", "z domu", "anywhere"]
 
 
 def fold(s: str) -> str:
-    """Нижній регістр без діакритики: 'Košice' -> 'kosice'."""
+    """Lowercase without diacritics: 'Košice' -> 'kosice'."""
     return "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c)).lower()
 
 
 _CITY_BY_FOLD = {fold(c): c for c in CITIES}
 
 
-# Хвости-позначки, які модель іноді копіює разом із назвою: "Flask – a plus", "dbt (výhodou)".
+# Marker suffixes the model sometimes copies along with the name: "Flask – a plus", "dbt (výhodou)".
 _MARKER_SUFFIX = re.compile(r"\s*[–-]\s*(a plus|nice to have|plus|bonus|výhodou)\s*$", re.IGNORECASE)
-# "2-4 years of professional experience", "min. 5 rokov praxe" — це не навичка.
+# "2-4 years of professional experience", "min. 5 rokov praxe" are not skills.
 _EXPERIENCE = re.compile(r"\d+\s*\+?\s*(?:[–-]\s*\d+\s*)?(?:years?|rok|rokov|roky)\b", re.IGNORECASE)
 
 
@@ -118,12 +118,12 @@ def normalize_skill(name: str) -> str:
     key = raw.lower()
     if key in _LOOKUP:
         return _LOOKUP[key]
-    # "Kubernetes (k8s)", "English (B2+)", "Java 17+" -> пробуємо без дужок і хвостів
+    # "Kubernetes (k8s)", "English (B2+)", "Java 17+" -> retry without parentheses and suffixes
     base = re.sub(r"\s*\(.*?\)\s*", " ", raw).strip()
     base = re.sub(r"\s*[\d.+]+$", "", base).strip()
     if base.lower() in _LOOKUP:
         return _LOOKUP[base.lower()]
-    # Нетехнічні навички довільним текстом: "great communicator", "práca v Scrum tíme", "angličtina min. B2"
+    # Non-technical skills in free text: "great communicator", "práca v Scrum tíme", "angličtina min. B2"
     folded = fold(base)
     for soft, stems in SOFT_STEMS.items():
         if any(stem in folded for stem in stems):
@@ -131,8 +131,8 @@ def normalize_skill(name: str) -> str:
     return base or raw
 
 
-# Чи згадує сторінка нетехнічну навичку. Для Slovak суворіше, ніж SOFT_STEMS:
-# "Slovakia" / "Slovensko" (країна) — не вимога знати мову.
+# Whether the page mentions a non-technical skill. Stricter than SOFT_STEMS for Slovak:
+# "Slovakia" / "Slovensko" (the country) is not a language requirement.
 _SOFT_MENTION: dict[str, re.Pattern[str]] = {
     "Slovak": re.compile(r"slovak(?!ia)|slovencin|slovensk(?:y|eho|om) jazyk"),
     "English": re.compile(r"english|anglick|anglictin"),
@@ -168,19 +168,19 @@ def normalize_location(location: str | None) -> str | None:
             if key.startswith(city_key):
                 return city
     if any(w in fold(location) for w in REMOTE_WORDS):
-        return None  # "Slovakia (Remote)", "Práca z domu" — міста немає
+        return None  # "Slovakia (Remote)", "Práca z domu": no city
     return location.strip()
 
 
-# Службові слова для визначення мови тексту (без діакритики).
+# Function words for detecting the text language (without diacritics).
 SK_STOPWORDS = {"a", "v", "na", "s", "so", "je", "pre", "sa", "z", "za", "do", "od", "aj", "alebo", "ktory",
                 "ktora", "budes", "ako", "len", "cez", "sme", "ste", "pri", "po", "k", "vo", "uz", "mas",
                 "tvoj", "nas", "nasich"}
 EN_STOPWORDS = {"the", "and", "of", "to", "with", "for", "in", "you", "we", "our", "is", "are", "will",
                 "your", "an", "at", "from", "who", "what", "or", "as"}
-# Словацький текст майже не містить англійських службових слів, тоді як словацьке оформлення
-# сайту (Profesia) додає SK-слова й до англійських вакансій. Тому порівнюємо не більшість,
-# а частку EN-слів. На мок-даних: SK-сторінки <= 0.29, EN-сторінки >= 0.38.
+# Slovak text contains almost no English function words, while the Slovak site chrome
+# (Profesia) adds SK words to English postings as well. So instead of a majority vote we use
+# the share of EN words. On mock data: SK pages <= 0.29, EN pages >= 0.38.
 EN_RATIO_THRESHOLD = 0.35
 
 
@@ -199,9 +199,9 @@ def _word_in(phrase: str, text_folded: str) -> bool:
 
 
 def move_marked_to_nice(required: list[str], nice: list[str], page_text: str) -> tuple[list[str], list[str]]:
-    """Пункт списку з позначкою «(výhodou)», «– a plus» тощо — бажаний, навіть якщо LLM поклала його в обов'язкові.
+    """A list item marked "(výhodou)", "– a plus" etc. is nice-to-have even if the LLM put it into required.
 
-    Лише для рядків-пунктів ("- ..."): у вільному тексті одне речення змішує обидва типи.
+    Only for bullet lines ("- ..."): in free text a single sentence mixes both kinds.
     """
     bullets = [fold(line) for line in page_text.splitlines() if line.startswith("- ")]
     marked = [b for b in bullets if any(m in b for m in NICE_MARKERS)]
@@ -216,15 +216,15 @@ def move_marked_to_nice(required: list[str], nice: list[str], page_text: str) ->
 
 
 def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
-    """Сирий витяг LLM -> фінальний JobPosting (канонічні назви, узгоджені списки, похідні поля)."""
+    """Raw LLM extraction -> final JobPosting (canonical names, consistent lists, derived fields)."""
     def clean(items: list[str]) -> list[str]:
         skills = [normalize_skill(s) for s in items if not is_experience(s)]
-        # Нетехнічна навичка, про яку сторінка не згадує, — вигадка моделі.
+        # A non-technical skill the page does not mention is a model hallucination.
         return dedupe([s for s in skills if s not in SOFT_SKILLS or soft_skill_mentioned(s, page_text)])
 
     required = clean(ex.required_skills)
     nice = [s for s in clean(ex.nice_to_have_skills)
-            if s.lower() not in {r.lower() for r in required}]  # обов'язкове важливіше за бажане
+            if s.lower() not in {r.lower() for r in required}]  # required takes precedence over nice-to-have
     required, nice = move_marked_to_nice(required, nice, page_text)
     # technologies = усі технічні навички з обох списків + те, що LLM поклала лише сюди.
     tech = dedupe(clean(ex.technologies) + required + nice)
@@ -233,9 +233,9 @@ def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
     return JobPosting(
         title=ex.title.strip(),
         company=ex.company.strip(),
-        # Місто не обнуляємо навіть при workplace_type=remote: якщо модель його назвала, воно
-        # зазвичай є на сторінці, а помилкове "remote" окремо ловить перевірка якості.
-        # (Раніше обнуляли — і одна помилка моделі ставала двома: remote + втрачене місто.)
+        # Keep the city even with workplace_type=remote: if the model named one, it is
+        # usually on the page, and a wrong "remote" is caught separately by the quality check.
+        # (Clearing it used to turn one model error into two: remote + a lost city.)
         location=location,
         remote=ex.workplace_type in ("hybrid", "remote"),
         employment_type=ex.employment_type,

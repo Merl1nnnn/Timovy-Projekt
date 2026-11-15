@@ -34,7 +34,7 @@ GOOD: dict[str, Any] = {
 
 
 class FakeClient:
-    """Повертає заздалегідь задані відповіді й запам'ятовує запити."""
+    """Returns predefined replies and records the requests."""
 
     name = "fake"
 
@@ -113,16 +113,16 @@ def test_normalize_lists_consistency() -> None:
                                   "nice_to_have_skills": ["javascript", "ts"], "technologies": []}))
     n = normalize(ex, "u", PAGE_TEXT + "\n- dobré komunikačné schopnosti")
     assert n.required_skills == ["JavaScript", "Communication"]
-    assert n.nice_to_have_skills == ["TypeScript"]  # дубль обов'язкового прибрано
+    assert n.nice_to_have_skills == ["TypeScript"]  # duplicate of a required skill removed
     assert n.technologies == ["JavaScript", "TypeScript"]  # без soft skills
 
 
 def test_workplace_type_maps_to_remote_and_location() -> None:
-    # повністю remote без міста -> location null
+    # fully remote without a city -> location null
     p, _ = extract(FakeClient([json.dumps(GOOD | {"workplace_type": "remote", "location": "Slovakia (Remote)"})]),
                    PAGE_TEXT, "u")
     assert p.remote is True and p.location is None
-    # модель сказала remote, але назвала місто -> місто зберігаємо (помилку remote ловить quality)
+    # the model said remote but named a city -> keep the city (quality catches the remote error)
     p, _ = extract(FakeClient([json.dumps(GOOD | {"workplace_type": "remote", "location": "Košice, Slovakia"})]),
                    PAGE_TEXT, "u")
     assert p.remote is True and p.location == "Košice"
@@ -143,7 +143,7 @@ def test_marked_bullets_move_to_nice_to_have() -> None:
     req, nice = move_marked_to_nice(["Azure", "dbt", "Airflow", "Kafka", "SQL"], ["Python"], text)
     assert req == ["Azure", "SQL"]
     assert nice == ["Python", "dbt", "Airflow", "Kafka"]
-    # у вільному тексті не чіпаємо: там одне речення містить і обов'язкові, і бажані
+    # free text is left alone: a single sentence there holds both required and nice-to-have skills
     req, nice = move_marked_to_nice(["Java"], [], "Pracovať budeš s Java. Výhodou je Kafka.")
     assert req == ["Java"]
 
@@ -153,7 +153,7 @@ def test_drops_invented_soft_skills_experience_and_markers() -> None:
                     "nice_to_have_skills": ["Kafka – a plus"], "technologies": ["2-4 roky praxe"]}
     text = PAGE_TEXT + "\nTatraSoft je firma so sídlom na Slovensku, offices in Slovakia."
     p, _ = extract(FakeClient([json.dumps(reply)]), text, "u")
-    assert p.required_skills == ["Java", "English"]  # Slovak/Scrum на сторінці не згадані
+    assert p.required_skills == ["Java", "English"]  # Slovak/Scrum are not mentioned on the page
     assert p.nice_to_have_skills == ["Kafka"]
     assert p.technologies == ["Java", "Kafka"]
 
@@ -183,7 +183,7 @@ def test_quality_flags_missing_salary_max_and_remote_contradiction() -> None:
     posting, _ = extract(FakeClient([json.dumps(reply)]), PAGE_TEXT, "u")
     report = check(posting, PAGE_TEXT)
     assert any("salary_max" in i for i in report.issues)
-    assert report.low_confidence  # суперечність remote сама по собі вже робить запис сумнівним
+    assert report.low_confidence  # the remote contradiction alone already makes the record doubtful
 
 
 def test_quality_flags_missed_salary() -> None:
@@ -214,6 +214,6 @@ def test_run_writes_jsonl_and_resumes(tmp_path: Path) -> None:
     assert rec["source_url"] == "http://localhost:8001/offer/1.html"
     assert rec["model"] == "fake" and rec["confidence"] == 1.0
 
-    assert run(FakeClient([]), raw_dir=raw, out_dir=out) == (0, 0)  # уже розпарсено -> пропуск
+    assert run(FakeClient([]), raw_dir=raw, out_dir=out) == (0, 0)  # already parsed -> skipped
     assert run(FakeClient(["broken"] * 3), raw_dir=raw, out_dir=out, force=True) == (0, 1)
     assert (out / "errors.jsonl").exists()

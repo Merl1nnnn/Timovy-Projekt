@@ -1,4 +1,4 @@
-"""Адаптер для LinkedIn MOCK: ul.jobs-search__results-list, пагінація a.pagination-next."""
+"""Adapter for the LinkedIn MOCK: ul.jobs-search__results-list, pagination a.pagination-next."""
 
 from dataclasses import dataclass
 
@@ -14,7 +14,7 @@ class LinkedInAdapter:
 
     @property
     def start_url(self) -> str:
-        # Корінь сайту робить meta-refresh; ідемо одразу на пошук, щоб уникнути гонки.
+        # The site root does a meta-refresh; go straight to search to avoid a race.
         return f"{self.base_url}/jobs/search/index.html"
 
     def detail_links(self, page: Page) -> list[str]:

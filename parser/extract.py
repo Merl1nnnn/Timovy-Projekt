@@ -1,4 +1,4 @@
-"""Витяг JobPosting із тексту сторінки через LLM: промпт, валідація Pydantic, retry."""
+"""JobPosting extraction from page text via an LLM: prompt, Pydantic validation, retry."""
 
 from pydantic import ValidationError
 
@@ -6,7 +6,7 @@ from parser.llm import LLMClient, Message
 from parser.normalize import normalize
 from parser.schema import JobExtraction, JobPosting, llm_json_schema
 
-MAX_RETRIES = 2  # додаткові спроби після першої
+MAX_RETRIES = 2  # extra attempts after the first one
 
 SYSTEM_PROMPT = """You extract structured data from one IT job posting page. Return ONLY a JSON object matching the schema.
 Ignore cookie banners, navigation, and the "Podobné ponuky" / "People also viewed" list of other jobs.
@@ -43,7 +43,7 @@ class ExtractionError(RuntimeError):
 
 
 def extract(client: LLMClient, page_text: str, source_url: str) -> tuple[JobPosting, int]:
-    """Повертає (нормалізований JobPosting, кількість спроб)."""
+    """Returns (normalized JobPosting, number of attempts)."""
     schema = llm_json_schema()
     messages: list[Message] = [{"role": "user", "content": f"Job posting page text:\n\n{page_text}"}]
     raw = ""
@@ -54,7 +54,7 @@ def extract(client: LLMClient, page_text: str, source_url: str) -> tuple[JobPost
         except ValidationError as e:
             if attempt > MAX_RETRIES:
                 raise ExtractionError(f"невалідний JSON після {attempt} спроб: {e}", attempt, raw) from e
-            # Повертаємо моделі її відповідь і помилку валідації — нехай виправить.
+            # Send the model its reply and the validation error so it can fix it.
             messages += [
                 {"role": "assistant", "content": raw},
                 {"role": "user", "content": "Your JSON failed validation:\n"

@@ -1,15 +1,15 @@
-"""Скрапер РЕАЛЬНОЇ Profesia.sk (категорія «Informačné technológie»).
+"""Scraper for the REAL Profesia.sk (category "Informačné technológie").
 
-На відміну від мок-скрапера:
-- звичайний HTTP (httpx) замість Playwright: Profesia рендерить сторінки на сервері;
-- «ввічливий» режим: затримка між запитами, чесний User-Agent, перевірка robots.txt,
-  зупинка на 403/429, обмеження кількості нових вакансій за запуск;
-- інкрементальність: уже завантажені вакансії не завантажуються повторно;
-- зберігається лише блок <main id="detail"> без розділу «Kontakt» (контактна особа, телефон),
-  а email і телефони в решті тексту замінюються заглушками — менше персональних даних на диску.
+Unlike the mock scraper:
+- plain HTTP (httpx) instead of Playwright: Profesia renders pages on the server;
+- "polite" mode: a delay between requests, an honest User-Agent, a robots.txt check,
+  stop on 403/429, a cap on new postings per run;
+- incremental: postings that were already downloaded are not downloaded again;
+- only the <main id="detail"> block is stored, without the "Kontakt" section (contact person, phone),
+  and e-mails and phone numbers in the rest of the text are replaced with placeholders, so less personal data lands on disk.
 
-Дані лежать окремо від мок-даних: data/real/raw/profesia/ (index.json у тому ж форматі).
-Запуск:
+Data is kept apart from mock data: data/real/raw/profesia/ (index.json in the same format).
+Usage:
     uv run python -m scraper.profesia_live --limit 20
 """
 
@@ -35,25 +35,25 @@ START_PATH = "/praca/informacne-technologie/"
 SITE = "profesia"
 USER_AGENT = "SkillMiner/0.1 (TUKE student team project; +https://github.com/Merl1nnnn/Timovy-Projekt)"
 
-# Посилання на деталі в рядку списку: <li class="list-row"><h2><a id="offer123" href="/praca/firma/O123?search_id=...">
+# Detail link in a list row: <li class="list-row"><h2><a id="offer123" href="/praca/firma/O123?search_id=...">
 _DETAIL_LINK = re.compile(r'<a\s[^>]*id="offer\d+"[^>]*href="([^"]+)"')
 _NEXT_LINK = re.compile(r'<a\s[^>]*href="([^"]+)"[^>]*class="next"')
 _JOB_ID = re.compile(r"/O(\d+)(?:[/?#]|$)")
 _MAIN = re.compile(r'<main\b[^>]*\bid="detail"[^>]*>.*?</main>', re.S)
-# Розділ контактів і все після нього (кнопки «поділитися», службові мітки) — до кінця <main>.
+# The contact section and everything after it (share buttons, service labels) up to the end of <main>.
 _CONTACT = re.compile(r"<h4>\s*(?:Kontakt|Contact|Kapcsolat)\s*</h4>.*(?=</main>)", re.S)
-# Брендовані шаблони компаній мають власну розмітку: ім'я йде одразу після мітки (можливо, через теги).
+# Branded company templates use their own markup: the name follows right after the label (possibly across tags).
 _CONTACT_NAME = re.compile(r"((?:Kontaktná osoba|Contact person|Kapcsolattartó)\s*:?)((?:\s*<[^>]+>)*)\s*([^<]{2,80})")
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}")
 _PHONE = re.compile(r"(?<![\w/])(?:\+|00)\d[\d ()/-]{7,}\d")
 
 
 class Blocked(RuntimeError):
-    """Сайт відповів 403/429 — далі не продовжуємо, щоб не створювати навантаження."""
+    """The site answered 403/429; stop here so as not to create load."""
 
 
 def detail_links(list_html: str) -> list[str]:
-    """Абсолютні URL деталей без трекінгових параметрів (?search_id=...), у порядку появи."""
+    """Absolute detail URLs without tracking parameters (?search_id=...), in order of appearance."""
     out: list[str] = []
     for href in _DETAIL_LINK.findall(list_html):
         path = htmllib.unescape(href).split("?", 1)[0]
@@ -83,7 +83,7 @@ def redact(text: str) -> str:
 
 
 def extract_detail(page_html: str) -> str | None:
-    """Мінімальний HTML для парсера: лише <main id="detail"> без контактів. None — невідомий шаблон."""
+    """Minimal HTML for the parser: only <main id="detail"> without contacts. None for an unknown template."""
     m = _MAIN.search(page_html)
     if not m:
         return None
@@ -93,7 +93,7 @@ def extract_detail(page_html: str) -> str | None:
 
 
 class PoliteClient:
-    """HTTP-клієнт із затримкою між запитами та перевіркою robots.txt."""
+    """HTTP client with a delay between requests and a robots.txt check."""
 
     def __init__(self, delay: float = 3.0, http: httpx.Client | None = None, check_robots: bool = True) -> None:
         self.delay = delay
@@ -134,9 +134,9 @@ def _save_index(path: Path, index: list[dict[str, Any]]) -> None:
 
 def scrape(client: PoliteClient, raw_dir: Path = REAL_RAW_DIR, limit: int = 20, max_pages: int = 5,
            log: Any = print) -> list[dict[str, Any]]:
-    """Завантажує до `limit` НОВИХ вакансій. Повертає лише нові записи індексу.
+    """Downloads up to `limit` NEW postings. Returns only the new index entries.
 
-    Індекс зберігається після кожної вакансії: перерваний запуск не втрачає вже завантажене.
+    The index is saved after every posting, so an interrupted run keeps what it already downloaded.
     """
     out_dir = raw_dir / SITE
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -158,7 +158,7 @@ def scrape(client: PoliteClient, raw_dir: Path = REAL_RAW_DIR, limit: int = 20, 
                 break
             known.add(detail_url)
             content = extract_detail(client.get(detail_url))
-            if content is None:  # нестандартний шаблон — запам'ятовуємо, щоб не качати знову
+            if content is None:  # non-standard template: remember it so it is not downloaded again
                 skipped.append({"url": detail_url, "reason": "no <main id=detail>"})
                 _save_index(out_dir / "skipped.json", skipped)
                 log(f"  пропущено (невідомий шаблон): {detail_url}")

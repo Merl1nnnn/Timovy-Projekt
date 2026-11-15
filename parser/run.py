@@ -1,8 +1,8 @@
-"""Парсить усі сирі сторінки з data/raw/ через LLM -> data/parsed/jobs.jsonl.
+"""Parses all raw pages from data/raw/ with the LLM -> data/parsed/jobs.jsonl.
 
-Повторний запуск пропускає вже розпарсені URL (прогін на Ollama довгий); --force — усе заново.
-Запуск: uv run python -m parser.run [--site profesia|linkedin] [--limit N] [--force]
-       uv run python -m parser.run --real   # реальні вакансії: data/real/raw -> data/real/parsed, без публікації
+A rerun skips already parsed URLs (an Ollama run is slow); --force starts from scratch.
+Usage: uv run python -m parser.run [--site profesia|linkedin] [--limit N] [--force]
+       uv run python -m parser.run --real   # real postings: data/real/raw -> data/real/parsed, no publishing
 """
 
 import argparse
@@ -66,7 +66,7 @@ def parse_entry(client: LLMClient, entry: dict[str, Any], raw_dir: Path) -> dict
 
 def run(client: LLMClient, raw_dir: Path = RAW_DIR, out_dir: Path = PARSED_DIR, site: str | None = None,
         limit: int | None = None, force: bool = False) -> tuple[int, int]:
-    """Повертає (успішно, помилок) за цей запуск."""
+    """Returns (succeeded, failed) for this run."""
     out_dir.mkdir(parents=True, exist_ok=True)
     jobs_path, errors_path = out_dir / "jobs.jsonl", out_dir / "errors.jsonl"
     if force:
@@ -90,7 +90,7 @@ def run(client: LLMClient, raw_dir: Path = RAW_DIR, out_dir: Path = PARSED_DIR, 
             print(f"[{i}/{len(todo)}] ПОМИЛКА {entry['url']}: {str(e)[:150]}")
             continue
         ok += 1
-        with jobs_path.open("a", encoding="utf-8") as f:  # дописуємо одразу: перерваний запуск не втрачає роботу
+        with jobs_path.open("a", encoding="utf-8") as f:  # append immediately so an interrupted run keeps its work
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
         flag = " LOW" if record["low_confidence"] else ""
         print(f"[{i}/{len(todo)}] {record['elapsed_s']:>5}s conf={record['confidence']:.2f}{flag}  {record['title']}")
@@ -115,8 +115,8 @@ def main() -> None:
         raise SystemExit(f"LLM недоступна ({e}). Чи запущено Ollama (ollama serve)?")
     print(f"Готово: {ok} успішно, {failed} з помилками -> {parsed_dir}")
     if args.real:
-        # Реальні дані не змішуються з синтетичними і не публікуються без ручної перевірки
-        # (дозвіл сайту, персональні дані). Публікація вручну: scripts/publish_results.py --kind real.
+        # Real data is never mixed with synthetic data or published without a manual review
+        # (site permission, personal data). Publish manually: scripts/publish_results.py --kind real.
         print("Реальні дані не публікуються автоматично.")
         return
     enabled = os.getenv("AUTO_PUBLISH", "true").lower() not in {"0", "false", "no"}
