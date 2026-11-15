@@ -88,7 +88,9 @@ for canon, variants in CANONICAL.items():
         _LOOKUP[v.lower()] = canon
 
 CITIES = ["Bratislava", "Košice", "Žilina", "Prešov", "Nitra", "Banská Bystrica", "Trnava",
-          "Trenčín", "Martin", "Poprad"]
+          "Trenčín", "Martin", "Poprad", "Trebišov", "Michalovce", "Zvolen", "Piešťany", "Prievidza",
+          "Liptovský Mikuláš", "Ružomberok", "Spišská Nová Ves", "Humenné", "Komárno", "Nové Zámky", "Levice",
+          "Lučenec", "Revúca", "Rimavská Sobota", "Považská Bystrica", "Dubnica nad Váhom", "Senica", "Skalica"]
 CITY_ABBREV = {"ba": "Bratislava", "ke": "Košice", "za": "Žilina"}
 REMOTE_WORDS = ["remote", "home office", "z domu", "anywhere"]
 

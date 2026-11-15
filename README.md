@@ -50,6 +50,22 @@ uv run python -m parser.run
 
 The prototype collects from **local mock sites only**, not real Profesia or LinkedIn. Raw HTML is stored in `data/raw/`; extraction results in `data/parsed/jobs.jsonl`. The code includes the parser, normalisation, heuristic quality checks, mock-site generator and scraper. It does not yet implement the complete API, database, ESCO mapping or LLM validator described in the SRS; `app/` and `storage/` are placeholders.
 
+### Real postings from Profesia.sk (experimental)
+
+`scraper/profesia_live.py` downloads IT postings from the real Profesia.sk category *Informačné technológie* over plain HTTP:
+
+```sh
+uv run python -m scraper.profesia_live --limit 20
+uv run python -m parser.run --real
+```
+
+- It checks `robots.txt`, waits at least 3 s (default) between requests, sends an identifying User-Agent and stops on HTTP 403/429.
+- It is incremental. Already downloaded postings are skipped, and `--limit` caps new postings per run.
+- Only the `<main id="detail">` block is stored. The contact section, contact person names, e-mail addresses and phone numbers are removed before saving.
+- Real data lives in `data/real/` (git-ignored), separate from mock data. `parser.run --real` **never publishes automatically**. Publish manually with `scripts/publish_results.py --kind real` only after the team has confirmed permission to use the data.
+- LinkedIn is intentionally not scraped: its terms prohibit automated access without permission.
+- Real pages are longer than mock pages. With Ollama, set `OLLAMA_NUM_CTX=8192`.
+
 ### Automatic publishing settings
 
 Defaults in `.env.example`:
@@ -132,4 +148,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The 62 automated tests cover extraction, normalisation, quality checks, mock sites, the Chromium scraper, export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
+The 69 automated tests cover extraction, normalisation, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.

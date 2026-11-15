@@ -2,6 +2,7 @@
 
 Повторний запуск пропускає вже розпарсені URL (прогін на Ollama довгий); --force — усе заново.
 Запуск: uv run python -m parser.run [--site profesia|linkedin] [--limit N] [--force]
+       uv run python -m parser.run --real   # реальні вакансії: data/real/raw -> data/real/parsed, без публікації
 """
 
 import argparse
@@ -24,6 +25,8 @@ from scripts.publish_results import publish
 ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT / "data" / "raw"
 PARSED_DIR = ROOT / "data" / "parsed"
+REAL_RAW_DIR = ROOT / "data" / "real" / "raw"
+REAL_PARSED_DIR = ROOT / "data" / "real" / "parsed"
 
 
 def load_index(raw_dir: Path, site: str | None = None) -> list[dict[str, Any]]:
@@ -101,12 +104,21 @@ def main() -> None:
     ap.add_argument("--limit", type=int, help="обробити не більше N сторінок")
     ap.add_argument("--force", action="store_true", help="видалити попередні результати й парсити все заново")
     ap.add_argument("--no-publish", action="store_true", help="лише локальна обробка без публікації")
+    ap.add_argument("--real", action="store_true",
+                    help="реальні вакансії (data/real/); результати НЕ публікуються автоматично")
     args = ap.parse_args()
+    raw_dir, parsed_dir = (REAL_RAW_DIR, REAL_PARSED_DIR) if args.real else (RAW_DIR, PARSED_DIR)
     try:
-        ok, failed = run(make_client(), site=args.site, limit=args.limit, force=args.force)
+        ok, failed = run(make_client(), raw_dir=raw_dir, out_dir=parsed_dir, site=args.site,
+                         limit=args.limit, force=args.force)
     except httpx.ConnectError as e:
         raise SystemExit(f"LLM недоступна ({e}). Чи запущено Ollama (ollama serve)?")
-    print(f"Готово: {ok} успішно, {failed} з помилками -> data/parsed/")
+    print(f"Готово: {ok} успішно, {failed} з помилками -> {parsed_dir}")
+    if args.real:
+        # Реальні дані не змішуються з синтетичними і не публікуються без ручної перевірки
+        # (дозвіл сайту, персональні дані). Публікація вручну: scripts/publish_results.py --kind real.
+        print("Реальні дані не публікуються автоматично.")
+        return
     enabled = os.getenv("AUTO_PUBLISH", "true").lower() not in {"0", "false", "no"}
     if not args.no_publish and enabled and (PARSED_DIR / "jobs.jsonl").exists():
         try:
