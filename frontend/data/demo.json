@@ -1,0 +1,33 @@
+{
+  "company_headcounts": {
+    "Bystrica Labs": 34,
+    "PixelPress Digital": 42,
+    "Danubia Data a.s.": 680,
+    "Sigma Kódex s.r.o.": 112,
+    "Orava Analytics": 27,
+    "BlueOx Fintech": 310,
+    "Hronbit Solutions": 74,
+    "Lipa Logistics IT": 520,
+    "Mostík Software s.r.o.": 22,
+    "TatraSoft s.r.o.": 195,
+    "Carpathia Cloud s.r.o.": 128,
+    "Koala Byte s.r.o.": 18,
+    "Zelený Kód a.s.": 285,
+    "Vrchol Systems a.s.": 930
+  },
+  "versions": {
+    "linkedin:4009826165": [
+      {"days_ago": 27, "salary_min": 3100, "salary_max": 3900},
+      {"days_ago": 17, "salary_min": 3400, "salary_max": 4200},
+      {"days_ago": 5, "salary_min": 3800, "salary_max": 4600}
+    ],
+    "linkedin:4004886188": [
+      {"days_ago": 24, "salary_min": 3000, "salary_max": 4300},
+      {"days_ago": 8, "salary_min": 3500, "salary_max": 5000, "remote": false}
+    ],
+    "linkedin:3924272172": [
+      {"days_ago": 25, "salary_min": 1900, "remote": false},
+      {"days_ago": 3, "salary_min": 2200, "remote": true}
+    ]
+  }
+}

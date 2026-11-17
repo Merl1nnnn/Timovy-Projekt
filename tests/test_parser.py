@@ -213,7 +213,15 @@ def test_run_writes_jsonl_and_resumes(tmp_path: Path) -> None:
     rec = json.loads((out / "jobs.jsonl").read_text(encoding="utf-8"))
     assert rec["source_url"] == "http://localhost:8001/offer/1.html"
     assert rec["model"] == "fake" and rec["confidence"] == 1.0
+    assert run(FakeClient([]), raw_dir=raw, out_dir=out) == (0, 0)
 
-    assert run(FakeClient([]), raw_dir=raw, out_dir=out) == (0, 0)  # уже розпарсено -> пропуск
+    changed_page = PAGE_TEXT.replace(GOOD["title"], "Senior QA Engineer")
+    (raw / "profesia" / "1.html").write_text(f"<p>{changed_page}</p>", encoding="utf-8")
+    updated = GOOD | {"title": "Senior QA Engineer"}
+    assert run(FakeClient([json.dumps(updated)]), raw_dir=raw, out_dir=out) == (1, 0)
+    current = (out / "jobs.jsonl").read_text(encoding="utf-8")
+    assert json.loads(current)["title"] == updated["title"]
+    assert json.loads(current)["text_hash"] != rec["text_hash"]
     assert run(FakeClient(["broken"] * 3), raw_dir=raw, out_dir=out, force=True) == (0, 1)
     assert (out / "errors.jsonl").exists()
+    assert (out / "jobs.jsonl").read_text(encoding="utf-8") == current

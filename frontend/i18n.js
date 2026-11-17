@@ -33,7 +33,89 @@ const MESSAGES = {
 };
 function readPreference(key) { try { return localStorage.getItem(key); } catch { return null; } }
 function savePreference(key, value) { try { localStorage.setItem(key, value); } catch { /* Private browsing may disable storage. */ } }
-const savedLanguage = readPreference('skillminer-language');
-const browserLanguage = navigator.language.split('-')[0];
-let language = Object.hasOwn(MESSAGES, savedLanguage) ? savedLanguage : (Object.hasOwn(MESSAGES, browserLanguage) ? browserLanguage : 'sk');
-function t(key, values = {}) { return MESSAGES[language][key].replace(/\{(\w+)\}/g, (_, name) => values[name] ?? ''); }
+function t(key, values = {}) {
+  return (MESSAGES[language][key] ?? MESSAGES.en[key] ?? key)
+    .replace(/\{(\w+)\}/g, (_, name) => values[name] ?? '');
+}
+
+const DASHBOARD_MESSAGES = {
+  en: {
+    navigation: 'Dashboard navigation', overview: 'Overview', analytics: 'Analytics',
+    dashboardTitle: 'IT jobs dashboard', dashboardIntro: 'Explore vacancies, hiring activity and advertised pay.',
+    syntheticNotice: 'Demo dataset · Vacancies, company sizes and example histories are synthetic.',
+    checked: 'Snapshot checked {date}', refreshError: 'The latest snapshot could not be loaded. Showing the previous snapshot.',
+    mockRunning: 'Checking the local demo sources…', mockFailed: 'The local demo check failed.',
+    changes: 'Changes in vacancies', noChanges: 'No vacancy changes have been recorded.',
+    position: 'Position', company: 'Company', location: 'City', allLocations: 'All cities', salary: 'Salary',
+    company_size: 'Company size', company_headcount: 'Employees', headcount: '{n} employees',
+    allSizes: 'All sizes', small: 'Small · 1–49', medium: 'Medium · 50–249', large: 'Large · 250+', unknown: 'Unknown',
+    possibleDuplicates: 'Possible duplicates', copies: '{n} linked sources', demoLink: 'Demo link ↗',
+    salary_period: 'Pay period', month: 'month', hour: 'hour', year: 'year',
+    activity: 'Vacancies over time', activityNote: 'Unique active vacancies, new listings and updates for the selected filters.',
+    period: 'Time range', last7: 'Last 7 days', last30: 'Last 30 days', last90: 'Last 90 days',
+    active: 'Active', added: 'New', updatedSeries: 'Changed', date: 'Date', chartValues: 'View chart data',
+    distribution: 'Vacancy distribution', salaryHistory: 'Salary history', salaryMinimum: 'Advertised minimum',
+    historyNote: 'Minimum salary at each recorded change. The table shows the full advertised range.',
+    noHistory: 'There are no comparable salary changes for this vacancy yet.',
+    payComparison: 'Pay by company size', payMethod: 'Median advertised minimum by size. The smallest group with salary data is the reference. Each currency and pay period is shown separately.',
+    baseline: 'Reference', difference: 'Difference', sample: 'Vacancies', noSalaryData: 'No comparable salaries for these filters.',
+    firstSeen: 'First seen', lastSeen: 'Last checked', lastChanged: 'Last updated', publishedDate: 'Published',
+    employment_type: 'Employment type', required_skills: 'Required skills', nice_to_have_skills: 'Nice-to-have skills',
+    salary_min: 'Minimum salary', salary_max: 'Maximum salary', salary_currency: 'Currency',
+    yes: 'Yes', no: 'No', titleField: 'Job title', showingPeriod: 'Showing period {period}', clearPeriod: 'Clear period',
+    queueEmpty: 'No history available for this selection.'
+  },
+  sk: {
+    navigation: 'Navigácia prehľadu', overview: 'Prehľad', analytics: 'Analytika',
+    dashboardTitle: 'Prehľad IT ponúk', dashboardIntro: 'Pracovné ponuky, vývoj dopytu a zverejnené mzdy.',
+    syntheticNotice: 'Demo údaje · Ponuky, veľkosti firiem a ukážková história sú syntetické.',
+    checked: 'Snímka skontrolovaná {date}', refreshError: 'Najnovšiu snímku sa nepodarilo načítať. Zobrazuje sa predchádzajúca snímka.',
+    mockRunning: 'Kontrolujú sa lokálne demo zdroje…', mockFailed: 'Kontrola lokálnych demo zdrojov zlyhala.',
+    changes: 'Zmeny v ponukách', noChanges: 'Zatiaľ neboli zaznamenané žiadne zmeny ponúk.',
+    position: 'Pozícia', company: 'Spoločnosť', location: 'Mesto', allLocations: 'Všetky mestá', salary: 'Mzda',
+    company_size: 'Veľkosť firmy', company_headcount: 'Zamestnanci', headcount: 'Počet zamestnancov: {n}',
+    allSizes: 'Všetky veľkosti', small: 'Malá · 1–49', medium: 'Stredná · 50–249', large: 'Veľká · 250+', unknown: 'Neznáma',
+    possibleDuplicates: 'Možné duplikáty', copies: 'Priradené zdroje: {n}', demoLink: 'Demo odkaz ↗',
+    salary_period: 'Obdobie mzdy', month: 'mesiac', hour: 'hodina', year: 'rok',
+    activity: 'Vývoj pracovných ponúk', activityNote: 'Unikátne aktívne, nové a zmenené ponuky podľa zvolených filtrov.',
+    period: 'Obdobie', last7: 'Posledných 7 dní', last30: 'Posledných 30 dní', last90: 'Posledných 90 dní',
+    active: 'Aktívne', added: 'Nové', updatedSeries: 'Zmenené', date: 'Dátum', chartValues: 'Zobraziť hodnoty grafu',
+    distribution: 'Rozdelenie ponúk', salaryHistory: 'História mzdy', salaryMinimum: 'Zverejnené minimum',
+    historyNote: 'Minimálna mzda pri každej zaznamenanej zmene. Tabuľka uvádza celé zverejnené rozpätie.',
+    noHistory: 'Táto ponuka zatiaľ nemá porovnateľné zmeny mzdy.',
+    payComparison: 'Mzdy podľa veľkosti firmy', payMethod: 'Medián zverejneného minima. Referenciou je najmenšia skupina s údajmi o mzde. Meny a obdobia mzdy sú uvedené samostatne.',
+    baseline: 'Referencia', difference: 'Rozdiel', sample: 'Ponuky', noSalaryData: 'Pre tieto filtre nie sú dostupné porovnateľné mzdy.',
+    firstSeen: 'Prvý záznam', lastSeen: 'Posledná kontrola', lastChanged: 'Posledná zmena', publishedDate: 'Zverejnené',
+    employment_type: 'Typ úväzku', required_skills: 'Požadované zručnosti', nice_to_have_skills: 'Zručnosti výhodou',
+    salary_min: 'Minimálna mzda', salary_max: 'Maximálna mzda', salary_currency: 'Mena',
+    yes: 'Áno', no: 'Nie', titleField: 'Názov pozície', showingPeriod: 'Obdobie {period}', clearPeriod: 'Zrušiť výber obdobia',
+    queueEmpty: 'Pre tento výber nie je dostupná história.'
+  },
+  uk: {
+    navigation: 'Навігація дашбордом', overview: 'Огляд', analytics: 'Аналітика',
+    dashboardTitle: 'Дашборд IT-вакансій', dashboardIntro: 'Вакансії, динаміка найму й оголошені зарплати.',
+    syntheticNotice: 'Демодані · Вакансії, розміри компаній та приклади історії вигадані.',
+    checked: 'Знімок перевірено {date}', refreshError: 'Останній знімок недоступний. Показуємо попередній знімок.',
+    mockRunning: 'Перевіряємо локальні демоджерела…', mockFailed: 'Не вдалося перевірити локальні демоджерела.',
+    changes: 'Зміни у вакансіях', noChanges: 'Змін у вакансіях ще не зафіксовано.',
+    position: 'Посада', company: 'Компанія', location: 'Місто', allLocations: 'Усі міста', salary: 'Зарплата',
+    company_size: 'Розмір компанії', company_headcount: 'Працівники', headcount: 'Працівників: {n}',
+    allSizes: 'Усі розміри', small: 'Мала · 1–49', medium: 'Середня · 50–249', large: 'Велика · 250+', unknown: 'Невідомо',
+    possibleDuplicates: 'Можливі дублікати', copies: 'Пов’язані джерела: {n}', demoLink: 'Демопосилання ↗',
+    salary_period: 'Період оплати', month: 'місяць', hour: 'година', year: 'рік',
+    activity: 'Динаміка вакансій', activityNote: 'Унікальні активні, нові та змінені вакансії за вибраними фільтрами.',
+    period: 'Період', last7: 'Останні 7 днів', last30: 'Останні 30 днів', last90: 'Останні 90 днів',
+    active: 'Активні', added: 'Нові', updatedSeries: 'Змінені', date: 'Дата', chartValues: 'Показати дані графіка',
+    distribution: 'Розподіл вакансій', salaryHistory: 'Історія зарплати', salaryMinimum: 'Оголошений мінімум',
+    historyNote: 'Мінімальна зарплата на дату кожної зміни. У таблиці наведено повний оголошений діапазон.',
+    noHistory: 'Для цієї вакансії ще немає порівнюваних змін зарплати.',
+    payComparison: 'Зарплати за розміром компанії', payMethod: 'Медіана оголошеної нижньої межі. База порівняння — найменша група з даними про зарплати. Валюти й періоди оплати показано окремо.',
+    baseline: 'База', difference: 'Різниця', sample: 'Вакансії', noSalaryData: 'За цими фільтрами немає порівнюваних зарплат.',
+    firstSeen: 'Уперше помічено', lastSeen: 'Остання перевірка', lastChanged: 'Остання зміна', publishedDate: 'Опубліковано',
+    employment_type: 'Тип зайнятості', required_skills: 'Обов’язкові навички', nice_to_have_skills: 'Бажані навички',
+    salary_min: 'Мінімальна зарплата', salary_max: 'Максимальна зарплата', salary_currency: 'Валюта',
+    yes: 'Так', no: 'Ні', titleField: 'Назва вакансії', showingPeriod: 'Період {period}', clearPeriod: 'Скинути період',
+    queueEmpty: 'Для цієї вибірки немає історії.'
+  }
+};
+for (const [code, messages] of Object.entries(DASHBOARD_MESSAGES)) Object.assign(MESSAGES[code], messages);

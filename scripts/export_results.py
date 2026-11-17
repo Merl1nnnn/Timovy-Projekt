@@ -40,7 +40,22 @@ def export(source: Path, output: Path, kind: str) -> dict:
             continue
         if key:
             seen.add(key)
-        jobs.append({k: redact(record[k]) for k in FIELDS if k in record})
+        job = {k: redact(record[k]) for k in FIELDS if k in record}
+        for stamp in ('scraped_at', 'published_at'):
+            if isinstance(record.get(stamp), str):
+                try:
+                    datetime.fromisoformat(record[stamp])
+                except ValueError:
+                    continue
+                job[stamp] = record[stamp]
+        if record.get('salary_period') in ('hour', 'month', 'year'):
+            job['salary_period'] = record['salary_period']
+        if type(record.get('company_headcount')) is int and record['company_headcount'] > 0:
+            job['company_headcount'] = record['company_headcount']
+        digest = record.get('text_hash')
+        if kind == 'synthetic' and isinstance(digest, str) and re.fullmatch('[a-f0-9]{64}', digest):
+            job['text_hash'] = digest
+        jobs.append(job)
     if not jobs:
         raise ValueError('Порожній набір: попередня публікація не буде замінена')
     payload = {'schema_version': 1, 'dataset_kind': kind,
