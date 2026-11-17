@@ -1,3 +1,7 @@
+# NLP development branch
+
+You are on **feature/nlp**, based on the existing main backend. Start with [NLP changes and manual checks](docs/NLP.md). Publication is disabled by default in this branch. The tests and model checks prepared in this change have **not been run**; the user will perform validation.
+
 # SkillMiner
 
 A student team project for analysing IT job postings and mapping skills to ESCO. Requirements: [English SRS](docs/SRS_SkillMiner_EN.docx) · [Slovak SRS](docs/SRS_SkillMiner_SK.docx).
@@ -46,7 +50,7 @@ gh auth login
 uv run python -m parser.run
 ```
 
-**When parsing finishes, results are automatically sent to the shared repository and GitHub Pages is updated.** Each participant must have write access to `Merl1nnnn/Timovy-Projekt`. Downloading the code alone does not grant permission to update the shared site. GitHub credentials remain on the participant's own computer.
+**In this development branch automatic publishing is disabled.** The description below documents the main-branch deployment; do not enable it while checking NLP changes. Each participant must have write access to `Merl1nnnn/Timovy-Projekt`. Downloading the code alone does not grant permission to update the shared site. GitHub credentials remain on the participant's own computer.
 
 The prototype collects from **local mock sites only**, not real Profesia or LinkedIn. Raw HTML is stored in `data/raw/`; extraction results in `data/parsed/jobs.jsonl`. The code includes the parser, normalisation, heuristic quality checks, mock-site generator and scraper. It does not yet implement the complete API, database, ESCO mapping or LLM validator described in the SRS; `app/` and `storage/` are placeholders.
 
@@ -55,9 +59,9 @@ The prototype collects from **local mock sites only**, not real Profesia or Link
 Defaults in `.env.example`:
 
 ```dotenv
-AUTO_PUBLISH=true
+AUTO_PUBLISH=false
 SKILLMINER_REPOSITORY=Merl1nnnn/Timovy-Projekt
-SKILLMINER_BRANCH=main
+SKILLMINER_BRANCH=feature/nlp
 DATASET_KIND=synthetic
 ```
 
@@ -132,4 +136,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The 62 automated tests cover extraction, normalisation, quality checks, mock sites, the Chromium scraper, export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
+The baseline and new automated tests cover extraction, normalisation, quality checks, mock sites, the Chromium scraper, export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.

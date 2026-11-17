@@ -8,7 +8,9 @@ import re
 FIELDS = ('title', 'company', 'location', 'remote', 'employment_type', 'seniority',
           'specialization', 'required_skills', 'nice_to_have_skills', 'technologies',
           'salary_min', 'salary_max', 'salary_currency', 'language', 'source_url',
-          'site', 'id', 'confidence', 'low_confidence', 'quality_issues', 'model', 'parsed_at')
+          'site', 'id', 'confidence', 'low_confidence', 'quality_issues', 'model', 'parsed_at',
+          'schema_version', 'validation_status', 'review_required', 'certificates', 'role_specializations',
+          'salary_period', 'salary_basis', 'salary_monthly_min', 'salary_monthly_max', 'region')
 EMAIL = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}')
 PHONE = re.compile(r'(?<!\w)(?:\+|00)\d[\d ()-]{7,}\d')
 
@@ -40,6 +42,8 @@ def export(source: Path, output: Path, kind: str) -> dict:
             continue
         if key:
             seen.add(key)
+        if record.get('schema_version') != 2 or record.get('validation_status') != 'validated' or record.get('review_required'):
+            continue
         jobs.append({k: redact(record[k]) for k in FIELDS if k in record})
     if not jobs:
         raise ValueError('Порожній набір: попередня публікація не буде замінена')

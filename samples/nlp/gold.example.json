@@ -1,0 +1,12 @@
+[
+  {
+    "source_url": "https://example.invalid/nlp/sk",
+    "required_skills": ["Python", "Django", "Docker", "Kubernetes", "English"],
+    "nice_to_have_skills": ["CKA"],
+    "technologies": ["Python", "Django", "Docker", "Kubernetes"],
+    "certificates": ["CKA"],
+    "seniority": "senior",
+    "specialization": "Backend",
+    "language": "sk"
+  }
+]

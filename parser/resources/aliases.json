@@ -1,0 +1,568 @@
+{
+  "version": "nlp-1",
+  "entries": [
+    {
+      "canonical": "JavaScript",
+      "kind": "technology",
+      "aliases": [
+        "js",
+        "javascript",
+        "java script",
+        "ecmascript",
+        "es6"
+      ]
+    },
+    {
+      "canonical": "TypeScript",
+      "kind": "technology",
+      "aliases": [
+        "ts",
+        "typescript"
+      ]
+    },
+    {
+      "canonical": "Python",
+      "kind": "technology",
+      "aliases": [
+        "python3",
+        "python 3",
+        "py"
+      ]
+    },
+    {
+      "canonical": "Java",
+      "kind": "technology",
+      "aliases": [
+        "java 17",
+        "java 21",
+        "java se"
+      ]
+    },
+    {
+      "canonical": "Kubernetes",
+      "kind": "technology",
+      "aliases": [
+        "k8s",
+        "kubernetes",
+        "openshift/kubernetes"
+      ]
+    },
+    {
+      "canonical": "Docker",
+      "kind": "technology",
+      "aliases": [
+        "docker",
+        "dockerfile",
+        "containers (docker)"
+      ]
+    },
+    {
+      "canonical": "PostgreSQL",
+      "kind": "technology",
+      "aliases": [
+        "postgres",
+        "postgresql",
+        "postgressql",
+        "postgresql database",
+        "psql"
+      ]
+    },
+    {
+      "canonical": "Spring Boot",
+      "kind": "technology",
+      "aliases": [
+        "spring boot",
+        "springboot",
+        "spring-boot"
+      ]
+    },
+    {
+      "canonical": "React",
+      "kind": "technology",
+      "aliases": [
+        "react",
+        "reactjs",
+        "react.js"
+      ]
+    },
+    {
+      "canonical": "Vue.js",
+      "kind": "technology",
+      "aliases": [
+        "vue",
+        "vuejs",
+        "vue.js",
+        "vue 3"
+      ]
+    },
+    {
+      "canonical": "Angular",
+      "kind": "technology",
+      "aliases": [
+        "angular",
+        "angularjs"
+      ]
+    },
+    {
+      "canonical": "Next.js",
+      "kind": "technology",
+      "aliases": [
+        "nextjs",
+        "next.js"
+      ]
+    },
+    {
+      "canonical": "Node.js",
+      "kind": "technology",
+      "aliases": [
+        "node",
+        "nodejs",
+        "node.js"
+      ]
+    },
+    {
+      "canonical": "Apache Spark",
+      "kind": "technology",
+      "aliases": [
+        "spark",
+        "apache spark",
+        "pyspark"
+      ]
+    },
+    {
+      "canonical": "Airflow",
+      "kind": "technology",
+      "aliases": [
+        "apache airflow",
+        "airflow"
+      ]
+    },
+    {
+      "canonical": "Kafka",
+      "kind": "technology",
+      "aliases": [
+        "apache kafka",
+        "kafka"
+      ]
+    },
+    {
+      "canonical": "GitLab CI",
+      "kind": "technology",
+      "aliases": [
+        "gitlab ci",
+        "gitlab ci/cd",
+        "gitlab-ci",
+        "gitlab pipelines"
+      ]
+    },
+    {
+      "canonical": "Terraform",
+      "kind": "technology",
+      "aliases": [
+        "terraform",
+        "tf"
+      ]
+    },
+    {
+      "canonical": "AWS",
+      "kind": "technology",
+      "aliases": [
+        "aws",
+        "amazon web services"
+      ]
+    },
+    {
+      "canonical": "Azure",
+      "kind": "technology",
+      "aliases": [
+        "azure",
+        "ms azure",
+        "microsoft azure"
+      ]
+    },
+    {
+      "canonical": "Power BI",
+      "kind": "technology",
+      "aliases": [
+        "power bi",
+        "powerbi",
+        "pbi"
+      ]
+    },
+    {
+      "canonical": "SQL",
+      "kind": "technology",
+      "aliases": [
+        "sql",
+        "t-sql",
+        "sql queries"
+      ]
+    },
+    {
+      "canonical": "REST API",
+      "kind": "technology",
+      "aliases": [
+        "rest",
+        "rest api",
+        "rest apis",
+        "restful",
+        "restful api",
+        "restful apis"
+      ]
+    },
+    {
+      "canonical": "Microservices",
+      "kind": "technology",
+      "aliases": [
+        "microservices",
+        "microservice architecture",
+        "mikroslužby",
+        "microservice"
+      ]
+    },
+    {
+      "canonical": "HTML",
+      "kind": "technology",
+      "aliases": [
+        "html",
+        "html5"
+      ]
+    },
+    {
+      "canonical": "CSS",
+      "kind": "technology",
+      "aliases": [
+        "css",
+        "css3"
+      ]
+    },
+    {
+      "canonical": "Selenium",
+      "kind": "technology",
+      "aliases": [
+        "selenium",
+        "selenium webdriver"
+      ]
+    },
+    {
+      "canonical": "Linux",
+      "kind": "technology",
+      "aliases": [
+        "linux",
+        "unix/linux",
+        "linux/unix"
+      ]
+    },
+    {
+      "canonical": "Bash",
+      "kind": "technology",
+      "aliases": [
+        "bash",
+        "shell",
+        "shell scripting",
+        "bash scripting"
+      ]
+    },
+    {
+      "canonical": "Git",
+      "kind": "tool",
+      "aliases": [
+        "git",
+        "version control (git)"
+      ]
+    },
+    {
+      "canonical": "Pandas",
+      "kind": "technology",
+      "aliases": [
+        "pandas"
+      ]
+    },
+    {
+      "canonical": "Jest",
+      "kind": "technology",
+      "aliases": [
+        "jest"
+      ]
+    },
+    {
+      "canonical": "Jenkins",
+      "kind": "tool",
+      "aliases": [
+        "jenkins"
+      ]
+    },
+    {
+      "canonical": "Grafana",
+      "kind": "tool",
+      "aliases": [
+        "grafana"
+      ]
+    },
+    {
+      "canonical": "Prometheus",
+      "kind": "tool",
+      "aliases": [
+        "prometheus"
+      ]
+    },
+    {
+      "canonical": "Ansible",
+      "kind": "technology",
+      "aliases": [
+        "ansible"
+      ]
+    },
+    {
+      "canonical": "dbt",
+      "kind": "technology",
+      "aliases": [
+        "dbt",
+        "data build tool"
+      ]
+    },
+    {
+      "canonical": "Snowflake",
+      "kind": "technology",
+      "aliases": [
+        "snowflake"
+      ]
+    },
+    {
+      "canonical": "Databricks",
+      "kind": "technology",
+      "aliases": [
+        "databricks"
+      ]
+    },
+    {
+      "canonical": "Cypress",
+      "kind": "technology",
+      "aliases": [
+        "cypress"
+      ]
+    },
+    {
+      "canonical": "Playwright",
+      "kind": "technology",
+      "aliases": [
+        "playwright"
+      ]
+    },
+    {
+      "canonical": "Postman",
+      "kind": "tool",
+      "aliases": [
+        "postman"
+      ]
+    },
+    {
+      "canonical": "JMeter",
+      "kind": "technology",
+      "aliases": [
+        "jmeter",
+        "apache jmeter"
+      ]
+    },
+    {
+      "canonical": "Jira",
+      "kind": "tool",
+      "aliases": [
+        "jira"
+      ]
+    },
+    {
+      "canonical": "Redux",
+      "kind": "technology",
+      "aliases": [
+        "redux"
+      ]
+    },
+    {
+      "canonical": "Webpack",
+      "kind": "tool",
+      "aliases": [
+        "webpack"
+      ]
+    },
+    {
+      "canonical": "Django",
+      "kind": "technology",
+      "aliases": [
+        "django"
+      ]
+    },
+    {
+      "canonical": "FastAPI",
+      "kind": "technology",
+      "aliases": [
+        "fastapi",
+        "fast api"
+      ]
+    },
+    {
+      "canonical": "Flask",
+      "kind": "technology",
+      "aliases": [
+        "flask"
+      ]
+    },
+    {
+      "canonical": "Celery",
+      "kind": "technology",
+      "aliases": [
+        "celery"
+      ]
+    },
+    {
+      "canonical": "Redis",
+      "kind": "technology",
+      "aliases": [
+        "redis"
+      ]
+    },
+    {
+      "canonical": "Hibernate",
+      "kind": "technology",
+      "aliases": [
+        "hibernate",
+        "jpa/hibernate"
+      ]
+    },
+    {
+      "canonical": "Oracle",
+      "kind": "technology",
+      "aliases": [
+        "oracle",
+        "oracle db",
+        "oracle database"
+      ]
+    },
+    {
+      "canonical": "Maven",
+      "kind": "tool",
+      "aliases": [
+        "maven"
+      ]
+    },
+    {
+      "canonical": "English",
+      "kind": "language",
+      "aliases": [
+        "english",
+        "angličtina",
+        "anglický jazyk",
+        "english language",
+        "fluent english"
+      ]
+    },
+    {
+      "canonical": "Slovak",
+      "kind": "language",
+      "aliases": [
+        "slovak",
+        "slovenčina",
+        "slovak language",
+        "slovak or czech",
+        "slovenský jazyk"
+      ]
+    },
+    {
+      "canonical": "Scrum",
+      "kind": "methodology",
+      "aliases": [
+        "scrum",
+        "agile",
+        "agile/scrum",
+        "agilný vývoj",
+        "agile scrum",
+        "scrum/agile"
+      ]
+    },
+    {
+      "canonical": "Communication",
+      "kind": "soft_skill",
+      "aliases": [
+        "communication",
+        "communication skills",
+        "komunikatívnosť",
+        "komunikačné schopnosti",
+        "strong communication skills"
+      ]
+    },
+    {
+      "canonical": "Czech",
+      "kind": "language",
+      "aliases": [
+        "čeština",
+        "český jazyk",
+        "czech language"
+      ]
+    },
+    {
+      "canonical": "C++",
+      "kind": "technology",
+      "aliases": [
+        "c++",
+        "cpp"
+      ]
+    },
+    {
+      "canonical": "C#",
+      "kind": "technology",
+      "aliases": [
+        "c#",
+        "csharp"
+      ]
+    },
+    {
+      "canonical": ".NET",
+      "kind": "technology",
+      "aliases": [
+        ".net",
+        "dotnet"
+      ]
+    },
+    {
+      "canonical": "Machine Learning",
+      "kind": "technology",
+      "aliases": [
+        "machine learning",
+        "strojové učenie",
+        "strojové učení"
+      ]
+    },
+    {
+      "canonical": "CKA",
+      "kind": "certification",
+      "aliases": [
+        "certified kubernetes administrator",
+        "cka"
+      ]
+    },
+    {
+      "canonical": "AWS Certified Solutions Architect",
+      "kind": "certification",
+      "aliases": [
+        "aws certified solutions architect",
+        "aws solutions architect certification"
+      ]
+    },
+    {
+      "canonical": "ISTQB",
+      "kind": "certification",
+      "aliases": [
+        "istqb",
+        "istqb certified tester"
+      ]
+    },
+    {
+      "canonical": "PMP",
+      "kind": "certification",
+      "aliases": [
+        "pmp",
+        "project management professional"
+      ]
+    }
+  ]
+}

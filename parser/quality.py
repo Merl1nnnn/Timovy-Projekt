@@ -33,7 +33,8 @@ def _contains(text_folded: str, phrase: str) -> bool:
     return re.search(rf"(?<![a-z0-9]){p}(?![a-z0-9])", text_folded) is not None
 
 
-def _salary_variants(n: int) -> list[str]:
+def _salary_variants(n: float) -> list[str]:
+    n = int(n) if float(n).is_integer() else n
     s = f"{n:,}"
     return [str(n), s, s.replace(",", " "), s.replace(",", "."), s.replace(",", " ")]
 

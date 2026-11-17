@@ -7,6 +7,7 @@ from scripts.publish_results import PublishConflict, merge_snapshots, publish
 
 
 def snapshot(jobs):
+    jobs = [{'schema_version':2, 'validation_status':'validated', 'review_required':False, **job} for job in jobs]
     return {'schema_version': 1, 'dataset_kind': 'synthetic', 'jobs': jobs}
 
 
@@ -27,7 +28,7 @@ class PublishingTests(unittest.TestCase):
     def test_conflict_refetches_and_preserves_concurrent_job(self):
         with tempfile.TemporaryDirectory() as d:
             source = Path(d) / 'jobs.jsonl'
-            source.write_text(json.dumps({'source_url': 'local', 'title': 'Local'}))
+            source.write_text(json.dumps({'schema_version':2, 'validation_status':'validated', 'review_required':False, 'source_url': 'local', 'title': 'Local'}))
             requests = []
             def api(token, method, endpoint, body=None):
                 requests.append((method, body))
@@ -46,7 +47,7 @@ class PublishingTests(unittest.TestCase):
     def test_unchanged_data_does_not_create_commit(self):
         with tempfile.TemporaryDirectory() as d:
             source = Path(d) / 'jobs.jsonl'
-            record = {'source_url': 'same', 'title': 'Same'}
+            record = {'schema_version':2, 'validation_status':'validated', 'review_required':False, 'source_url': 'same', 'title': 'Same'}
             source.write_text(json.dumps(record))
             def api(token, method, endpoint, body=None):
                 self.assertEqual(method, 'GET')
@@ -56,7 +57,7 @@ class PublishingTests(unittest.TestCase):
     def test_failure_keeps_local_file(self):
         with tempfile.TemporaryDirectory() as d:
             source = Path(d) / 'jobs.jsonl'
-            original = json.dumps({'source_url': 'a', 'title': 'A'})
+            original = json.dumps({'schema_version':2, 'validation_status':'validated', 'review_required':False, 'source_url': 'a', 'title': 'A'})
             source.write_text(original)
             def unavailable(*args):
                 raise RuntimeError('offline')
@@ -65,7 +66,7 @@ class PublishingTests(unittest.TestCase):
             self.assertEqual(source.read_text(), original)
 
     def test_mixed_datasets_are_rejected(self):
-        remote = snapshot([{'source_url': 'a', 'title': 'A'}])
+        remote = snapshot([{'schema_version':2, 'validation_status':'validated', 'review_required':False, 'source_url': 'a', 'title': 'A'}])
         local = {**snapshot([]), 'dataset_kind': 'real'}
         with self.assertRaises(RuntimeError):
             merge_snapshots(remote, local)

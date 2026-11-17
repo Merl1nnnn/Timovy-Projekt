@@ -43,6 +43,13 @@ class FakeClient:
         self.calls: list[list[dict[str, str]]] = []
 
     def complete(self, system: str, messages: list[dict[str, str]], schema: dict[str, Any]) -> str:
+        if system.startswith("You are an independent skill evidence validator"):
+            payload = json.loads(messages[0]["content"])
+            return json.dumps({"items": [{"id": m["id"], "verdict": "supported", "confidence": 0.95,
+                                         "reason": "fixture"} for m in payload["mentions"]],
+                               "fields": [{"field": field, "verdict": "supported", "confidence": 0.95,
+                                           "evidence": payload["posting"], "reason": "fixture"}
+                                          for field in payload["fields"]]})
         self.calls.append(list(messages))
         return self.replies.pop(0)
 
@@ -174,7 +181,8 @@ def test_quality_flags_hallucinations() -> None:
     report = check(posting, PAGE_TEXT)
     text = " | ".join(report.issues)
     assert report.low_confidence
-    for expected in ["Rust", "title", "9999", "seniority 'junior'", "remote=false"]:
+    assert posting.salary_min == 3000  # grounded normalisation corrected the invented amount
+    for expected in ["Rust", "title", "seniority 'junior'", "remote=false"]:
         assert expected in text
 
 
@@ -182,14 +190,15 @@ def test_quality_flags_missing_salary_max_and_remote_contradiction() -> None:
     reply = GOOD | {"salary_max": None, "workplace_type": "on-site"}
     posting, _ = extract(FakeClient([json.dumps(reply)]), PAGE_TEXT, "u")
     report = check(posting, PAGE_TEXT)
-    assert any("salary_max" in i for i in report.issues)
+    assert posting.salary_max == 4200  # the explicit source range is recovered
     assert report.low_confidence  # суперечність remote сама по собі вже робить запис сумнівним
 
 
 def test_quality_flags_missed_salary() -> None:
     no_salary = GOOD | {"salary_min": None, "salary_max": None, "salary_currency": None}
     posting, _ = extract(FakeClient([json.dumps(no_salary)]), PAGE_TEXT, "u")
-    assert any("salary" in i for i in check(posting, PAGE_TEXT).issues)
+    assert posting.salary_min == 3000
+    assert not any("none extracted" in i for i in check(posting, PAGE_TEXT).issues)
 
 
 # ------------------------------------------------------------------ html + run

@@ -11,7 +11,7 @@ class ExportTests(unittest.TestCase):
     def test_allowlist_redaction_and_deduplication(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            record = {'title': 'Developer test@example.com +421 900 123 456',
+            record = {'schema_version': 2, 'validation_status': 'validated', 'review_required': False, 'title': 'Developer test@example.com +421 900 123 456',
                       'source_url': 'http://localhost/job/1', 'technologies': ['Python'],
                       'raw_html': 'private raw text', 'api_key': 'SECRET'}
             source = root / 'in.jsonl'

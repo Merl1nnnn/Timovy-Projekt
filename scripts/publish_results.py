@@ -87,6 +87,8 @@ def merge_snapshots(previous, local):
 
 
 def publish(source, *, output=None, kind='synthetic', repository=None, branch=None, token=None, request=None):
+    if request is None and os.getenv('SKILLMINER_OFFLINE', '').lower() in {'1', 'true', 'yes'}:
+        raise RuntimeError('Publication is disabled in this isolated workspace (SKILLMINER_OFFLINE)')
     output = output or source.parent / 'public_jobs.json'
     local = export(source, output, kind)
     token = token or auth_token()

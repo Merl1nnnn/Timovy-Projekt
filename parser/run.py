@@ -19,6 +19,7 @@ from parser.extract import ExtractionError, extract
 from parser.html_text import html_to_text
 from parser.llm import LLMClient, LLMError, make_client
 from parser.quality import check
+from parser.validator import validate_posting
 from scripts.publish_results import publish
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -46,11 +47,15 @@ def parse_entry(client: LLMClient, entry: dict[str, Any], raw_dir: Path) -> dict
     text = html_to_text(html)
     started = time.perf_counter()
     posting, attempts = extract(client, text, source_url=entry["url"])
+    posting = validate_posting(client, posting, text)
     report = check(posting, text)
     return {
         "site": entry["site"],
         "id": entry["id"],
         **posting.model_dump(),
+        "schema_version": 2,
+        "validator_model": client.name,
+        "source_text": text,
         "confidence": report.confidence,
         "low_confidence": report.low_confidence,
         "quality_issues": report.issues,
@@ -66,10 +71,24 @@ def run(client: LLMClient, raw_dir: Path = RAW_DIR, out_dir: Path = PARSED_DIR, 
     """Повертає (успішно, помилок) за цей запуск."""
     out_dir.mkdir(parents=True, exist_ok=True)
     jobs_path, errors_path = out_dir / "jobs.jsonl", out_dir / "errors.jsonl"
+    review_path = out_dir / "review.jsonl"
     if force:
         jobs_path.unlink(missing_ok=True)
         errors_path.unlink(missing_ok=True)
-    done = {r["source_url"] for r in read_jsonl(jobs_path)}
+        review_path.unlink(missing_ok=True)
+    existing = read_jsonl(jobs_path)
+    accepted = [r for r in existing if r.get("schema_version") == 2
+                and r.get("validation_status") == "validated" and not r.get("review_required")]
+    legacy = [r for r in existing if r not in accepted]
+    if legacy:
+        with review_path.open("a", encoding="utf-8") as stream:
+            for record in legacy:
+                stream.write(json.dumps({**record, "validation_status": "review", "review_required": True,
+                                         "migration_reason": "legacy or unvalidated result"}, ensure_ascii=False) + "\n")
+        temporary = jobs_path.with_suffix(".jsonl.tmp")
+        temporary.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in accepted), encoding="utf-8")
+        temporary.replace(jobs_path)
+    done = {r["source_url"] for r in accepted}
     todo = [e for e in load_index(raw_dir, site) if e["url"] not in done]
     if limit is not None:
         todo = todo[:limit]
@@ -87,7 +106,10 @@ def run(client: LLMClient, raw_dir: Path = RAW_DIR, out_dir: Path = PARSED_DIR, 
             print(f"[{i}/{len(todo)}] ПОМИЛКА {entry['url']}: {str(e)[:150]}")
             continue
         ok += 1
-        with jobs_path.open("a", encoding="utf-8") as f:  # дописуємо одразу: перерваний запуск не втрачає роботу
+        target = review_path if record["review_required"] or record["low_confidence"] else jobs_path
+        if target == review_path:
+            record["validation_status"] = "review"
+        with target.open("a", encoding="utf-8") as f:  # дописуємо одразу: перерваний запуск не втрачає роботу
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
         flag = " LOW" if record["low_confidence"] else ""
         print(f"[{i}/{len(todo)}] {record['elapsed_s']:>5}s conf={record['confidence']:.2f}{flag}  {record['title']}")
@@ -107,7 +129,7 @@ def main() -> None:
     except httpx.ConnectError as e:
         raise SystemExit(f"LLM недоступна ({e}). Чи запущено Ollama (ollama serve)?")
     print(f"Готово: {ok} успішно, {failed} з помилками -> data/parsed/")
-    enabled = os.getenv("AUTO_PUBLISH", "true").lower() not in {"0", "false", "no"}
+    enabled = os.getenv("AUTO_PUBLISH", "false").lower() not in {"0", "false", "no"}
     if not args.no_publish and enabled and (PARSED_DIR / "jobs.jsonl").exists():
         try:
             result = publish(PARSED_DIR / "jobs.jsonl", kind=os.getenv("DATASET_KIND", "synthetic"))

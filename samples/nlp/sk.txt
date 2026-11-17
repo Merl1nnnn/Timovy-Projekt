@@ -1,0 +1,13 @@
+Senior Backend Developer
+Example SK s.r.o.
+Miesto práce: Košice
+Pracovný pomer: TPP, on-site
+Mzda brutto: 42 000 – 48 000 EUR ročne
+Požadujeme:
+- Python a Django, minimálne 5 rokov praxe.
+- Docker a k8s.
+- Angličtina B2.
+Výhodou je:
+- Certifikácia Certified Kubernetes Administrator (CKA).
+Benefity:
+- Bezplatné školenie Rust pre záujemcov.

@@ -8,7 +8,7 @@ import re
 from html.parser import HTMLParser
 
 SKIP_TAGS = {"head", "script", "style", "noscript", "nav", "header", "footer", "svg", "button", "input"}
-BLOCK_TAGS = {"p", "div", "section", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6", "br", "tr", "main"}
+BLOCK_TAGS = {"p", "div", "section", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6", "br", "tr", "td", "th", "main"}
 VOID_TAGS = {"br", "input", "img", "meta", "link", "hr"}
 
 

@@ -1,0 +1,12 @@
+Senior Backend vývojář
+Example CZ
+Místo práce: Praha
+Pracovní poměr: plný úvazek, on-site.
+Mzda: 60 000 – 80 000 Kč hrubého měsíčně.
+Požadavky:
+- Hledáme vývojáře se zkušenostmi s Python a PostgreSQL.
+- Požadujeme 5 let praxe a češtinu.
+Výhodou:
+- Docker.
+Nabízíme:
+- Školení Java pro zájemce.

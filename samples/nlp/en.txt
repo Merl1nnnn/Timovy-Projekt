@@ -1,0 +1,12 @@
+Junior Machine Learning Engineer
+Example Research
+Location: Bratislava
+Full-time, fully remote.
+Salary: EUR 2,000 - 2,600 gross per month.
+Requirements:
+- Python, SQL and Pandas.
+- We are looking for someone with 0-1 years of experience.
+Nice to have:
+- AWS Certified Solutions Architect certification.
+Benefits:
+- We offer Java workshops.

@@ -4,6 +4,7 @@
 валідація й retry — у parser/extract.py, спільні для всіх провайдерів.
 """
 
+import json
 import os
 from typing import Any, Protocol
 
@@ -35,6 +36,10 @@ class OllamaClient:
         self.last_prompt_tokens = 0
 
     def complete(self, system: str, messages: list[Message], schema: dict[str, Any]) -> str:
+        # Conservative preflight, before Ollama can silently truncate the request.
+        chars = len(system) + len(json.dumps(messages, ensure_ascii=False)) + len(json.dumps(schema))
+        if chars // 3 + 1024 > self.num_ctx:
+            raise LLMError("Input may exceed context; shorten the source or increase OLLAMA_NUM_CTX")
         resp = self.http.post(f"{self.url}/api/chat", json={
             "model": self.model,
             "messages": [{"role": "system", "content": system}, *messages],
@@ -85,7 +90,7 @@ def make_client() -> LLMClient:
         return OllamaClient(
             url=os.getenv("OLLAMA_URL", "http://localhost:11434"),
             model=os.getenv("OLLAMA_MODEL", "qwen2.5:7b"),
-            num_ctx=int(os.getenv("OLLAMA_NUM_CTX", "4096")),
+            num_ctx=int(os.getenv("OLLAMA_NUM_CTX", "8192")),
         )
     if provider == "claude":
         return ClaudeClient(model=os.getenv("CLAUDE_MODEL", "claude-opus-5-5"))

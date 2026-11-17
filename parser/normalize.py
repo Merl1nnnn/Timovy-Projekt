@@ -10,72 +10,12 @@ import unicodedata
 from parser.schema import JobExtraction, JobPosting
 
 # Канонічна назва -> варіанти написання (порівняння без урахування регістру).
-CANONICAL: dict[str, list[str]] = {
-    "JavaScript": ["js", "javascript", "java script", "ecmascript", "es6"],
-    "TypeScript": ["ts", "typescript"],
-    "Python": ["python3", "python 3", "py"],
-    "Java": ["java 17", "java 21", "java se"],
-    "Kubernetes": ["k8s", "kubernetes", "openshift/kubernetes"],
-    "Docker": ["docker", "dockerfile", "containers (docker)"],
-    "PostgreSQL": ["postgres", "postgresql", "postgressql", "postgresql database", "psql"],
-    "Spring Boot": ["spring boot", "springboot", "spring-boot"],
-    "React": ["react", "reactjs", "react.js"],
-    "Vue.js": ["vue", "vuejs", "vue.js", "vue 3"],
-    "Angular": ["angular", "angularjs"],
-    "Next.js": ["nextjs", "next.js"],
-    "Node.js": ["node", "nodejs", "node.js"],
-    "Apache Spark": ["spark", "apache spark", "pyspark"],
-    "Airflow": ["apache airflow", "airflow"],
-    "Kafka": ["apache kafka", "kafka"],
-    "GitLab CI": ["gitlab ci", "gitlab ci/cd", "gitlab-ci", "gitlab pipelines"],
-    "Terraform": ["terraform", "tf"],
-    "AWS": ["aws", "amazon web services"],
-    "Azure": ["azure", "ms azure", "microsoft azure"],
-    "Power BI": ["power bi", "powerbi", "pbi"],
-    "SQL": ["sql", "t-sql", "sql queries"],
-    "REST API": ["rest", "rest api", "rest apis", "restful", "restful api", "restful apis"],
-    "Microservices": ["microservices", "microservice architecture", "mikroslužby", "microservice"],
-    "HTML": ["html", "html5"],
-    "CSS": ["css", "css3"],
-    "Selenium": ["selenium", "selenium webdriver"],
-    "Linux": ["linux", "unix/linux", "linux/unix"],
-    "Bash": ["bash", "shell", "shell scripting", "bash scripting"],
-    "Git": ["git", "version control (git)"],
-    "Pandas": ["pandas"],
-    "Jest": ["jest"],
-    "Jenkins": ["jenkins"],
-    "Grafana": ["grafana"],
-    "Prometheus": ["prometheus"],
-    "Ansible": ["ansible"],
-    "dbt": ["dbt", "data build tool"],
-    "Snowflake": ["snowflake"],
-    "Databricks": ["databricks"],
-    "Cypress": ["cypress"],
-    "Playwright": ["playwright"],
-    "Postman": ["postman"],
-    "JMeter": ["jmeter", "apache jmeter"],
-    "Jira": ["jira"],
-    "Redux": ["redux"],
-    "Webpack": ["webpack"],
-    "Django": ["django"],
-    "FastAPI": ["fastapi", "fast api"],
-    "Flask": ["flask"],
-    "Celery": ["celery"],
-    "Redis": ["redis"],
-    "Hibernate": ["hibernate", "jpa/hibernate"],
-    "Oracle": ["oracle", "oracle db", "oracle database"],
-    "Maven": ["maven"],
-    # нетехнічні навички
-    "English": ["english", "angličtina", "anglický jazyk", "english language", "fluent english"],
-    "Slovak": ["slovak", "slovenčina", "slovak language", "slovak or czech", "slovenský jazyk"],
-    "Scrum": ["scrum", "agile", "agile/scrum", "agilný vývoj", "agile scrum", "scrum/agile"],
-    "Communication": ["communication", "communication skills", "komunikatívnosť",
-                      "komunikačné schopnosti", "strong communication skills"],
-}
-SOFT_SKILLS = {"English", "Slovak", "Scrum", "Communication"}
+from parser.aliases import ALIASES as CANONICAL
+SOFT_SKILLS = {"English", "Slovak", "Czech", "Scrum", "Communication"}
 # Основи слів (без діакритики) для розпізнавання нетехнічних навичок у вільному формулюванні.
 SOFT_STEMS: dict[str, list[str]] = {
     "Slovak": ["slovak", "slovensk", "slovencin"],
+    "Czech": ["czech", "cestin", "cesky jazyk"],
     "English": ["english", "anglick", "anglictin"],
     "Scrum": ["scrum", "agil"],
     "Communication": ["communicat", "komunika"],
@@ -98,6 +38,8 @@ def fold(s: str) -> str:
     return "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c)).lower()
 
 
+from parser.context import REGIONS
+CITIES = list(dict.fromkeys(CITIES + [city for cities in REGIONS.values() for city in cities]))
 _CITY_BY_FOLD = {fold(c): c for c in CITIES}
 
 
@@ -118,7 +60,7 @@ def normalize_skill(name: str) -> str:
         return _LOOKUP[key]
     # "Kubernetes (k8s)", "English (B2+)", "Java 17+" -> пробуємо без дужок і хвостів
     base = re.sub(r"\s*\(.*?\)\s*", " ", raw).strip()
-    base = re.sub(r"\s*[\d.+]+$", "", base).strip()
+    base = re.sub(r"\s+[\d.+]+$", "", base).strip()
     if base.lower() in _LOOKUP:
         return _LOOKUP[base.lower()]
     # Нетехнічні навички довільним текстом: "great communicator", "práca v Scrum tíme", "angličtina min. B2"
@@ -134,6 +76,7 @@ def normalize_skill(name: str) -> str:
 _SOFT_MENTION: dict[str, re.Pattern[str]] = {
     "Slovak": re.compile(r"slovak(?!ia)|slovencin|slovensk(?:y|eho|om) jazyk"),
     "English": re.compile(r"english|anglick|anglictin"),
+    "Czech": re.compile(r"czech|cestin|cesky jazyk"),
     "Scrum": re.compile(r"scrum|agil"),
     "Communication": re.compile(r"communicat|komunika"),
 }
@@ -183,10 +126,8 @@ EN_RATIO_THRESHOLD = 0.35
 
 
 def detect_language(text: str) -> str:
-    words = re.findall(r"[a-z]+", fold(text))
-    sk = sum(w in SK_STOPWORDS for w in words)
-    en = sum(w in EN_STOPWORDS for w in words)
-    return "en" if en and en / (en + sk) >= EN_RATIO_THRESHOLD else "sk"
+    from parser.context import language_info
+    return language_info(text)[0]
 
 
 NICE_MARKERS = ["vyhodou", "(plus)", "plusove body", "nice to have", "a plus", "(bonus)", "bonus points"]
@@ -228,7 +169,7 @@ def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
     tech = dedupe(clean(ex.technologies) + required + nice)
     tech = [t for t in tech if t not in SOFT_SKILLS]
     location = normalize_location(ex.location)
-    return JobPosting(
+    posting = JobPosting(
         title=ex.title.strip(),
         company=ex.company.strip(),
         # Місто не обнуляємо навіть при workplace_type=remote: якщо модель його назвала, воно
@@ -248,3 +189,6 @@ def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
         language=detect_language(page_text),
         source_url=source_url,
     )
+
+    from parser.context import enrich
+    return enrich(posting, page_text)
