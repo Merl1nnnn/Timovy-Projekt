@@ -157,7 +157,8 @@ def dedupe(items: list[str]) -> list[str]:
 
 
 def normalize_location(location: str | None) -> str | None:
-    if not location:
+    # The model sometimes writes the JSON null as a string.
+    if not location or location.strip().lower() in {"null", "none", "n/a", "-"}:
         return None
     for part in re.split(r"[,(/]| - | – ", location):
         key = fold(part).strip()
