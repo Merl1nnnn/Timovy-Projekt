@@ -66,6 +66,17 @@ uv run python -m parser.run --real
 - LinkedIn is intentionally not scraped: its terms prohibit automated access without permission.
 - Real pages are longer than mock pages. With Ollama, set `OLLAMA_NUM_CTX=8192`.
 
+#### Evaluate against the gold set
+
+The team hand-annotated 50 real postings (`data/real/gold/`, git-ignored). `scripts/evaluate.py` compares `data/real/parsed/jobs.jsonl` with them: accuracy per field, micro precision / recall / F1 for skills, and whether `low_confidence` really marks worse records.
+
+```sh
+uv run python -m parser.run --real
+uv run python -m scripts.evaluate --json data/real/eval/report.json
+```
+
+`specialization` is not scored yet, because the gold set uses `other` for postings outside the parser's six specialisations.
+
 ### Automatic publishing settings
 
 Defaults in `.env.example`:
@@ -156,4 +167,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The 87 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
+The 92 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. Unit tests do not measure quality on real postings; use `scripts/evaluate.py` with the gold set for that.
