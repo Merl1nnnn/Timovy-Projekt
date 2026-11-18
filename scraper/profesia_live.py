@@ -45,7 +45,8 @@ _CONTACT = re.compile(r"<h4>\s*(?:Kontakt|Contact|Kapcsolat)\s*</h4>.*(?=</main>
 # Branded company templates use their own markup: the name follows right after the label (possibly across tags).
 _CONTACT_NAME = re.compile(r"((?:Kontaktná osoba|Contact person|Kapcsolattartó)\s*:?)((?:\s*<[^>]+>)*)\s*([^<]{2,80})")
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}")
-_PHONE = re.compile(r"(?<![\w/])(?:\+|00)\d[\d ()/-]{7,}\d")
+# "+421 ..." / "00421 ...". Never right after "<digit> ": in "2 000 - 2 500 EUR" the "00" is part of an amount.
+_PHONE = re.compile(r"(?<![\w/])(?<!\d )(?:\+|00)\d[\d ()/-]{7,}\d")
 
 
 class Blocked(RuntimeError):
@@ -175,18 +176,57 @@ def scrape(client: PoliteClient, raw_dir: Path = REAL_RAW_DIR, limit: int = 20, 
     return added
 
 
+def refresh(client: PoliteClient, ids: list[str], raw_dir: Path = REAL_RAW_DIR,
+            log: Any = print) -> list[str]:
+    """Downloads already known postings again (e.g. after a redaction fix). Returns the refreshed IDs.
+
+    An expired posting (404/410) or an unknown template keeps the old file.
+    """
+    out_dir = raw_dir / SITE
+    index_path = out_dir / "index.json"
+    index = _load_index(index_path)
+    by_id = {e["id"]: e for e in index}
+    unknown = [i for i in ids if i not in by_id]
+    if unknown:
+        raise ValueError(f"немає в index.json: {', '.join(unknown)}")
+    done: list[str] = []
+    for jid in ids:
+        entry = by_id[jid]
+        try:
+            content = extract_detail(client.get(entry["url"]))
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code not in (404, 410):
+                raise
+            log(f"  {jid}: вакансію знято (HTTP {e.response.status_code}), старий файл лишається")
+            continue
+        if content is None:
+            log(f"  {jid}: невідомий шаблон, старий файл лишається")
+            continue
+        (out_dir / entry["file"].split("/", 1)[1]).write_text(content, encoding="utf-8")
+        entry["scraped_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        _save_index(index_path, index)
+        done.append(jid)
+        log(f"  оновлено {jid}")
+    return done
+
+
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     ap = argparse.ArgumentParser(description="Завантажує IT-вакансії з реальної Profesia.sk у data/real/raw/.")
     ap.add_argument("--limit", type=int, default=20, help="максимум НОВИХ вакансій за запуск (default 20)")
     ap.add_argument("--max-pages", type=int, default=5, help="максимум сторінок списку (по 20 вакансій)")
     ap.add_argument("--delay", type=float, default=3.0, help="мінімальна пауза між запитами, с (не менше 1)")
+    ap.add_argument("--refresh", nargs="+", metavar="ID", help="завантажити вже відомі вакансії заново")
     args = ap.parse_args()
     if args.delay < 1:
         raise SystemExit("--delay має бути не менше 1 секунди")
     try:
+        if args.refresh:
+            done = refresh(PoliteClient(delay=args.delay), args.refresh)
+            print(f"Оновлено: {len(done)} з {len(args.refresh)} -> data/real/raw/{SITE}/")
+            return
         added = scrape(PoliteClient(delay=args.delay), limit=args.limit, max_pages=args.max_pages)
-    except (Blocked, PermissionError, httpx.HTTPError) as e:
+    except (Blocked, PermissionError, httpx.HTTPError, ValueError) as e:
         raise SystemExit(f"Зупинено: {e}. Уже завантажене збережено в data/real/raw/.")
     print(f"Нових вакансій: {len(added)} -> data/real/raw/{SITE}/")
 

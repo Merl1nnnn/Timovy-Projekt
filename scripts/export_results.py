@@ -10,7 +10,8 @@ FIELDS = ('title', 'company', 'location', 'remote', 'employment_type', 'seniorit
           'salary_min', 'salary_max', 'salary_currency', 'language', 'source_url',
           'site', 'id', 'confidence', 'low_confidence', 'quality_issues', 'model', 'parsed_at')
 EMAIL = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}')
-PHONE = re.compile(r'(?<!\w)(?:\+|00)\d[\d ()-]{7,}\d')
+# Not right after "<digit> ", so amounts like "2 000 - 2 500 EUR" are not taken for phone numbers.
+PHONE = re.compile(r'(?<!\w)(?<!\d )(?:\+|00)\d[\d ()-]{7,}\d')
 
 
 def redact(value):

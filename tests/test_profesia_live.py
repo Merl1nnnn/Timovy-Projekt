@@ -53,6 +53,12 @@ def test_extract_detail_removes_contacts_and_personal_data() -> None:
     assert pl.extract_detail("<html><body><div>інший шаблон</div></body></html>") is None
 
 
+@pytest.mark.parametrize("salary", ["2 000 - 2 500 EUR/mesiac", "5 000 - 6 000 €", "Od 1 000 EUR", "12 000 000 EUR"])
+def test_salary_is_not_taken_for_phone(salary: str) -> None:
+    assert pl.redact(f"Mzda: {salary}") == f"Mzda: {salary}"
+    assert pl.redact(f"{salary}, tel. 00421 905 123 456") == f"{salary}, tel. [phone removed]"
+
+
 def test_branded_template_contact_name_removed() -> None:
     page = ('<main id="detail"><h1>Web developer</h1><div class="row"><div class="col-md-2">'
             '<p class="mb-0">Kontaktná osoba</p></div>\n<div class="col-md-6">\n  <p class=mb-0">Jana Nováková</p>'
@@ -99,6 +105,25 @@ def test_scrape_is_limited_and_incremental(tmp_path: Path) -> None:
     assert [e["id"] for e in added2] == ["5", "6"]
     assert not any(u.endswith(("/O1", "/O2", "/O3", "/O4")) for u in site2.requests)
     assert len(json.loads((tmp_path / "profesia" / "index.json").read_text(encoding="utf-8"))) == 5
+
+
+def test_refresh_overwrites_known_postings(tmp_path: Path) -> None:
+    pl.scrape(client(FakeSite()), raw_dir=tmp_path, limit=2, log=lambda *_: None)
+    (tmp_path / "profesia" / "1.html").write_text("stale", encoding="utf-8")
+    site = FakeSite()
+    assert pl.refresh(client(site), ["1"], raw_dir=tmp_path, log=lambda *_: None) == ["1"]
+    assert "Python developer 1" in (tmp_path / "profesia" / "1.html").read_text(encoding="utf-8")
+    assert site.requests == ["https://www.profesia.sk/praca/firma-1/O1"]  # no list pages, only the posting
+    with pytest.raises(ValueError):
+        pl.refresh(client(site), ["999"], raw_dir=tmp_path, log=lambda *_: None)
+
+
+def test_refresh_keeps_file_of_expired_posting(tmp_path: Path) -> None:
+    pl.scrape(client(FakeSite()), raw_dir=tmp_path, limit=1, log=lambda *_: None)
+    gone = pl.PoliteClient(delay=0, check_robots=False,
+                           http=httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(404))))
+    assert pl.refresh(gone, ["1"], raw_dir=tmp_path, log=lambda *_: None) == []
+    assert "Python developer 1" in (tmp_path / "profesia" / "1.html").read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("status", [403, 429])
