@@ -1,4 +1,4 @@
-"""Підготувати публічний JSON для фронтенду з локального jobs.jsonl."""
+"""Builds the public JSON for the frontend from the local jobs.jsonl."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -6,15 +6,16 @@ from pathlib import Path
 import re
 
 FIELDS = ('title', 'company', 'location', 'remote', 'employment_type', 'seniority',
-          'specialization', 'required_skills', 'nice_to_have_skills', 'technologies',
-          'salary_min', 'salary_max', 'salary_currency', 'language', 'source_url',
+          'specialization', 'required_skills', 'nice_to_have_skills', 'min_experience_years',
+          'education', 'salary_min', 'salary_max', 'salary_currency', 'summary', 'language', 'source_url',
           'site', 'id', 'confidence', 'low_confidence', 'quality_issues', 'model', 'parsed_at')
 EMAIL = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}')
-PHONE = re.compile(r'(?<!\w)(?:\+|00)\d[\d ()-]{7,}\d')
+# Not right after "<digit> ", so amounts like "2 000 - 2 500 EUR" are not taken for phone numbers.
+PHONE = re.compile(r'(?<!\w)(?<!\d )(?:\+|00)\d[\d ()-]{7,}\d')
 
 
 def redact(value):
-    # Сирі HTML/тексти й довільні службові поля ніколи не експортуються.
+    # Raw HTML/text and arbitrary internal fields are never exported.
     if isinstance(value, str):
         return PHONE.sub('[phone removed]', EMAIL.sub('[email removed]', value))
     if isinstance(value, list):
@@ -31,7 +32,7 @@ def export(source: Path, output: Path, kind: str) -> dict:
         record = json.loads(line)
         if not isinstance(record, dict) or not isinstance(record.get('title'), str):
             raise ValueError(f'Рядок {number}: потрібен об’єкт із title')
-        for key in ('technologies', 'required_skills', 'nice_to_have_skills', 'quality_issues'):
+        for key in ('required_skills', 'nice_to_have_skills', 'quality_issues'):
             if key in record and (not isinstance(record[key], list) or
                                   not all(isinstance(v, str) for v in record[key])):
                 raise ValueError(f'Рядок {number}: {key} має бути списком рядків')
@@ -55,11 +56,13 @@ def export(source: Path, output: Path, kind: str) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, required=True)
-    parser.add_argument('--output', type=Path, default=Path('frontend/data/jobs.json'))
+    parser.add_argument('--output', type=Path, default=None,
+                        help='default: frontend/data/jobs.json (synthetic) or frontend/data/jobs_real.json (real)')
     parser.add_argument('--kind', choices=['synthetic', 'real'], default='synthetic')
     args = parser.parse_args()
-    payload = export(args.input, args.output, args.kind)
-    print(f"Підготовлено {len(payload['jobs'])} публічних записів: {args.output}")
+    output = args.output or Path('frontend/data/jobs_real.json' if args.kind == 'real' else 'frontend/data/jobs.json')
+    payload = export(args.input, output, args.kind)
+    print(f"Підготовлено {len(payload['jobs'])} публічних записів: {output}")
 
 
 if __name__ == '__main__':

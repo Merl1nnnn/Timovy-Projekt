@@ -1,14 +1,14 @@
-"""Другий прохід: перевірка якості витягу правилами (без додаткового LLM-виклику).
+"""Second pass: rule-based quality check of the extraction (no extra LLM call).
 
-Кожне порушення має вагу; confidence = 1 - сума ваг (не менше 0).
-Запис позначається low_confidence, якщо confidence < LOW_CONFIDENCE_THRESHOLD.
+Each issue has a weight; confidence = 1 - sum of weights (at least 0).
+A record is flagged low_confidence if confidence < LOW_CONFIDENCE_THRESHOLD.
 """
 
 import re
 
 from pydantic import BaseModel
 
-from parser.normalize import CANONICAL, CITY_ABBREV, REMOTE_WORDS, fold
+from parser.normalize import CANONICAL, CITY_ABBREV, REMOTE_WORDS, SOFT_SKILLS, fold
 from parser.schema import JobPosting
 
 LOW_CONFIDENCE_THRESHOLD = 0.7
@@ -28,7 +28,7 @@ class QualityReport(BaseModel):
 
 
 def _contains(text_folded: str, phrase: str) -> bool:
-    """Пошук фрази як окремого слова (без діакритики й регістру)."""
+    """Searches for a phrase as a whole word (ignoring diacritics and case)."""
     p = re.escape(fold(phrase).strip())
     return re.search(rf"(?<![a-z0-9]){p}(?![a-z0-9])", text_folded) is not None
 
@@ -39,7 +39,7 @@ def _salary_variants(n: int) -> list[str]:
 
 
 def _has_salary_range(page_text: str) -> bool:
-    """Рядок із валютою, де є два різні числа-суми: "2 000 – 3 000 EUR", "€2,500/month - €3,500/month"."""
+    """A line with a currency and two different amounts: "2 000 – 3 000 EUR", "€2,500/month - €3,500/month"."""
     for line in page_text.splitlines():
         if "€" in line or "eur" in line.lower():
             amounts = {int(re.sub(r"\D", "", m)) for m in re.findall(r"\d{1,2}[  .,]?\d{3}", line)}
@@ -52,11 +52,16 @@ def check(ex: JobPosting, page_text: str) -> QualityReport:
     t = fold(page_text)
     issues: list[tuple[str, float]] = []
 
-    # Галюцинації: кожна технологія має бути в тексті (канонічно або аліасом).
-    for tech in ex.technologies:
-        variants = [tech] + CANONICAL.get(tech, [])
+    # Hallucinations: every technical skill must appear in the text (canonical name or alias).
+    for skill in ex.required_skills + ex.nice_to_have_skills:
+        if skill in SOFT_SKILLS:
+            continue  # already filtered in normalize by whether the page mentions them
+        variants = [skill] + CANONICAL.get(skill, [])
         if not any(_contains(t, v) for v in variants):
-            issues.append((f"technology not found in text: {tech}", 0.15))
+            issues.append((f"skill not found in text: {skill}", 0.15))
+
+    if ex.min_experience_years is not None and not re.search(rf"(?<!\d){ex.min_experience_years}(?!\d)", page_text):
+        issues.append((f"experience {ex.min_experience_years} years not found in text", 0.15))
 
     if not _contains(t, ex.title):
         issues.append(("title not found verbatim in text (translated or invented?)", 0.2))
@@ -74,7 +79,7 @@ def check(ex: JobPosting, page_text: str) -> QualityReport:
     if not ex.remote and remote_hint:
         issues.append(("remote=false but text mentions remote/hybrid/home office", 0.35))
 
-    # Зарплата: числа мають бути в тексті; і навпаки — зарплата в тексті, але не витягнута.
+    # Salary: the numbers must be in the text; and vice versa, a salary in the text that was not extracted.
     for n in (ex.salary_min, ex.salary_max):
         if n is not None and not any(v in page_text for v in _salary_variants(n)):
             issues.append((f"salary {n} not found in text", 0.3))
@@ -83,7 +88,7 @@ def check(ex: JobPosting, page_text: str) -> QualityReport:
     if ex.salary_min is not None and ex.salary_max is None and _has_salary_range(page_text):
         issues.append(("text has a salary range, but salary_max not extracted", 0.3))
 
-    # Seniority, явно вказаний у заголовку, має збігатися з витягнутим.
+    # Seniority stated explicitly in the title must match the extracted one.
     title_levels = {lvl for lvl, words in SENIORITY_WORDS.items() if any(_contains(fold(ex.title), w) for w in words)}
     if ex.seniority is None:
         issues.append(("seniority missing", 0.1))

@@ -1,4 +1,4 @@
-"""Контракт HTTP з локальною Ollama, без завантаження моделі."""
+"""HTTP contract with a local Ollama, without loading a model."""
 import httpx
 import pytest
 

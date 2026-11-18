@@ -1,4 +1,4 @@
-"""Адаптер для Profesia MOCK: картки div.list-row, пагінація ul.pagination a.next."""
+"""Adapter for the Profesia MOCK: cards div.list-row, pagination ul.pagination a.next."""
 
 from dataclasses import dataclass
 

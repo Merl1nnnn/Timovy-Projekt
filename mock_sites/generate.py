@@ -1,9 +1,9 @@
-"""Генератор мок-вакансій і статичних мок-сайтів (Profesia-подібний і LinkedIn-подібний).
+"""Generator of mock job postings and static mock sites (Profesia-like and LinkedIn-like).
 
-Спершу випадково обираються структуровані поля (це ground truth), потім вони
-рендеряться в «брудний» текст і HTML. Результат детермінований за seed.
+Structured fields are picked at random first (this is the ground truth), then they are
+rendered into "messy" text and HTML. The output is deterministic for a given seed.
 
-Запуск: uv run python -m mock_sites.generate
+Usage: uv run python -m mock_sites.generate
 """
 
 import argparse
@@ -32,8 +32,8 @@ BASE_DATE = date(2026, 11, 1)
 @dataclass(frozen=True)
 class SiteConfig:
     port: int
-    en_share: float  # частка вакансій англійською
-    salary_share: float  # частка вакансій із зарплатою
+    en_share: float  # share of postings in English
+    salary_share: float  # share of postings with a salary
 
 
 SITES: dict[str, SiteConfig] = {
@@ -57,7 +57,7 @@ def detail_path(site: str, job_id: str) -> str:
 
 @dataclass
 class Job:
-    # --- ground truth (ті самі поля, що й у схемі парсера JobPosting) ---
+    # --- ground truth (the same fields as the parser's JobPosting schema) ---
     title: str
     company: str
     location: str | None
@@ -73,7 +73,7 @@ class Job:
     salary_currency: str | None
     language: str
     source_url: str
-    # --- лише для рендерингу ---
+    # --- rendering only ---
     id: str = ""
     site: str = ""
     location_display: str = ""
@@ -92,8 +92,8 @@ class Job:
     linkedin_level: str = ""
     show_criteria: bool = True
     similar: list["Job"] = field(default_factory=list)
-    # Складні / навмисно зламані вакансії (mock_sites/edge_cases.py): опис пастки
-    # і, за потреби, власний HTML сторінки деталей замість шаблону.
+    # Hard / deliberately broken postings (mock_sites/edge_cases.py): a description of the trap
+    # and, if needed, custom detail-page HTML instead of the template.
     edge_case: str = ""
     raw_html: str | None = None
 
@@ -105,10 +105,10 @@ class Job:
                 | {"edge_case": self.edge_case})
 
 
-# ---------------------------------------------------------------- рендеринг тексту
+# ---------------------------------------------------------------- text rendering
 
 def render_tech(rng: random.Random, tech: str) -> str:
-    """Канонічна назва або аліас (js, k8s, postgres...)."""
+    """Canonical name or an alias (js, k8s, postgres...)."""
     if tech in v.ALIASES and rng.random() < 0.45:
         return rng.choice(v.ALIASES[tech])
     return tech
@@ -124,7 +124,7 @@ def join_words(items: list[str], lang: str, rng: random.Random, conj: str | None
 
 
 def make_title(rng: random.Random, spec: str, seniority: str, lang: str, remote: bool) -> str:
-    # Часто SK-вакансія має англійський заголовок.
+    # SK postings often have an English title.
     title_lang = "en" if lang == "sk" and rng.random() < 0.2 else lang
     template = rng.choice(v.TITLE_TEMPLATES[spec][title_lang])
     title = template.format(s=rng.choice(v.SENIORITY_TITLE_WORDS[seniority][title_lang]))
@@ -146,7 +146,7 @@ def format_salary(lo: int, hi: int | None, lang: str) -> str:
 
 def make_requirements(rng: random.Random, lang: str, seniority: str, required_tech: list[str],
                       nice_tech: list[str], soft: list[str]) -> list[dict[str, Any]]:
-    """Вимоги в одному з трьох стилів: списки, вільний текст, змішаний список."""
+    """Requirements in one of three styles: lists, free text, a mixed list."""
     exp = rng.choice(v.EXPERIENCE_LINES[seniority][lang])
     req = [render_tech(rng, t) for t in required_tech]
     nice = [render_tech(rng, t) for t in nice_tech]
@@ -185,7 +185,7 @@ def make_requirements(rng: random.Random, lang: str, seniority: str, required_te
                 text += f"It's a plus if you know {join_words(nice, lang, rng, 'or')}."
         return [{"kind": "p", "text": text.strip()}]
 
-    # mixed: один список, де «nice to have» позначено лише суфіксом
+    # mixed: one list where "nice to have" is marked only by a suffix
     suffixes = ["(výhodou)", "– nice to have", "(plus)"] if lang == "sk" else ["(nice to have)", "– a plus", "(bonus)"]
     items = [exp] + req + soft_txt + [f"{t} {rng.choice(suffixes)}" for t in nice]
     first, rest = items[0], items[1:]
@@ -194,7 +194,7 @@ def make_requirements(rng: random.Random, lang: str, seniority: str, required_te
     return [{"kind": "h", "text": head}, {"kind": "ul", "items": [first] + rest}]
 
 
-# ---------------------------------------------------------------- вибір полів
+# ---------------------------------------------------------------- field selection
 
 def pick_salary(rng: random.Random, seniority: str) -> tuple[int, int | None]:
     low, high = {"junior": (1300, 1900), "medior": (2000, 3000),
@@ -212,7 +212,7 @@ def make_job(rng: random.Random, site: str, job_id: str) -> Job:
     seniority = rng.choices(["junior", "medior", "senior", "lead"], weights=[25, 30, 30, 15])[0]
     company = rng.choice(v.COMPANIES)
 
-    # Місце роботи: місто (onsite/hybrid) або повністю remote.
+    # Workplace: a city (onsite/hybrid) or fully remote.
     city = rng.choices(["Bratislava", "Košice", "Žilina", None], weights=[45, 20, 15, 20])[0]
     if city is None:
         location, remote, workplace = None, True, "Remote"
@@ -224,7 +224,7 @@ def make_job(rng: random.Random, site: str, job_id: str) -> Job:
 
     employment = rng.choices(["full_time", "part_time", "contract"], weights=[75, 10, 15])[0]
 
-    # Технології та навички.
+    # Technologies and skills.
     pool_spec = v.SPECIALIZATIONS[spec]
     core = list(pool_spec["core"]) or [rng.choice(v.QA_CORE_CHOICES)]
     pool = [t for t in pool_spec["pool"] if t not in core]
@@ -234,7 +234,7 @@ def make_job(rng: random.Random, site: str, job_id: str) -> Job:
     nice_tech = pool[n_req:n_req + rng.randint(0, 3)]
     soft_names = list(v.SOFT_SKILLS)
     if lang == "sk":
-        soft_names.remove("Slovak")  # у словацькій вакансії словацьку не вимагають явно
+        soft_names.remove("Slovak")  # Slovak postings do not require Slovak explicitly
     soft = rng.sample(soft_names, rng.randint(1, 2))
 
     salary_min = salary_max = None
@@ -245,7 +245,7 @@ def make_job(rng: random.Random, site: str, job_id: str) -> Job:
         salary_min, salary_max = pick_salary(rng, seniority)
         salary_currency = "EUR"
         salary_display = format_salary(salary_min, salary_max, lang)
-        salary_in_text = rng.random() < 0.2  # зарплата лише в тексті, не в окремому полі
+        salary_in_text = rng.random() < 0.2  # salary only in the text, not in a separate field
 
     title = make_title(rng, spec, seniority, lang, remote)
 
@@ -255,7 +255,7 @@ def make_job(rng: random.Random, site: str, job_id: str) -> Job:
 
     benefits = rng.sample(v.BENEFITS[lang], rng.randint(3, 5))
     if lang == "en" and rng.random() < 0.2:
-        benefits += rng.sample(v.BENEFITS["sk"], 2)  # змішані мови
+        benefits += rng.sample(v.BENEFITS["sk"], 2)  # mixed languages
 
     intro = rng.choice(v.INTRO_TEMPLATES[lang]).format(
         c=company, k=rng.choice(v.COMPANY_KINDS[lang]), p=rng.choice(v.PRODUCTS[lang]))
@@ -281,7 +281,7 @@ def make_job(rng: random.Random, site: str, job_id: str) -> Job:
         show_criteria=rng.random() < 0.7,
     )
 
-    # Факти, які видно лише в тексті опису.
+    # Facts that are visible only in the description text.
     if salary_in_text and salary_display:
         job.extra_lines.append(f"Mzda: {salary_display}, podľa skúseností." if lang == "sk"
                                else f"Salary: {salary_display}, depending on experience.")
@@ -311,7 +311,7 @@ def make_jobs(rng: random.Random, site: str, n: int) -> list[Job]:
     return jobs
 
 
-# ---------------------------------------------------------------- запис сайтів
+# ---------------------------------------------------------------- writing the sites
 
 def days_ago(d: date) -> str:
     n = (BASE_DATE - d).days
@@ -335,7 +335,7 @@ def write_site(site: str, jobs: list[Job], out_dir: Path) -> None:
         html = job.raw_html or env.get_template("detail.html").render(job=job)
         write_file(out_dir / detail_path(site, job.id).lstrip("/"), html)
     if site == "linkedin":
-        # Корінь сайту перенаправляє на пошук, як на справжньому сайті.
+        # The site root redirects to search, like on the real site.
         write_file(out_dir / "index.html",
                    '<!DOCTYPE html><meta charset="utf-8">'
                    '<meta http-equiv="refresh" content="0; url=/jobs/search/index.html">')
@@ -348,14 +348,14 @@ def write_file(path: Path, content: str) -> None:
 
 def generate(seed: int = 42, n_per_site: int = 45, sites_root: Path = MOCK_ROOT,
              gt_path: Path = GROUND_TRUTH_PATH, edge_cases: bool = True) -> list[dict[str, Any]]:
-    from mock_sites.edge_cases import make_edge_cases  # тут, щоб уникнути циклічного імпорту
+    from mock_sites.edge_cases import make_edge_cases  # imported here to avoid a circular import
 
     rng = random.Random(seed)
     ground_truth: list[dict[str, Any]] = []
     for site in SITES:
         jobs = make_jobs(rng, site, n_per_site)
         if edge_cases:
-            # Дописуються в кінець і не чіпають rng: основні вакансії лишаються тими самими.
+            # Appended at the end without touching rng, so the regular postings stay the same.
             edge = make_edge_cases(site)
             for i, job in enumerate(edge):
                 job.similar = jobs[i:i + 3]
@@ -372,7 +372,7 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("-n", type=int, default=45, help="вакансій на кожен сайт")
     args = ap.parse_args()
-    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]  # консоль Windows у cp1251
+    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]  # the Windows console uses cp1251
     gt = generate(seed=args.seed, n_per_site=args.n)
     for site in SITES:
         print(f"{site}: {sum(1 for r in gt if r['site'] == site)} вакансій -> mock_sites/{site}/site/")

@@ -1,7 +1,7 @@
-"""Playwright-скрапер мок-сайтів: обхід списку й пагінації, збереження raw HTML деталей.
+"""Playwright scraper for the mock sites: walks the list and pagination, saves the raw detail HTML.
 
-Результат: data/raw/<site>/<id>.html і data/raw/<site>/index.json (url -> файл).
-Запуск (сайти мають бути запущені через mock_sites.serve):
+Output: data/raw/<site>/<id>.html and data/raw/<site>/index.json (url -> file).
+Usage (the sites must be running via mock_sites.serve):
     uv run python -m scraper.run [--site profesia|linkedin]
 """
 
@@ -21,7 +21,7 @@ from scraper.profesia import ProfesiaAdapter
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT / "data" / "raw"
-MAX_LIST_PAGES = 50  # запобіжник від нескінченної пагінації
+MAX_LIST_PAGES = 50  # guard against endless pagination
 
 
 def goto(page: Page, url: str, retries: int = 2) -> None:
@@ -51,8 +51,8 @@ def collect_detail_urls(page: Page, adapter: SiteAdapter) -> list[str]:
 
 
 def scrape_site(browser: Browser, adapter: SiteAdapter, raw_dir: Path = RAW_DIR) -> list[dict[str, Any]]:
-    # Пишемо в тимчасову теку й підміняємо лише після успіху,
-    # щоб невдалий запуск не стер попередні дані.
+    # Write to a temporary directory and swap it in only on success,
+    # so a failed run does not wipe the previous data.
     out_dir = raw_dir / adapter.name
     tmp_dir = raw_dir / f"{adapter.name}.tmp"
     if tmp_dir.exists():
@@ -70,7 +70,7 @@ def scrape_site(browser: Browser, adapter: SiteAdapter, raw_dir: Path = RAW_DIR)
                 "site": adapter.name,
                 "id": job_id,
                 "url": url,
-                "file": f"{adapter.name}/{job_id}.html",  # відносно data/raw
+                "file": f"{adapter.name}/{job_id}.html",  # relative to data/raw
                 "scraped_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             })
         (tmp_dir / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")

@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from scripts.publish_results import PublishConflict, merge_snapshots, publish
+from scripts.publish_results import NotFound, PublishConflict, merge_snapshots, publish
 
 
 def snapshot(jobs):
@@ -63,6 +63,34 @@ class PublishingTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'offline'):
                 publish(source, token='fake', request=unavailable)
             self.assertEqual(source.read_text(), original)
+
+    def test_real_data_goes_to_its_own_file_and_creates_it(self):
+        with tempfile.TemporaryDirectory() as d:
+            source = Path(d) / 'jobs.jsonl'
+            source.write_text(json.dumps({'source_url': 'https://www.profesia.sk/O1', 'title': 'Real'}))
+            calls = []
+            def api(token, method, endpoint, body=None):
+                calls.append((method, endpoint, body))
+                if method == 'GET':
+                    raise NotFound('missing')
+                self.assertNotIn('sha', body)
+                self.assertEqual(json.loads(base64.b64decode(body['content']))['dataset_kind'], 'real')
+                return {'commit': {'html_url': 'https://github.com/example/commit'}}
+            self.assertTrue(publish(source, kind='real', token='fake', request=api)['changed'])
+            self.assertTrue(all(e.split('?')[0].endswith('/frontend/data/jobs_real.json') for _, e, _ in calls))
+
+    def test_synthetic_data_keeps_the_original_file(self):
+        with tempfile.TemporaryDirectory() as d:
+            source = Path(d) / 'jobs.jsonl'
+            source.write_text(json.dumps({'source_url': 'a', 'title': 'A'}))
+            endpoints = []
+            def api(token, method, endpoint, body=None):
+                endpoints.append(endpoint.split('?')[0])
+                if method == 'GET':
+                    return encoded(snapshot([]))
+                return {'commit': {'html_url': 'https://github.com/example/commit'}}
+            publish(source, token='fake', request=api)
+            self.assertTrue(endpoints and all(e.endswith('/contents/frontend/data/jobs.json') for e in endpoints))
 
     def test_mixed_datasets_are_rejected(self):
         remote = snapshot([{'source_url': 'a', 'title': 'A'}])
