@@ -56,11 +56,13 @@ def export(source: Path, output: Path, kind: str) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, required=True)
-    parser.add_argument('--output', type=Path, default=Path('frontend/data/jobs.json'))
+    parser.add_argument('--output', type=Path, default=None,
+                        help='default: frontend/data/jobs.json (synthetic) or frontend/data/jobs_real.json (real)')
     parser.add_argument('--kind', choices=['synthetic', 'real'], default='synthetic')
     args = parser.parse_args()
-    payload = export(args.input, args.output, args.kind)
-    print(f"Підготовлено {len(payload['jobs'])} публічних записів: {args.output}")
+    output = args.output or Path('frontend/data/jobs_real.json' if args.kind == 'real' else 'frontend/data/jobs.json')
+    payload = export(args.input, output, args.kind)
+    print(f"Підготовлено {len(payload['jobs'])} публічних записів: {output}")
 
 
 if __name__ == '__main__':

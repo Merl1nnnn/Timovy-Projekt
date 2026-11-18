@@ -10,3 +10,5 @@ data/db/
 data/real/
 data/ground_truth.json
 mock_sites/*/site/
+# Real postings are published via scripts/publish_results.py --kind real, never committed by hand.
+frontend/data/jobs_real.json

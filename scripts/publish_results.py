@@ -17,10 +17,15 @@ else:
     from export_results import export
 
 REPOSITORY = 'Merl1nnnn/Timovy-Projekt'
-PATH = 'frontend/data/jobs.json'
+# One file per dataset kind, so synthetic and real postings never end up in the same file.
+PATHS = {'synthetic': 'frontend/data/jobs.json', 'real': 'frontend/data/jobs_real.json'}
 
 
 class PublishConflict(RuntimeError):
+    pass
+
+
+class NotFound(RuntimeError):
     pass
 
 
@@ -36,9 +41,10 @@ def api(token, method, endpoint, body=None):
     except urllib.error.HTTPError as error:
         if error.code in (409, 422):
             raise PublishConflict('Конфлікт публікації; дані на сайті змінилися') from None
+        if error.code == 404:
+            raise NotFound('Репозиторій, гілку або файл даних не знайдено') from None
         messages = {401: 'Потрібна чинна авторизація (gh auth login)',
-                    403: 'Недостатньо прав Contents: write або перевищено ліміт',
-                    404: 'Репозиторій, гілку або файл даних не знайдено'}
+                    403: 'Недостатньо прав Contents: write або перевищено ліміт'}
         raise RuntimeError(messages.get(error.code, f'GitHub HTTP {error.code}')) from None
     except (urllib.error.URLError, TimeoutError) as error:
         raise RuntimeError('GitHub недоступний; локальні результати збережено') from error
@@ -93,19 +99,27 @@ def publish(source, *, output=None, kind='synthetic', repository=None, branch=No
     repository = repository or os.getenv('SKILLMINER_REPOSITORY', REPOSITORY)
     branch = branch or os.getenv('SKILLMINER_BRANCH', 'main')
     request = request or api
-    endpoint = f'/repos/{repository}/contents/{PATH}'
+    endpoint = f'/repos/{repository}/contents/{PATHS[kind]}'
     for attempt in range(3):
-        previous = request(token, 'GET', endpoint + '?ref=' + urllib.parse.quote(branch, safe=''))
-        if previous.get('encoding') != 'base64':
-            raise RuntimeError('Непідтримуваний формат GitHub Contents; запис зупинено')
-        remote = json.loads(base64.b64decode(previous['content']))
-        merged = merge_snapshots(remote, local)
-        if remote['jobs'] == merged['jobs'] and remote.get('dataset_kind') == kind:
-            return {'changed': False, 'count': len(merged['jobs']), 'url': None}
         try:
-            result = request(token, 'PUT', endpoint, {'message': 'Update shared NLP results',
-                'branch': branch, 'sha': previous['sha'],
-                'content': base64.b64encode(json.dumps(merged, ensure_ascii=False, indent=2).encode()).decode()})
+            previous = request(token, 'GET', endpoint + '?ref=' + urllib.parse.quote(branch, safe=''))
+        except NotFound:
+            previous = None  # first publication of this dataset kind: the file is created
+        if previous is None:
+            remote, sha = {'schema_version': 1, 'dataset_kind': kind, 'jobs': []}, None
+        else:
+            if previous.get('encoding') != 'base64':
+                raise RuntimeError('Непідтримуваний формат GitHub Contents; запис зупинено')
+            remote, sha = json.loads(base64.b64decode(previous['content'])), previous['sha']
+        merged = merge_snapshots(remote, local)
+        if sha and remote['jobs'] == merged['jobs'] and remote.get('dataset_kind') == kind:
+            return {'changed': False, 'count': len(merged['jobs']), 'url': None}
+        body = {'message': f'Update shared NLP results ({kind})', 'branch': branch,
+                'content': base64.b64encode(json.dumps(merged, ensure_ascii=False, indent=2).encode()).decode()}
+        if sha:
+            body['sha'] = sha
+        try:
+            result = request(token, 'PUT', endpoint, body)
         except PublishConflict:
             if attempt == 2:
                 raise

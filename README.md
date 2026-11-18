@@ -95,6 +95,8 @@ If uploading fails, the command reports an error and keeps local results. Run th
 
 The static dashboard in `frontend/` supports search, filters, frequencies of required and nice-to-have skills, job details (short English summary, minimum experience and education), quality flags and CSV export. The interface is available in **Slovak, English and Ukrainian**, with **light and dark themes**. Preferences are saved in the browser. Job titles and extracted data remain in their original language.
 
+A **Mock / Real** switch at the top selects the dataset. Mock data (lavender notice) comes from `frontend/data/jobs.json`; real Profesia.sk postings (green notice) come from `frontend/data/jobs_real.json`. Until real data is published, the Real view says so instead of showing anything. The choice is remembered and can be linked with `?data=real` or `?data=mock`.
+
 The initial dataset contains **101 synthetic postings from local mock sites**. LLM results may contain errors. These are not statistics from the real labour market.
 
 ## How publishing works
@@ -115,6 +117,12 @@ python3 -m http.server 8765 --directory frontend
 
 Open http://localhost:8765. Opening `index.html` through `file://` is not supported because the dashboard loads its JSON with `fetch`.
 
+To see your local real postings in the Real view, export them first. `frontend/data/jobs_real.json` is git-ignored, so it cannot be committed by accident:
+
+```sh
+python3 scripts/export_results.py --input data/real/parsed/jobs.jsonl --kind real
+```
+
 ## Publish local NLP results
 
 Install [GitHub CLI](https://cli.github.com/) and sign in with write access to this repository:
@@ -130,7 +138,7 @@ Review `data/parsed/public_jobs.json` next to your input file, then publish:
 python3 scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl'
 ```
 
-The script merges results into `frontend/data/jobs.json` on `main`, preserving jobs from other participants. GitHub Actions then deploys the updated site. Earlier snapshots remain in Git history. Concurrent updates are retried; if all retries fail, local results remain available for a later upload.
+The script merges results into `frontend/data/jobs.json` (synthetic) or `frontend/data/jobs_real.json` (`--kind real`) on `main`, preserving jobs from other participants. The real file is created on its first publication. GitHub Actions then deploys the updated site. Earlier snapshots remain in Git history. Concurrent updates are retried; if all retries fail, local results remain available for a later upload.
 
 Datasets are marked as synthetic by default. Use `--kind real` only after checking publication permissions and removing personal data upstream.
 
@@ -148,4 +156,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The 85 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
+The 87 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
