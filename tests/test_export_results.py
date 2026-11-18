@@ -12,7 +12,7 @@ class ExportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             record = {'title': 'Developer test@example.com +421 900 123 456',
-                      'source_url': 'http://localhost/job/1', 'technologies': ['Python'],
+                      'source_url': 'http://localhost/job/1', 'required_skills': ['Python'],
                       'raw_html': 'private raw text', 'api_key': 'SECRET'}
             source = root / 'in.jsonl'
             source.write_text('\n'.join([json.dumps(record)] * 2))
@@ -38,7 +38,7 @@ class ExportTests(unittest.TestCase):
             output = root / 'out.json'
             output.write_text('previous')
             source = root / 'in.jsonl'
-            for content in ['', '{"title":"job","technologies":"Python"}', 'invalid json']:
+            for content in ['', '{"title":"job","required_skills":"Python"}', 'invalid json']:
                 source.write_text(content)
                 with self.assertRaises(ValueError):
                     export(source, output, 'synthetic')

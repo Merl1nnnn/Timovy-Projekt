@@ -114,13 +114,14 @@ def is_experience(item: str) -> bool:
 
 
 def normalize_skill(name: str) -> str:
-    raw = _MARKER_SUFFIX.sub("", name.strip().strip(".,;:"))
+    # Keep a leading dot: ".NET".
+    raw = _MARKER_SUFFIX.sub("", name.strip().lstrip(",;:").rstrip(".,;:"))
     key = raw.lower()
     if key in _LOOKUP:
         return _LOOKUP[key]
     # "Kubernetes (k8s)", "English (B2+)", "Java 17+" -> retry without parentheses and suffixes
     base = re.sub(r"\s*\(.*?\)\s*", " ", raw).strip()
-    base = re.sub(r"\s*[\d.+]+$", "", base).strip()
+    base = re.sub(r"\s+[\d.+]+$", "", base).strip()  # only a version after a space: "Java 17+"; "TYPO3" stays intact
     if base.lower() in _LOOKUP:
         return _LOOKUP[base.lower()]
     # Non-technical skills in free text: "great communicator", "práca v Scrum tíme", "angličtina min. B2"
@@ -215,10 +216,36 @@ def move_marked_to_nice(required: list[str], nice: list[str], page_text: str) ->
     return keep, dedupe(nice + moved)
 
 
+_AMOUNT = r"(\d{1,2}[  .,]?\d{3})"
+_SALARY_RANGE = re.compile(_AMOUNT + r"\s*[-–]\s*(?:€\s*)?" + _AMOUNT + r"\s*(?:EUR|€)", re.IGNORECASE)
+_SALARY_ONE = re.compile(r"(?:€\s*" + _AMOUNT + r"|" + _AMOUNT + r"\s*(?:EUR|€))", re.IGNORECASE)
+
+
+def salary_from_text(page_text: str) -> tuple[int | None, int | None]:
+    """Rule-based monthly salary: the first line with an EUR amount. A fallback for when the LLM missed it."""
+    def num(s: str) -> int:
+        return int(re.sub(r"\D", "", s))
+
+    for line in page_text.splitlines():
+        if not re.search(r"EUR|€", line, re.IGNORECASE):
+            continue
+        m = _SALARY_RANGE.search(line)
+        if m and 300 <= num(m.group(1)) <= num(m.group(2)):
+            return num(m.group(1)), num(m.group(2))
+        m = _SALARY_ONE.search(line)
+        if m and num(m.group(1) or m.group(2)) >= 300:  # smaller amounts are hourly rates or bonuses
+            return num(m.group(1) or m.group(2)), None
+    return None, None
+
+
+MAX_SKILL_WORDS = 5  # a longer "skill" is a duty sentence, not a skill
+
+
 def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
     """Raw LLM extraction -> final JobPosting (canonical names, consistent lists, derived fields)."""
     def clean(items: list[str]) -> list[str]:
-        skills = [normalize_skill(s) for s in items if not is_experience(s)]
+        skills = [normalize_skill(s) for s in items
+                  if not is_experience(s) and len(s.split()) <= MAX_SKILL_WORDS]
         # A non-technical skill the page does not mention is a model hallucination.
         return dedupe([s for s in skills if s not in SOFT_SKILLS or soft_skill_mentioned(s, page_text)])
 
@@ -226,9 +253,15 @@ def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
     nice = [s for s in clean(ex.nice_to_have_skills)
             if s.lower() not in {r.lower() for r in required}]  # required takes precedence over nice-to-have
     required, nice = move_marked_to_nice(required, nice, page_text)
-    # technologies = усі технічні навички з обох списків + те, що LLM поклала лише сюди.
-    tech = dedupe(clean(ex.technologies) + required + nice)
-    tech = [t for t in tech if t not in SOFT_SKILLS]
+    years = ex.min_experience_years
+    if years is not None and not 0 <= years <= 40:
+        years = None
+    salary_min, salary_max, currency = ex.salary_min, ex.salary_max, ex.salary_currency
+    rule_min, rule_max = salary_from_text(page_text)
+    if salary_min is None and salary_max is None and rule_min is not None:
+        salary_min, salary_max, currency = rule_min, rule_max, "EUR"
+    elif salary_max is None and rule_max is not None and salary_min == rule_min:
+        salary_max = rule_max
     location = normalize_location(ex.location)
     return JobPosting(
         title=ex.title.strip(),
@@ -243,10 +276,12 @@ def normalize(ex: JobExtraction, source_url: str, page_text: str) -> JobPosting:
         specialization=ex.specialization,
         required_skills=required,
         nice_to_have_skills=nice,
-        technologies=tech,
-        salary_min=ex.salary_min,
-        salary_max=ex.salary_max,
-        salary_currency=ex.salary_currency,
+        min_experience_years=years,
+        education=ex.education,
+        salary_min=salary_min,
+        salary_max=salary_max,
+        salary_currency=currency,
+        summary=" ".join(ex.summary.split()),
         language=detect_language(page_text),
         source_url=source_url,
     )

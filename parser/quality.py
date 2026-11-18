@@ -8,7 +8,7 @@ import re
 
 from pydantic import BaseModel
 
-from parser.normalize import CANONICAL, CITY_ABBREV, REMOTE_WORDS, fold
+from parser.normalize import CANONICAL, CITY_ABBREV, REMOTE_WORDS, SOFT_SKILLS, fold
 from parser.schema import JobPosting
 
 LOW_CONFIDENCE_THRESHOLD = 0.7
@@ -52,11 +52,16 @@ def check(ex: JobPosting, page_text: str) -> QualityReport:
     t = fold(page_text)
     issues: list[tuple[str, float]] = []
 
-    # Галюцинації: кожна технологія має бути в тексті (канонічно або аліасом).
-    for tech in ex.technologies:
-        variants = [tech] + CANONICAL.get(tech, [])
+    # Hallucinations: every technical skill must appear in the text (canonical name or alias).
+    for skill in ex.required_skills + ex.nice_to_have_skills:
+        if skill in SOFT_SKILLS:
+            continue  # already filtered in normalize by whether the page mentions them
+        variants = [skill] + CANONICAL.get(skill, [])
         if not any(_contains(t, v) for v in variants):
-            issues.append((f"technology not found in text: {tech}", 0.15))
+            issues.append((f"skill not found in text: {skill}", 0.15))
+
+    if ex.min_experience_years is not None and not re.search(rf"(?<!\d){ex.min_experience_years}(?!\d)", page_text):
+        issues.append((f"experience {ex.min_experience_years} years not found in text", 0.15))
 
     if not _contains(t, ex.title):
         issues.append(("title not found verbatim in text (translated or invented?)", 0.2))

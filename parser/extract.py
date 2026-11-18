@@ -24,15 +24,22 @@ LEVEL / ROLE
 - seniority: from the title if it contains a level (Junior/Jr./Začínajúci -> junior; Medior/Mid -> medior; Senior/Sr./Skúsený -> senior; Lead/Tech Lead/Team Lead/Principal -> lead). If the title has no level, use required experience: 0-1 years junior, 2-4 medior, 5-6 senior, 7+ or team leading lead.
 - specialization: one of Python, Java, DevOps, Data, QA, Frontend.
 
-SKILLS - take them ONLY from the requirements part (Požiadavky, Požadujeme, Must have, Requirements, Who we're looking for, What you bring, Čo by si mal/a ovládať, or a sentence like "Hľadáme..." / "We are looking for..."). NEVER from duties (Náplň práce, What you'll do, Čo budeš robiť) or benefits.
+SKILLS - take them ONLY from the requirements part (Požiadavky, Požadujeme, Must have, Requirements, Who we're looking for, What you bring, Čo by si mal/a ovládať, "Ďalšie znalosti" / "Other knowledge", or a sentence like "Hľadáme..." / "We are looking for..."). NEVER from duties (Náplň práce, What you'll do, Čo budeš robiť) or benefits.
+- A skill is a SHORT name (1-4 words) of a programming language, technology, tool, framework, platform, protocol or method: "Python", "Spring Boot", "Active Directory", "SIEM", "ITIL". Never a task or a whole sentence ("analýza zraniteľnosti", "writing documentation"), never a personality trait ("team player", "analytical thinking").
 - nice_to_have_skills: items under a "Výhodou je" / "Nice to have" / "Bonus points" / "Plusové body" heading, or items marked with (výhodou), (plus), (bonus), (nice to have), "– a plus", "– nice to have", or after "Výhodou je znalosť" / "It's a plus if you know".
-- required_skills: every other requirement item that is a technology or skill. Skip years of experience and education.
+- required_skills: every other requirement item that is a skill. A skill must not be in both lists.
 - Non-technical requirements: include them ONLY if the page explicitly asks for them, and name them "English" (English language), "Slovak" (Slovak/Czech language), "Scrum" (Scrum/agile experience), "Communication" (communication skills). Do not add any of these if the page does not mention it.
-- technologies: every technology/tool/framework from required_skills and nice_to_have_skills (no English/Slovak/Scrum/Communication).
-- Write technologies with standard names: js -> JavaScript, k8s -> Kubernetes, postgres -> PostgreSQL.
+- Write skills with standard names: js -> JavaScript, k8s -> Kubernetes, postgres -> PostgreSQL, keep ".NET" and "TYPO3" as written.
+
+EXPERIENCE / EDUCATION
+- min_experience_years: minimum years of experience required ("min. 3 roky praxe", "3+ years", "Počet rokov praxe: 4", "Number of years of experience: 4"). For a range "2-4 years" use 2. null if no number of years is given.
+- education: the MINIMUM required education. "Stredoškolské (s maturitou)" / "Secondary" -> secondary; "Vysokoškolské I. stupňa" / "Bachelor" / generic "university degree" / "VŠ" -> bachelor; "Vysokoškolské II. stupňa" / "Master" / "Ing." / "Mgr." -> master; "Vysokoškolské III. stupňa" / "PhD" -> phd. null if not stated or only mentioned as an advantage.
 
 SALARY
-- salary_min / salary_max: monthly gross integers. "od X" / "From X" -> salary_min=X, salary_max=null. No salary -> all three salary fields null. salary_currency: "EUR"."""
+- salary_min / salary_max: monthly gross integers. "od X" / "From X" -> salary_min=X, salary_max=null. No salary -> all three salary fields null. salary_currency: "EUR".
+
+SUMMARY
+- summary: 2-3 short sentences IN ENGLISH about what the person will do and in which product, team or domain. Use only facts from the page; no salary, benefits, contact details or marketing phrases."""
 
 
 class ExtractionError(RuntimeError):

@@ -6,8 +6,8 @@ from pathlib import Path
 import re
 
 FIELDS = ('title', 'company', 'location', 'remote', 'employment_type', 'seniority',
-          'specialization', 'required_skills', 'nice_to_have_skills', 'technologies',
-          'salary_min', 'salary_max', 'salary_currency', 'language', 'source_url',
+          'specialization', 'required_skills', 'nice_to_have_skills', 'min_experience_years',
+          'education', 'salary_min', 'salary_max', 'salary_currency', 'summary', 'language', 'source_url',
           'site', 'id', 'confidence', 'low_confidence', 'quality_issues', 'model', 'parsed_at')
 EMAIL = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}')
 # Not right after "<digit> ", so amounts like "2 000 - 2 500 EUR" are not taken for phone numbers.
@@ -32,7 +32,7 @@ def export(source: Path, output: Path, kind: str) -> dict:
         record = json.loads(line)
         if not isinstance(record, dict) or not isinstance(record.get('title'), str):
             raise ValueError(f'Рядок {number}: потрібен об’єкт із title')
-        for key in ('technologies', 'required_skills', 'nice_to_have_skills', 'quality_issues'):
+        for key in ('required_skills', 'nice_to_have_skills', 'quality_issues'):
             if key in record and (not isinstance(record[key], list) or
                                   not all(isinstance(v, str) for v in record[key])):
                 raise ValueError(f'Рядок {number}: {key} має бути списком рядків')

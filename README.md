@@ -93,7 +93,7 @@ If uploading fails, the command reports an error and keeps local results. Run th
 
 **Live site: https://merl1nnnn.github.io/Timovy-Projekt/**
 
-The static dashboard in `frontend/` supports search, filters, technology frequencies, job details, quality flags and CSV export. The interface is available in **Slovak, English and Ukrainian**, with **light and dark themes**. Preferences are saved in the browser. Job titles and extracted data remain in their original language.
+The static dashboard in `frontend/` supports search, filters, frequencies of required and nice-to-have skills, job details (short English summary, minimum experience and education), quality flags and CSV export. The interface is available in **Slovak, English and Ukrainian**, with **light and dark themes**. Preferences are saved in the browser. Job titles and extracted data remain in their original language.
 
 The initial dataset contains **101 synthetic postings from local mock sites**. LLM results may contain errors. These are not statistics from the real labour market.
 
@@ -148,4 +148,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The 69 automated tests cover extraction, normalisation, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
+The 85 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.

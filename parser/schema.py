@@ -16,6 +16,7 @@ Seniority = Literal["junior", "medior", "senior", "lead"]
 EmploymentType = Literal["full_time", "part_time", "contract"]
 Specialization = Literal["Python", "Java", "DevOps", "Data", "QA", "Frontend"]
 WorkplaceType = Literal["on-site", "hybrid", "remote"]
+Education = Literal["secondary", "bachelor", "master", "phd"]
 
 
 class _SalaryCheck(BaseModel):
@@ -45,12 +46,15 @@ class JobExtraction(_SalaryCheck):
     employment_type: EmploymentType | None
     seniority: Seniority | None
     specialization: Specialization | None
-    required_skills: list[str]
-    nice_to_have_skills: list[str]
-    technologies: list[str]
+    required_skills: list[str] = Field(description="Short skill names (1-4 words) from the requirements")
+    nice_to_have_skills: list[str] = Field(description="Short skill names marked as an advantage / a plus")
+    min_experience_years: int | None = Field(description="Minimum years of required experience; null if not stated")
+    education: Education | None = Field(description="Minimum required education; null if not stated")
     salary_min: int | None = Field(description="Monthly gross salary lower bound")
     salary_max: int | None = Field(description="Monthly gross salary upper bound; null for 'from X'")
     salary_currency: str | None = Field(description="ISO 4217 code, e.g. EUR")
+    # Last on purpose: the summary is generated after all factual fields and does not affect them.
+    summary: str = Field(description="2-3 sentences in English: what the job is about")
     # language is deliberately not requested from the LLM: qwen2.5:7b kept answering "Slovak" for English
     # postings (0.38-0.56 accuracy). The rule parser/normalize.py:detect_language sets the language.
 
@@ -63,12 +67,14 @@ class JobPosting(_SalaryCheck):
     employment_type: EmploymentType | None
     seniority: Seniority | None
     specialization: Specialization | None
-    required_skills: list[str]
-    nice_to_have_skills: list[str]
-    technologies: list[str]
+    required_skills: list[str]  # required skills (technical + English/Slovak/Scrum/Communication)
+    nice_to_have_skills: list[str]  # nice-to-have ("výhodou", "a plus"); never overlap with required
+    min_experience_years: int | None
+    education: Education | None
     salary_min: int | None
     salary_max: int | None
     salary_currency: str | None
+    summary: str
     language: Literal["sk", "en"]
     source_url: str
 
