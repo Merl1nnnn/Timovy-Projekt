@@ -1,4 +1,4 @@
-# Extraction evaluation — Rostyslav's module
+# Extraction evaluation 
 
 This module validates the human-annotated gold set, scores saved parser outputs,
 exports metrics and errors, and compares two runs. It reads input files without
