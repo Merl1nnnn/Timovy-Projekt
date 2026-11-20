@@ -1,4 +1,4 @@
-"""Read-only validation of human labels and saved predictions. No LLM or network calls."""
+"""Validate gold labels and saved predictions."""
 
 import json
 from pathlib import Path
@@ -16,7 +16,7 @@ ENUMS = {
 
 
 class DatasetError(ValueError):
-    """An input cannot safely be scored; all collected issues are available to the caller."""
+    """Input validation errors."""
 
     def __init__(self, issues: list[str]):
         self.issues = issues
@@ -116,7 +116,6 @@ def load_gold(gold_dir: Path) -> dict[str, dict[str, Any]]:
                     issues.append(f"{jid}: conflicting annotations in {origins[jid]} and {path.name}: "
                                   + ", ".join(sorted(set(differing))))
                 else:
-                    # Keep available provenance from either agreeing control annotation.
                     for field in ("site", "url", "source_url", "text_hash", "snapshot_id"):
                         if not previous.get(field) and row.get(field):
                             previous[field] = row[field]

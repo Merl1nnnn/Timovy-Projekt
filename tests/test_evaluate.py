@@ -60,8 +60,6 @@ def test_load_gold_keeps_one_copy_of_control_jobs(tmp_path: Path) -> None:
     assert sorted(load_gold(tmp_path)) == ["7", "a", "b"]
 
 
-# The fixtures above are deliberately small enough to verify metrics by hand.
-
 
 
 def write_gold(path, rows, name="gold_a.json"):

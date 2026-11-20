@@ -1,14 +1,14 @@
-# Оцінювання extraction — частина Rostyslav
+# Extraction evaluation — Rostyslav's module
 
-Модуль перевіряє людський golden set, порівнює збережені відповіді парсера з ним,
-зберігає метрики й помилки та порівнює два запуски. Він не викликає LLM, не збирає
-вакансії, не навчає модель і не публікує дані. Початкові файли читаються без змін.
+This module validates the human-annotated gold set, scores saved parser outputs,
+exports metrics and errors, and compares two runs. It reads input files without
+modifying them. It does not call an LLM, scrape jobs, train a model, or publish data.
 
-## Швидкий демонстраційний запуск
+## Quick demo
 
-Встановіть залежності через `uv sync --locked`. Запускайте з кореня репозиторію.
-Файли в `examples/evaluation/` — три вигадані вакансії та вручну задані відповіді;
-це перевірка роботи інструмента, а не вимірювання реальної моделі.
+Install dependencies with `uv sync --locked`. Run commands from the repository root.
+The files in `examples/evaluation/` contain three fictional jobs and manually
+prepared predictions. They demonstrate the evaluator, not a real model's quality.
 
 ```sh
 uv run python -m scripts.evaluate --gold examples/evaluation/gold --validate-only
@@ -18,135 +18,138 @@ uv run python -m scripts.evaluate --gold examples/evaluation/gold --pred example
 uv run python -m scripts.evaluate --gold examples/evaluation/gold --pred examples/evaluation/candidate.jsonl --run-name demo-candidate --baseline data/real/eval/demo-baseline/report.json --out-dir data/real/eval/demo-candidate
 ```
 
-Очікування: baseline обробляє 2/3 вакансій, candidate — 3/3. Candidate знаходить
-усі навички, але в demo-2 помиляється щодо досвіду. Звіт має показати і покращення,
-і погіршення. Повторний запуск потребує іншої назви вихідної папки.
+Expected results: the baseline processes 2/3 jobs; the candidate processes 3/3.
+The candidate finds all skills but gets the experience field wrong in demo-2.
+The report shows both improvements and regressions. Use a new output directory
+when repeating a run.
 
-## Реальні дані
+## Real data
 
-1. Збережіть незмінну копію текстів, на яких люди робили розмітку, і відповідних
-   результатів парсера. Поточний текст за тим самим URL може вже відрізнятися.
-2. Покладіть файли учасників `gold_*.json` в одну папку та перевірте їх:
+1. Freeze copies of the texts used for human annotation and the corresponding
+   parser outputs. The current page at the same URL may have changed.
+2. Put the participants' `gold_*.json` files in one directory and validate them:
 
 ```sh
 uv run python -m scripts.evaluate --gold data/real/gold --validate-only
 ```
 
-3. Узгодьте виявлені конфлікти між людьми. Інструмент не обирає переможця.
-4. Зафіксуйте dev/test-списки ID. `--ids` приймає JSON-масив, наприклад
-   `["O123", "O456"]`, з реальними ID вашої розмітки. Дублікати й різні версії
-   тієї самої вакансії мають бути в одній частині. Інструмент не створює випадковий
-   split і не визначає схожі вакансії автоматично.
-5. Оцініть вже збережені результати, наприклад:
+3. Have the annotators resolve any conflicts. The evaluator does not choose a winner.
+4. Freeze separate dev/test ID lists. `--ids` accepts a JSON array such as
+   `["O123", "O456"]`, using actual IDs from your annotations. Keep duplicates and
+   versions of the same job in the same split. The evaluator does not create random
+   splits or automatically identify similar jobs.
+5. Evaluate the saved predictions:
 
 ```sh
 uv run python -m scripts.evaluate --gold data/real/gold --pred data/real/parsed/jobs.jsonl --ids data/real/splits/dev.json --run-name baseline-dev --prompt-version prompt-v1 --schema-version extraction-v1 --out-dir data/real/eval/baseline-dev
 ```
 
-`--prompt-version` та `--schema-version` — ваші мітки версій, які справді
-використовувалися для генерації відповідей. Інструмент не може відновити їх із
-старого JSONL. Без мітки версія зазначається як невідома.
+`--prompt-version` and `--schema-version` identify the versions actually used to
+produce the predictions. The evaluator cannot recover them from an older JSONL
+file. Omitted versions are recorded as unknown.
 
-Для наступного експерименту спершу збережіть нові відповіді в **інший** JSONL,
-а потім додайте `--baseline data/real/eval/baseline-dev/report.json` і нову
-`--out-dir`. Парсер сам зберігає лише останній результат; цей модуль його поведінку
-не змінює. Звичайний запуск парсера може пропускати незмінені тексти навіть після
-зміни моделі/промпта — плануйте переобробку окремо, зберігши попередні відповіді.
+For the next experiment, first save its predictions in a **different** JSONL file.
+Then add `--baseline data/real/eval/baseline-dev/report.json` and a new `--out-dir`.
+The parser itself keeps only the latest result; this module does not change that
+behavior. A normal parser run may skip unchanged texts even after a model or prompt
+change. Plan reprocessing separately and preserve the previous predictions first.
 
-Якщо всі наявні приклади вже використовували для виправлення парсера, вважайте їх
-набором для розробки. Для незалежної перевірки розмітьте нові приклади. Не підбирайте
-промпт за тестовими помилками. Нові зібрані вакансії не змінюють зафіксований тест.
+If all existing examples have already informed parser improvements, treat them as
+development data. Annotate new examples for independent testing. Do not tune the
+prompt against test errors. Newly collected jobs do not change the frozen test set.
 
-## Формат і перевірки
+## Input format and validation
 
-Gold: об'єкт `{"dataset_id": "...", "jobs": [...]}` у файлах `gold_*.json`.
-`dataset_id` необов'язковий; зазначені значення в одній папці мають збігатися.
-Predictions: JSONL, один об'єкт вакансії на рядок. `id` — непорожній рядок.
+Gold files: `gold_*.json`, each containing `{"dataset_id": "...", "jobs": [...]}`.
+`dataset_id` is optional; supplied values within one directory must agree.
+Predictions: JSONL with one job object per line. Each `id` must be a non-empty string.
 
-Обов'язкові поля обох форматів: `title`, `company`, `location`, `remote`,
-`employment_type`, `seniority`, `min_experience_years`, `education`, `salary_min`,
-`salary_max`, `language`, `required_skills`, `nice_to_have_skills`.
+Both formats require: `title`, `company`, `location`, `remote`, `employment_type`,
+`seniority`, `min_experience_years`, `education`, `salary_min`, `salary_max`,
+`language`, `required_skills`, and `nice_to_have_skills`.
 
-`null` означає перевірену відсутність інформації, а відсутній ключ — невалідний
-запис. Навички — масиви непорожніх рядків, `remote` — boolean, роки/зарплата —
-невід'ємні цілі або null. Категорії відповідають поточній схемі парсера.
+In gold annotations, `null` means the information was checked and is absent;
+a missing key makes the record invalid. Skills must be lists of non-empty strings,
+`remote` must be a boolean, and years/salary must be non-negative integers or null.
+Categories follow the current parser schema.
 
-Однакові контрольні розмітки об'єднуються; порядок навичок неважливий.
-Розбіжності в оцінюваних полях, спеціалізації чи відомій ідентичності джерела
-зупиняють запуск зі списком конфліктів. Повторні ID у predictions заборонені:
-спочатку виберіть результати одного запуску. Некоректні записи не відкидаються
-непомітно. ID в цій версії мають бути унікальні в межах набору.
+Agreeing control annotations are merged; skill order does not matter. Conflicts
+in scored fields, specialization, or known source identity stop evaluation and
+produce a list of issues. Duplicate prediction IDs are rejected: select the outputs
+of one run first. Invalid records are not silently discarded. IDs must be unique
+within the dataset in this version.
 
-Коли в обох записах присутні `site`, `source_url`/`url`, `snapshot_id` або
-`text_hash`, їхня невідповідність зупиняє оцінювання. Відсутність хешів дозволена
-для старих даних, але звіт явно показує, для скількох вакансій хеш підтверджений.
-Хеші мають бути обчислені з того самого тексту, поданого моделі. Збіг ID сам по
-собі не підтверджує збіг тексту. Збереження/обчислення хешів джерела — окремий етап.
+When both records provide `site`, `source_url`/`url`, `snapshot_id`, or `text_hash`,
+a mismatch stops evaluation. Missing hashes are allowed for older data, but the
+report states how many jobs have matching hashes. Compute hashes from the same
+text supplied to the model. Matching IDs alone do not verify matching source text.
+Saving source snapshots and computing their hashes are separate steps.
 
-## Як читати метрики
+## Reading the metrics
 
-- **Precision = TP / (TP + FP):** частка правильних серед знайдених навичок.
-- **Recall = TP / (TP + FN):** частка знайдених серед навичок у gold.
-- **F1 = 2PR / (P + R):** спільна оцінка precision та recall.
-- **Micro:** спочатку сумуємо TP/FP/FN усіх вакансій, потім обчислюємо метрики.
-- **Required / nice / all:** окремі списки та їхнє об'єднання. Навичка у
-  неправильному списку може бути правильною в `all`, але помилковою в required/nice.
-- **Coverage:** кількість gold-вакансій з результатом / розмір обраного gold.
-- **Matched:** якість лише там, де модель дала результат.
-- **Full cohort / end-to-end:** відсутній результат — порожні списки навичок;
-  для полів це неправильна відповідь, навіть коли у gold null.
-- **Present-only accuracy:** точність поля на оброблених вакансіях, де gold не null.
-  Поруч показано кількість таких прикладів; це не оцінка всіх вакансій.
+- **Precision = TP / (TP + FP):** the fraction of extracted skills that are correct.
+- **Recall = TP / (TP + FN):** the fraction of gold skills that were found.
+- **F1 = 2PR / (P + R):** the harmonic mean of precision and recall.
+- **Micro:** sum TP/FP/FN across jobs before calculating the metrics.
+- **Required / nice / all:** the two skill lists and their union. A skill assigned
+  to the wrong list can be correct in `all` but wrong in required/nice.
+- **Coverage:** gold jobs with a prediction divided by the selected gold set size.
+- **Matched:** quality only on jobs with predictions.
+- **Full cohort / end-to-end:** missing predictions count as empty skill lists.
+  For field accuracy, a missing prediction is incorrect even if the gold value is null.
+- **Present-only accuracy:** field accuracy on matched jobs whose gold value is
+  not null. The report includes the sample count; this does not cover all gold jobs.
 
-Конвенція для порожніх множин: precision або recall з нульовим знаменником = 1;
-коли обидві множини порожні, F1 = 1. Тому F1 завжди потрібно читати разом із
-coverage і TP/FP/FN. За відсутності оброблених вакансій matched-метрики = N/A.
-Порожній predictions-файл допустимий для оцінки повного збою; непорожній файл без
-жодного збігу ID вважається помилково вибраним набором. Зайві ID не оцінюються,
-але перелічені у звіті.
+Empty-set convention: precision or recall with a zero denominator is 1; when both
+skill sets are empty, F1 is 1. Always read F1 alongside coverage and TP/FP/FN.
+Matched metrics are N/A when no jobs have predictions. An empty predictions file
+can represent a complete processing failure. A non-empty file with no matching IDs
+is treated as an incorrectly selected dataset. Extra IDs are listed but not scored.
 
-Навички порівнюються після поточної нормалізації парсера: alias, регістр,
-діакритика й пунктуація. Це не семантичне ESCO-оцінювання. Назва посади порівнюється
-зі згортанням пробілів; компанія — за успадкованим правилом видалення правових
-форм та збігу/входження назви. Решта полів порівнюються точно. Ці правила мають
-обмеження; зміни нормалізації можуть змінювати метрики.
+Skills are compared after the parser's current normalization of aliases, case,
+diacritics, and punctuation. This is not semantic ESCO evaluation. Job titles are
+compared after collapsing whitespace. Company names use the existing rule that
+removes legal forms and accepts equal names or substring matches. Other fields use
+exact equality. These rules have limitations; normalization changes can affect scores.
 
-`specialization` поки не оцінюється через невідповідність категорій gold/parser.
-`summary` і `salary_currency` також не оцінюються. Наявні heuristic confidence
-та списки частих помилок збережені у JSON; confidence не є ймовірністю правильності.
+`specialization` is not scored yet because the gold and parser categories differ.
+`summary` and `salary_currency` are also unscored. The existing heuristic confidence
+checks and frequent-error lists remain in JSON. Confidence is not a calibrated
+probability of correctness.
 
-## Результати й порівняння
+## Reports and comparison
 
-Нова `--out-dir` містить:
+A new `--out-dir` contains:
 
-- `report.json` — метрики, окремі помилки, результати вакансій, метадані запуску.
-- `report.md` — стислий звіт для перегляду командою.
-- `errors.csv` — неправильні поля, зайві/пропущені навички, відсутні результати.
+- `report.json`: metrics, individual errors, per-job results, and run metadata.
+- `report.md`: a readable summary for the team.
+- `errors.csv`: incorrect fields, extra/missing skills, and missing predictions.
 
-CSV показує нормалізовані ключі навичок. Причину помилки треба встановлювати за
-текстом вакансії; інструмент визначає різницю, а не її причину. CSV захищає текстові
-комірки від інтерпретації як формул. Звіти можуть містити фрагменти даних вакансій:
-типова папка `data/real/eval/` вже виключена з Git.
+The CSV uses normalized skill keys. Inspect the source text to determine why an
+error occurred; the evaluator identifies discrepancies, not their causes. CSV text
+cells are escaped against spreadsheet formula interpretation. Reports can contain
+job data; the default `data/real/eval/` directory is already excluded from Git.
 
-`--json` залишається доступним для окремого JSON. Існуючі файли/папки результатів
-не перезаписуються. На помилку вхідних даних або несумісне порівняння CLI повертає
-код 2. На успіх — 0.
+`--json` remains available for a standalone JSON report. Existing output files and
+directories are never overwritten. Invalid inputs or incompatible comparisons return
+CLI exit code 2; successful runs return 0.
 
-Порівняння вимагає однакового набору ID, відбитка gold і відбитка правил
-оцінювання. У метаданих також є SHA-256 файлу predictions, назви моделей та час
-оцінювання. Якщо правила змінилися, заново оцініть **обидва збережені** набори
-відповідей за новими правилами. Старі звіти без metadata спочатку перегенеруйте.
+Comparison requires identical gold IDs, a matching gold fingerprint, and a matching
+scoring-rules fingerprint. Metadata also records the predictions file's SHA-256,
+model names, and evaluation time. If scoring rules change, evaluate **both saved
+prediction sets** again under the new rules. Regenerate older reports without metadata.
 
-Зміни основних метрик рахуються на всьому зафіксованому gold, тому зниклі відповіді
-не покращують результат непомітно. Звіт містить також нові/втрачені відповіді та
-зміни для спільних вакансій. Дельта — опис різниці, не доказ статистичної значущості.
-На малому наборі висновки попередні; одного універсального порогу «хорошого F1» немає.
+Main metric deltas use the full frozen gold cohort, so missing predictions cannot
+silently improve the score. Reports also include newly processed jobs, lost
+predictions, and changes on jobs processed in both runs. A delta describes a
+difference; it does not establish statistical significance. Conclusions from small
+datasets are preliminary, and there is no universal threshold for a good F1 score.
 
-## Тести
+## Tests
 
 ```sh
 uv run pytest tests/test_evaluate.py -q
 ```
 
-Перевіряємо метрики з відомою відповіддю, пропущені результати, null-поля,
-конфлікти розмітки, несумісні знімки/звіти, незмінність вхідних даних та CLI.
+Tests cover manually verified metrics, missing predictions, null fields, annotation
+conflicts, incompatible snapshots/reports, input preservation, and the CLI.

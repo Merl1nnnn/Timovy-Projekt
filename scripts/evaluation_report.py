@@ -1,4 +1,4 @@
-"""Versioned local reports and conservative comparison of saved evaluation runs."""
+"""Export and compare evaluation reports."""
 
 import csv
 import hashlib
@@ -76,7 +76,6 @@ def percent(value: float | None) -> str:
 
 
 def render_markdown(report: dict) -> str:
-    # Keep vacancy text out of the summary; detailed discrepancies stay in the local CSV/JSON.
     meta = report["metadata"]
     name = str(meta["run_name"]).replace("\n", " ").replace("\r", " ")
     lines = [f"# Extraction evaluation: {name}", "",
@@ -135,7 +134,7 @@ def render_markdown(report: dict) -> str:
 
 def csv_cell(value: Any) -> str:
     text = "" if value is None else str(value)
-    # Spreadsheet apps can interpret extracted text as formulas.
+    # Escape spreadsheet formulas.
     return "'" + text if text.lstrip().startswith(("=", "+", "-", "@")) or text.startswith(("\t", "\r")) else text
 
 
