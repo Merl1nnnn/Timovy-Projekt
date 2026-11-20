@@ -68,6 +68,8 @@ uv run python -m parser.run --real
 
 #### Evaluate against the gold set
 
+For gold validation, immutable JSON/Markdown/CSV reports, fixed dev/test cohorts and comparison of two saved runs, see [Evaluation guide (Ukrainian)](docs/EVALUATION.md). A synthetic demo runs locally without Ollama or real vacancy data.
+
 The team hand-annotated 50 real postings (`data/real/gold/`, git-ignored). `scripts/evaluate.py` compares `data/real/parsed/jobs.jsonl` with them: accuracy per field, micro precision / recall / F1 for skills, and whether `low_confidence` really marks worse records.
 
 ```sh
