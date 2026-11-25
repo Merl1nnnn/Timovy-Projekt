@@ -1,4 +1,4 @@
-"""Контракт HTTP з локальною Ollama, без завантаження моделі."""
+"""HTTP contract with a local Ollama, without loading a model."""
 import httpx
 import pytest
 
@@ -23,7 +23,7 @@ def test_ollama_sends_schema_and_reads_content() -> None:
         assert client.last_prompt_tokens == 123
 
 
-@pytest.mark.parametrize('status,tokens,error', [(503, 0, 'HTTP 503'), (200, 4096, 'num_ctx')])
+@pytest.mark.parametrize('status,tokens,error', [(503, 0, 'HTTP 503'), (200, 8192, 'num_ctx')])
 def test_ollama_rejects_server_error_and_full_context(status, tokens, error) -> None:
     client = OllamaClient('http://localhost:11434', 'qwen2.5:1.5b')
     client.http.close()

@@ -1,63 +1,114 @@
 # NLP A — feature/nlp
 
-This branch starts at `main` commit `c3124bb6c9e6c668fe02ac5a750243c1a9a96022`. It extends the existing Ollama extractor; it is not a separate project. No frontend, published JSON or Pages workflow changes are needed for this work.
+This branch incorporates main `00ff59c` (25 November 2026), including the live Profesia
+scraper, dashboard, extraction fields and team evaluator. The deployed main site is unchanged.
 
-## Implemented path
+## Pipeline and compatibility
 
-1. Existing HTML-to-text and structured LLM extraction.
-2. Fast dictionary NER plus LLM mention proposals, including explicit certifications and skill types.
-3. Exact quotes grounded in the unchanged text. Python Unicode offsets use `[start, end)`, not UTF-8 byte offsets. The alias registry checks surface → canonical mappings. Quotes from recognised benefits/duties sections, negations and missing quotes go to review.
-4. A separate LLM prompt validates every mention and non-null metadata field. Missing/duplicate IDs, an invalid response, a failed request, or confidence below 0.8 fails closed. The same configured local model is used in a second pass; this is not an independently trained model.
-5. Only supported mentions populate the final skill lists. Metadata needs literal supporting quotes. Uncertain records and low-confidence heuristic reports go to `data/parsed/review.jsonl`; only accepted records go to `jobs.jsonl`.
-6. SK/EN/CS language heuristics (with `und` for insufficient text), Slovak city-to-region mapping, explicit salary currency/period/gross/net. Yearly amounts have a separate monthly equivalent. Hourly pay is not multiplied by guessed working hours. Ambiguous currencies or missing period/basis require review. Currency is not converted and net is not converted to gross.
+1. Structured extraction preserves main's required/nice-to-have lists, experience,
+   education and English summary. `technologies` is removed, matching main.
+2. Dictionary NER and LLM proposals produce skills, tools and certificates with exact
+   Unicode `[start, end)` spans in the saved source text. Requirements headings and
+   item-level nice markers determine the requirement type. Company descriptions,
+   benefits, duties, negations and alternative requirements cannot silently become
+   mandatory skills. Unknown section layouts go to review rather than being guessed.
+3. A separate prompt checks every mention and non-null metadata field. Missing,
+   duplicate or unknown IDs, invalid output, failed requests, or confidence below 0.8
+   prevent automatic acceptance. The same local model is used twice; its errors may
+   be correlated. Confidence is not a calibrated probability.
+4. Only supported mentions populate the final lists. A job needing review is kept out
+   of `jobs.jsonl` and refused by the public exporter. This conservative gate must be
+   assessed for false rejections as well as missed errors.
 
-`source_text`, its SHA-256, `field_evidence`, `skill_mentions`, rejected items and model/alias versions are local audit data. Evidence is anchored to the exact stored `source_text`; changing the text invalidates offsets. The public exporter does not export full text or evidence quotes. The exporter accepts only validated schema-v2 records; legacy and review records are refused. At the next batch run, legacy local results move to review instead of silently being treated as validated.
+`skill_mentions` stores canonical name, type, requirement, quote, positions and verdict.
+`certificates` is a separate list. `role_specializations` contains explicit title-based
+roles such as Backend or ML, independently of Python/Java skill tags. An ambiguous
+"Python developer" does not automatically imply either role. The legacy
+`specialization` field remains for current consumers. The extraction prompt no longer
+infers a lead role from seven years of experience alone. Taxonomy and inference rules
+still need agreement with the mentor.
 
-`role_specializations` separates role tags (Backend, ML, etc.) from technologies; the existing legacy fields remain for compatibility. Role tags are derived from explicit title wording, not guessed from a technology alone.
+## Salary, language and aliases
 
-## Local manual inspection
+- Language detection supports SK/EN/CS, with `und` for insufficient evidence.
+- Known Slovak cities map to regions; foreign cities do not receive invented regions.
+- `salary_original_min/max`, `salary_currency`, `salary_period` and `salary_basis`
+  preserve the source offer, including cents and upper-only bounds.
+- Legacy `salary_min/max` and `salary_monthly_min/max` contain **monthly gross** amounts
+  in the original currency. Explicit annual gross amounts are divided by 12. Hourly,
+  net or ambiguous amounts leave these fields null. No working hours, currency rate,
+  or net-to-gross conversion is guessed. Missing units/basis require review.
+- Conflicting salary offers are not resolved by taking the first EUR line. Clear meal
+  vouchers/allowances are excluded. Ambiguous combinations still require inspection.
+- Experts edit `parser/resources/aliases.json` and its version. Ambiguous aliases fail
+  to load; dictionary content changes also invalidate cached results.
 
-No model/server is started automatically. Install dependencies using `uv sync --locked`. Start Ollama yourself only when you want to run inference. Use an 8192-token context or larger. The conservative preflight may reject long pages instead of letting Ollama truncate them silently; chunking long postings is still a future improvement.
+## Local checking
+
+No service is started automatically. Use `uv sync --locked`, then start Ollama yourself.
+The example configuration uses `qwen2.5:7b` and an 8192-token context. A 1.5B model can
+be used for smoke checks, but neither model has a proven quality score for this branch.
+Long pages exceeding the conservative context preflight fail rather than being silently
+truncated; automatic chunking is not implemented.
 
 ```sh
-# From this checkout, after you choose to start Ollama:
-.venv/bin/python -m parser.inspect --input samples/nlp/sk.txt \
-  --source-url https://example.invalid/nlp/sk --output data/nlp-checks/sk.json
+.venv/bin/python -m parser.inspect --input samples/nlp/sk.txt --source-url https://example.invalid/nlp/sk --output data/nlp-checks/sk.json
 .venv/bin/python -m parser.inspect --input samples/nlp/en.txt --output data/nlp-checks/en.json
 .venv/bin/python -m parser.inspect --input samples/nlp/cs.txt --output data/nlp-checks/cs.json
 .venv/bin/python -m parser.inspect --input samples/nlp/adversarial.txt --output data/nlp-checks/adversarial.json
+.venv/bin/python -m parser.run --real --no-publish --limit 5
 ```
 
-Use `--html` for a saved page. This command only reads a file and writes local JSON; it never publishes. See `samples/nlp/EXPECTED.md` for manual expectations. Source text can contain personal data: use redacted source pages and keep `data/` out of Git.
+`--html` accepts a saved HTML page. Both inspection and batch processing are local.
+The frontend receives compatible legacy fields plus optional role/certificate/salary
+metadata. Full text and evidence quotes remain local and are not publicly exported.
 
-For the normal batch pipeline: `.venv/bin/python -m parser.run --no-publish`. Review files are candidates for the future expert UI, not an implemented expert decision workflow. Re-running the old batch runner may append repeated review attempts; use the inspection command for focused debugging.
+## Reprocessing and review
 
-## Test and measurement commands (prepared for the user, not executed during this change)
+Cache identity includes source-text SHA-256, extraction/validation prompts, NLP code,
+schema, alias content/version, model name, context and `OLLAMA_MODEL_REVISION`.
+Set the revision when replacing weights under the same model tag: tag names alone do
+not identify the weights. Review results are cached too, avoiding endless retries.
+`--force` reprocesses only the selected records; it does not delete unrelated results.
+Legacy outputs are reprocessed, never assigned a new text hash without inference.
+
+- `jobs.jsonl`: current accepted schema-v3 results for export.
+- `review.jsonl`: latest uncertain/stale result per source URL; no duplicate attempts.
+- `results.jsonl`: current-fingerprint successful attempts, including review, for NLP
+  diagnostics. Stale migration records are excluded.
+- `errors.jsonl`: failed extraction attempts.
+
+If refreshing fails, the previous accepted record moves to review and is not exported
+as current. The files are individually replaced atomically, not a database transaction.
+Expert decisions and an expert UI are outside this implementation.
+
+## Measurement
 
 ```sh
 .venv/bin/python -m pytest -q
-.venv/bin/python -m pytest tests/test_nlp_evidence.py -q
-.venv/bin/python -m scripts.evaluate_nlp --gold samples/nlp/gold.example.json \
-  --predictions data/nlp-checks --output data/nlp-checks/metrics.json
+.venv/bin/python -m scripts.evaluate --gold data/real/gold --pred data/real/parsed/jobs.jsonl --ids data/real/splits/dev.json --run-name accepted-dev --out-dir data/real/eval/accepted-dev
+.venv/bin/python -m scripts.evaluate --gold data/real/gold --pred data/real/parsed/results.jsonl --ids data/real/splits/dev.json --run-name diagnostics-dev --out-dir data/real/eval/diagnostics-dev
+.venv/bin/python -m scripts.evaluate_nlp --gold samples/nlp/gold.example.json --predictions data/nlp-checks --output data/nlp-checks/metrics.json
 ```
 
-The tiny synthetic examples are not the required ≥300 manually annotated golden set. Annotation ownership remains shared with NLP B. No SRS metric is claimed as achieved: skill F1 ≥0.80, seniority/specialisation macro-F1 ≥0.75/0.70 and validator injected-error detection ≥85% still need measurement on the frozen human-labelled test split. Numeric confidence is a model judgement/heuristic, not a calibrated probability.
+The first report measures accepted output, counting review/missing jobs as missing.
+The second diagnoses all current attempts and reports accepted coverage separately.
+Never compare these as equivalent cohorts of accepted predictions. Preserve snapshots
+and previous outputs before reprocessing; keep development and frozen test sets separate.
 
-## Expert-maintained aliases
+Shared evaluation includes seniority/specialization/language macro-F1, optional
+certificate/role metrics, literal span and skill evidence coverage, injected-error
+recognition and supported-control false rejections. Gold may add `certificates`,
+`role_specializations`, `injected_errors` and `supported_controls` lists. Missing optional
+annotations are unscored. An injected error counts as detected only when rejected and
+absent from the output lists. Literal spans establish traceability, not semantic truth.
 
-Edit `parser/resources/aliases.json`: canonical name, aliases, kind, and a new version string. Ambiguous aliases fail to load. Restart the parser after editing. This is a versioned file interface, not an expert web editor. The NER stage is dictionary matching, not a fine-tuned SlovakBERT model. Inflections/new aliases and domain vocabulary need manual review.
+The sample gold is synthetic and tiny. No SRS quality target is claimed: skill F1 ≥0.80,
+seniority/specialization macro-F1 ≥0.75/0.70, validator error detection ≥85%, and ≥300
+human-annotated jobs still require team measurement and a frozen test set.
 
-## Branch safety
+## Publication safety
 
-`AUTO_PUBLISH=false`, `SKILLMINER_OFFLINE=true`, and `SKILLMINER_BRANCH=feature/nlp` are the defaults here. The publisher refuses actual uploads in offline mode. The hosted main frontend remains unchanged. Do not disable the guard until the team agrees on a reviewed integration.
-
-Both other branches change `parser/run.py`. When merging later, preserve their changed-text hash logic / `--real` routing and this branch's validation gate. No integration with those branches was performed here.
-
-## Known limitations to check
-
-- Small local models can still be inaccurate; the validator may agree with an extractor error.
-- Requirements-section and negation detection is conservative and language dependent; inspect false rejections.
-- The alias dictionary and regional coverage are finite; foreign cities have no invented Slovak region.
-- No legal source approval, real-site crawl, new training, expert UI or golden-set annotation is performed by this branch.
-- Title/company/other rejected metadata is kept only in review records for diagnosis; accepted records require field evidence.
-- The legacy frontend assumes monthly pay; it must use `salary_period`/`salary_monthly_*` before this output is integrated into main analytics.
+Defaults remain `AUTO_PUBLISH=false`, `SKILLMINER_OFFLINE=true` and
+`SKILLMINER_BRANCH=feature/nlp`. Real processing never auto-publishes. No deployment,
+real-site crawl or LLM inference is needed for the offline test suite.

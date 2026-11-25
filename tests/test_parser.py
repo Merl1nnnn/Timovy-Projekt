@@ -6,7 +6,8 @@ import pytest
 
 from parser.extract import ExtractionError, extract
 from parser.html_text import html_to_text
-from parser.normalize import detect_language, move_marked_to_nice, normalize, normalize_location, normalize_skill
+from parser.normalize import (detect_language, move_marked_to_nice, normalize, normalize_location, normalize_skill,
+                              salary_from_text)
 from parser.quality import check
 from parser.run import run
 from parser.schema import JobExtraction, llm_json_schema
@@ -28,13 +29,14 @@ GOOD: dict[str, Any] = {
     "title": "Senior Java vývojár (m/ž)", "company": "TatraSoft s.r.o.", "location": "Bratislava - Staré Mesto",
     "workplace_type": "hybrid", "employment_type": "full_time", "seniority": "senior", "specialization": "Java",
     "required_skills": ["Java", "spring boot", "Kubernetes (k8s)", "English (B2+)"],
-    "nice_to_have_skills": ["Kafka"], "technologies": ["Java", "Spring Boot"],
+    "nice_to_have_skills": ["Kafka"], "min_experience_years": 5, "education": None,
     "salary_min": 3000, "salary_max": 4200, "salary_currency": "eur",
+    "summary": "Backend  Java development\nfor TatraSoft.",
 }
 
 
 class FakeClient:
-    """Повертає заздалегідь задані відповіді й запам'ятовує запити."""
+    """Returns predefined replies and records the requests."""
 
     name = "fake"
 
@@ -43,14 +45,11 @@ class FakeClient:
         self.calls: list[list[dict[str, str]]] = []
 
     def complete(self, system: str, messages: list[dict[str, str]], schema: dict[str, Any]) -> str:
-        if system.startswith("You are an independent skill evidence validator"):
-            payload = json.loads(messages[0]["content"])
-            return json.dumps({"items": [{"id": m["id"], "verdict": "supported", "confidence": 0.95,
-                                         "reason": "fixture"} for m in payload["mentions"]],
-                               "fields": [{"field": field, "verdict": "supported", "confidence": 0.95,
-                                           "evidence": payload["posting"], "reason": "fixture"}
-                                          for field in payload["fields"]]})
         self.calls.append(list(messages))
+        if 'items' in schema.get('properties', {}):
+            payload = json.loads(messages[0]['content'])
+            return json.dumps({'items': [{'id': m['id'], 'verdict': 'supported', 'confidence': .99, 'reason': 'fixture'} for m in payload['mentions']],
+                               'fields': [{'field': f, 'verdict': 'supported', 'confidence': .99, 'evidence': payload['posting'], 'reason': 'fixture'} for f in payload['fields']]})
         return self.replies.pop(0)
 
 
@@ -65,7 +64,9 @@ def test_extract_valid_first_try() -> None:
     assert posting.salary_currency == "EUR"
     assert posting.remote is True and posting.language == "sk"
     assert posting.required_skills == ["Java", "Spring Boot", "Kubernetes", "English"]
-    assert posting.technologies == ["Java", "Spring Boot", "Kubernetes", "Kafka"]
+    assert posting.nice_to_have_skills == ["Kafka"]
+    assert posting.min_experience_years == 5
+    assert posting.summary == "Backend Java development for TatraSoft."
 
 
 def test_extract_retries_on_invalid_json_and_feeds_error_back() -> None:
@@ -100,7 +101,7 @@ def test_schema_is_strict_for_structured_output() -> None:
     ("English (B2+)", "English"), ("angličtina min. B2", "English"), ("Agile/Scrum", "Scrum"),
     ("great communicator", "Communication"), ("dobré komunikačné schopnosti", "Communication"),
     ("práca v Scrum tíme", "Scrum"), ("fluent Slovak or Czech", "Slovak"),
-    ("SomethingNew", "SomethingNew"),
+    ("SomethingNew", "SomethingNew"), (".NET", ".NET"), ("TYPO3", "TYPO3"), ("C++", "C++"),
 ])
 def test_normalize_skill(raw: str, canon: str) -> None:
     assert normalize_skill(raw) == canon
@@ -109,7 +110,7 @@ def test_normalize_skill(raw: str, canon: str) -> None:
 @pytest.mark.parametrize("raw, city", [
     ("BA", "Bratislava"), ("Kosice", "Košice"), ("Košice - Juh", "Košice"), ("Zilina", "Žilina"),
     ("Bratislava, Bratislavský kraj, Slovakia", "Bratislava"), ("Slovakia (Remote)", None),
-    ("Práca z domu", None), (None, None),
+    ("Práca z domu", None), (None, None), ("null", None), ("-", None),
 ])
 def test_normalize_location(raw: str | None, city: str | None) -> None:
     assert normalize_location(raw) == city
@@ -117,19 +118,24 @@ def test_normalize_location(raw: str | None, city: str | None) -> None:
 
 def test_normalize_lists_consistency() -> None:
     ex = JobExtraction(**(GOOD | {"required_skills": ["js", "Communication skills", "JavaScript"],
-                                  "nice_to_have_skills": ["javascript", "ts"], "technologies": []}))
+                                  "nice_to_have_skills": ["javascript", "ts"]}))
     n = normalize(ex, "u", PAGE_TEXT + "\n- dobré komunikačné schopnosti")
     assert n.required_skills == ["JavaScript", "Communication"]
-    assert n.nice_to_have_skills == ["TypeScript"]  # дубль обов'язкового прибрано
-    assert n.technologies == ["JavaScript", "TypeScript"]  # без soft skills
+    assert n.nice_to_have_skills == ["TypeScript"]  # duplicate of a required skill removed
+
+
+def test_long_duty_sentences_are_not_skills() -> None:
+    reply = GOOD | {"required_skills": ["Java", "analýza a vyhodnocovanie bezpečnostných incidentov v sieti"]}
+    p, _ = extract(FakeClient([json.dumps(reply)]), PAGE_TEXT, "u")
+    assert p.required_skills == ["Java"]
 
 
 def test_workplace_type_maps_to_remote_and_location() -> None:
-    # повністю remote без міста -> location null
+    # fully remote without a city -> location null
     p, _ = extract(FakeClient([json.dumps(GOOD | {"workplace_type": "remote", "location": "Slovakia (Remote)"})]),
                    PAGE_TEXT, "u")
     assert p.remote is True and p.location is None
-    # модель сказала remote, але назвала місто -> місто зберігаємо (помилку remote ловить quality)
+    # the model said remote but named a city -> keep the city (quality catches the remote error)
     p, _ = extract(FakeClient([json.dumps(GOOD | {"workplace_type": "remote", "location": "Košice, Slovakia"})]),
                    PAGE_TEXT, "u")
     assert p.remote is True and p.location == "Košice"
@@ -150,19 +156,20 @@ def test_marked_bullets_move_to_nice_to_have() -> None:
     req, nice = move_marked_to_nice(["Azure", "dbt", "Airflow", "Kafka", "SQL"], ["Python"], text)
     assert req == ["Azure", "SQL"]
     assert nice == ["Python", "dbt", "Airflow", "Kafka"]
-    # у вільному тексті не чіпаємо: там одне речення містить і обов'язкові, і бажані
+    # free text is left alone: a single sentence there holds both required and nice-to-have skills
     req, nice = move_marked_to_nice(["Java"], [], "Pracovať budeš s Java. Výhodou je Kafka.")
     assert req == ["Java"]
 
 
 def test_drops_invented_soft_skills_experience_and_markers() -> None:
     reply = GOOD | {"required_skills": ["Java", "English", "Slovak", "Scrum", "5+ years of hands-on experience"],
-                    "nice_to_have_skills": ["Kafka – a plus"], "technologies": ["2-4 roky praxe"]}
+                    "nice_to_have_skills": ["Kafka – a plus", "2-4 roky praxe"],
+                    "min_experience_years": 99}
     text = PAGE_TEXT + "\nTatraSoft je firma so sídlom na Slovensku, offices in Slovakia."
     p, _ = extract(FakeClient([json.dumps(reply)]), text, "u")
-    assert p.required_skills == ["Java", "English"]  # Slovak/Scrum на сторінці не згадані
+    assert p.required_skills == ["Java", "English"]  # Slovak/Scrum are not mentioned on the page
     assert p.nice_to_have_skills == ["Kafka"]
-    assert p.technologies == ["Java", "Kafka"]
+    assert p.min_experience_years is None  # an unrealistic value is dropped
 
 
 # ------------------------------------------------------------------ quality
@@ -175,30 +182,41 @@ def test_quality_good_extraction_is_confident() -> None:
 
 
 def test_quality_flags_hallucinations() -> None:
-    bad = GOOD | {"title": "Senior Java Developer", "technologies": ["Java", "Rust"],
+    bad = GOOD | {"title": "Senior Java Developer", "nice_to_have_skills": ["Rust"], "min_experience_years": 7,
                   "salary_min": 9999, "salary_max": None, "seniority": "junior", "workplace_type": "on-site"}
     posting, _ = extract(FakeClient([json.dumps(bad)]), PAGE_TEXT, "u")
     report = check(posting, PAGE_TEXT)
     text = " | ".join(report.issues)
     assert report.low_confidence
-    assert posting.salary_min == 3000  # grounded normalisation corrected the invented amount
-    for expected in ["Rust", "title", "seniority 'junior'", "remote=false"]:
+    for expected in ["Rust", "title", "seniority 'junior'", "remote=false", "experience 7"]:
         assert expected in text
 
 
-def test_quality_flags_missing_salary_max_and_remote_contradiction() -> None:
-    reply = GOOD | {"salary_max": None, "workplace_type": "on-site"}
+def test_quality_flags_remote_contradiction() -> None:
+    reply = GOOD | {"workplace_type": "on-site"}
     posting, _ = extract(FakeClient([json.dumps(reply)]), PAGE_TEXT, "u")
     report = check(posting, PAGE_TEXT)
-    assert posting.salary_max == 4200  # the explicit source range is recovered
-    assert report.low_confidence  # суперечність remote сама по собі вже робить запис сумнівним
+    assert report.low_confidence  # the remote contradiction alone already makes the record doubtful
 
 
-def test_quality_flags_missed_salary() -> None:
+@pytest.mark.parametrize("line, expected", [
+    ("2 500 - 3 795 EUR/mesiac brutto", (2500, 3795)),
+    ("- základná mzda od 1 800 €, v závislosti od skúseností", (None, None)),
+    ("Od 1 500 EUR/mesiacfinálna výška mzdy závisí", (None, None)),
+    ("€2,500/month - €3,500/month gross", (2500, 3500)),
+    ("Stravné lístky 5 EUR", (None, None)),
+])
+def test_salary_from_text(line: str, expected: tuple) -> None:
+    assert salary_from_text("Pozícia\n" + line) == expected
+
+
+def test_missed_salary_is_filled_by_rule() -> None:
     no_salary = GOOD | {"salary_min": None, "salary_max": None, "salary_currency": None}
     posting, _ = extract(FakeClient([json.dumps(no_salary)]), PAGE_TEXT, "u")
-    assert posting.salary_min == 3000
-    assert not any("none extracted" in i for i in check(posting, PAGE_TEXT).issues)
+    assert (posting.salary_min, posting.salary_max, posting.salary_currency) == (3000, 4200, "EUR")
+    only_min = GOOD | {"salary_max": None}
+    posting, _ = extract(FakeClient([json.dumps(only_min)]), PAGE_TEXT, "u")
+    assert posting.salary_max == 4200
 
 
 # ------------------------------------------------------------------ html + run
@@ -222,7 +240,33 @@ def test_run_writes_jsonl_and_resumes(tmp_path: Path) -> None:
     rec = json.loads((out / "jobs.jsonl").read_text(encoding="utf-8"))
     assert rec["source_url"] == "http://localhost:8001/offer/1.html"
     assert rec["model"] == "fake" and rec["confidence"] == 1.0
+    assert run(FakeClient([]), raw_dir=raw, out_dir=out) == (0, 0)
 
-    assert run(FakeClient([]), raw_dir=raw, out_dir=out) == (0, 0)  # уже розпарсено -> пропуск
+    changed_page = PAGE_TEXT.replace(GOOD["title"], "Senior QA Engineer")
+    (raw / "profesia" / "1.html").write_text(f"<p>{changed_page}</p>", encoding="utf-8")
+    updated = GOOD | {"title": "Senior QA Engineer"}
+    assert run(FakeClient([json.dumps(updated)]), raw_dir=raw, out_dir=out) == (1, 0)
+    current = (out / "jobs.jsonl").read_text(encoding="utf-8")
+    assert json.loads(current)["title"] == updated["title"]
+    assert json.loads(current)["text_hash"] != rec["text_hash"]
     assert run(FakeClient(["broken"] * 3), raw_dir=raw, out_dir=out, force=True) == (0, 1)
     assert (out / "errors.jsonl").exists()
+    assert (out / "jobs.jsonl").read_text(encoding="utf-8") == ""
+    assert json.loads((out / "review.jsonl").read_text())["title"] == updated["title"]
+
+
+def test_run_reprocesses_legacy_records_instead_of_adopting_hash(tmp_path: Path) -> None:
+    raw = tmp_path / "raw"
+    (raw / "profesia").mkdir(parents=True)
+    (raw / "profesia" / "1.html").write_text(f"<p>{PAGE_TEXT}</p>", encoding="utf-8")
+    url = "http://localhost:8001/offer/1.html"
+    (raw / "profesia" / "index.json").write_text(json.dumps([
+        {"site": "profesia", "id": "1", "url": url, "file": "profesia/1.html"},
+    ]), encoding="utf-8")
+    out = tmp_path / "parsed"
+    out.mkdir()
+    (out / "jobs.jsonl").write_text(json.dumps({"source_url": url, "title": "old"}) + "\n", encoding="utf-8")
+    assert run(FakeClient([json.dumps(GOOD)]), raw_dir=raw, out_dir=out) == (1, 0)
+    rec = json.loads((out / "jobs.jsonl").read_text(encoding="utf-8"))
+    assert rec["title"] == GOOD["title"] and rec["validation_status"] == "validated"
+    assert len(rec["text_hash"]) == 64

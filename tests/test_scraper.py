@@ -15,7 +15,7 @@ from scraper.run import scrape_site
 @pytest.fixture(scope="module")
 def generated(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, list[dict]]:
     tmp = tmp_path_factory.mktemp("mock")
-    # 23 звичайні + складні вакансії (у т. ч. зламаний HTML) = 3 сторінки, остання неповна
+    # 23 regular + edge-case postings (incl. broken HTML) = 3 pages, the last one partial
     gt = generate(seed=7, n_per_site=23, sites_root=tmp, gt_path=tmp / "gt.json")
     return tmp, gt
 
@@ -40,7 +40,7 @@ def test_scrapes_all_details(adapter_cls, generated, browser: Browser, tmp_path:
         server.shutdown()
 
     expected_ids = {r["id"] for r in gt if r["site"] == name}
-    assert {r["id"] for r in index} == expected_ids  # усі вакансії з усіх сторінок, без дублів
+    assert {r["id"] for r in index} == expected_ids  # all postings from all pages, no duplicates
     assert len(index) == len(expected_ids) > 23
 
     saved = json.loads((tmp_path / name / "index.json").read_text(encoding="utf-8"))
@@ -54,10 +54,10 @@ def test_failed_scrape_keeps_previous_data(browser: Browser, tmp_path: Path) -> 
     old = tmp_path / "profesia"
     old.mkdir()
     (old / "index.json").write_text("[]", encoding="utf-8")
-    server = start_server(tmp_path / "empty", port=0)  # неіснуюча тека -> 404 на все
+    server = start_server(tmp_path / "empty", port=0)  # missing directory -> 404 for everything
     port = server.server_address[1]
     server.shutdown()
-    server.server_close()  # порт закрито: з'єднання буде відхилено
+    server.server_close()  # port closed: the connection will be refused
     with pytest.raises(Exception):
         scrape_site(browser, ProfesiaAdapter(base_url=f"http://127.0.0.1:{port}"), raw_dir=tmp_path)
     assert (old / "index.json").read_text(encoding="utf-8") == "[]"

@@ -1,6 +1,6 @@
-"""Роздає обидва статичні мок-сайти: Profesia на :8001, LinkedIn на :8002.
+"""Serves both static mock sites: Profesia on :8001, LinkedIn on :8002.
 
-Запуск: uv run python -m mock_sites.serve   (Ctrl+C — зупинити)
+Usage: uv run python -m mock_sites.serve   (Ctrl+C to stop)
 """
 
 import sys
@@ -13,12 +13,12 @@ from mock_sites.generate import MOCK_ROOT, SITES
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
-    def log_message(self, format: str, *args: object) -> None:  # без логу кожного запиту
+    def log_message(self, format: str, *args: object) -> None:  # do not log every request
         pass
 
 
 def start_server(site_dir: Path, port: int) -> ThreadingHTTPServer:
-    """Запускає сервер у фоновому потоці. port=0 — вільний порт (для тестів)."""
+    """Starts the server in a background thread. port=0 picks a free port (for tests)."""
     handler = partial(QuietHandler, directory=str(site_dir))
     server = ThreadingHTTPServer(("127.0.0.1", port), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()

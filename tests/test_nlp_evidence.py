@@ -71,7 +71,7 @@ def test_validator_fails_closed(mode):
     ex = JobExtraction(**GOOD)
     posting = attach_evidence(normalize(ex,'url',PAGE_TEXT),ex,PAGE_TEXT)
     result = validate_posting(ValidatorClient(mode),posting,PAGE_TEXT)
-    assert not result.required_skills and not result.technologies
+    assert not result.required_skills and not result.nice_to_have_skills
     assert result.review_required and result.validation_status == 'review'
 
 
@@ -79,7 +79,7 @@ def test_unsupported_item_never_enters_accepted_lists():
     from parser.evidence import attach_evidence
     ex = JobExtraction(**GOOD)
     result = validate_posting(ValidatorClient('valid'), attach_evidence(normalize(ex,'url',PAGE_TEXT),ex,PAGE_TEXT), PAGE_TEXT)
-    assert 'Kubernetes' not in result.technologies
+    assert 'Kubernetes' not in result.required_skills
     assert any(item.canonical == 'Kubernetes' for item in result.rejected_items)
     assert all(m.verdict == 'supported' for m in result.skill_mentions)
 
@@ -97,12 +97,13 @@ def test_instruction_text_cannot_become_accepted_data():
     ex = JobExtraction(**GOOD)
     result = validate_posting(ValidatorClient('valid'), attach_evidence(normalize(ex,'url',text),ex,text),text)
     assert result.review_required
-    assert not result.required_skills and not result.technologies
+    assert not result.required_skills and not result.nice_to_have_skills
 
 
 def test_hourly_amount_preserves_cents_and_no_work_hours_are_invented():
     from parser.context import enrich
     posting = normalize(JobExtraction(**GOOD), 'url', PAGE_TEXT)
     posting = enrich(posting, 'Salary: €18.50/hour gross\nWe are looking for developers with Python.')
-    assert posting.salary_min == 18.5
+    assert posting.salary_original_min == 18.5
+    assert posting.salary_min is None
     assert posting.salary_monthly_min is None

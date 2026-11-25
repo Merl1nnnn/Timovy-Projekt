@@ -1,8 +1,9 @@
-# NLP development branch
-
-You are on **feature/nlp**, based on the existing main backend. Start with [NLP changes and manual checks](docs/NLP.md). Publication is disabled by default in this branch. The tests and model checks prepared in this change have **not been run**; the user will perform validation.
-
 # SkillMiner
+
+**NLP development branch (`feature/nlp`).** Based on main `00ff59c` (25 November 2026).
+Adds grounded skill/certificate extraction, separate LLM validation, role tags, explicit salary units,
+and reproducible reprocessing. See [NLP guide](docs/NLP.md). Publishing is disabled by default;
+local changes do not deploy GitHub Pages.
 
 A student team project for analysing IT job postings and mapping skills to ESCO. Requirements: [English SRS](docs/SRS_SkillMiner_EN.docx) · [Slovak SRS](docs/SRS_SkillMiner_SK.docx).
 
@@ -15,7 +16,7 @@ git clone https://github.com/Merl1nnnn/Timovy-Projekt.git
 cd Timovy-Projekt
 ```
 
-Requirements: [uv](https://docs.astral.sh/uv/), [Ollama](https://ollama.com/), and [GitHub CLI](https://cli.github.com/) for publishing. Python 3.11 is selected by the project configuration. A GPU is optional; the default small model runs on CPU, but its extraction quality is limited.
+Requirements: [uv](https://docs.astral.sh/uv/), [Ollama](https://ollama.com/), and [GitHub CLI](https://cli.github.com/) for publishing. Python 3.11 is selected by the project configuration. A GPU is optional; CPU inference is supported but a 7B model can be slow; 1.5B is an optional smoke-test model, not a quality baseline.
 
 Install dependencies and prepare configuration:
 
@@ -32,7 +33,7 @@ Start Ollama if it is not already running, and download the model:
 ```sh
 ollama serve
 # In another terminal:
-ollama pull qwen2.5:1.5b
+ollama pull qwen2.5:7b
 ```
 
 Create the local demonstration sites and start their server:
@@ -42,17 +43,47 @@ uv run python -m mock_sites.generate
 uv run python -m mock_sites.serve
 ```
 
-Keep that server running. In another terminal, collect the mock pages, sign in to GitHub once, and run the parser:
+Keep that server running. In another terminal, collect the mock pages, run the parser locally:
 
 ```sh
 uv run python -m scraper.run
-gh auth login
-uv run python -m parser.run
+uv run python -m parser.run --no-publish
 ```
 
-**In this development branch automatic publishing is disabled.** The description below documents the main-branch deployment; do not enable it while checking NLP changes. Each participant must have write access to `Merl1nnnn/Timovy-Projekt`. Downloading the code alone does not grant permission to update the shared site. GitHub credentials remain on the participant's own computer.
+**This branch saves results locally and blocks publication by default.** `jobs.jsonl` contains only validated accepted records; uncertain results go to `review.jsonl`. Do not enable publication while testing.
 
-The prototype collects from **local mock sites only**, not real Profesia or LinkedIn. Raw HTML is stored in `data/raw/`; extraction results in `data/parsed/jobs.jsonl`. The code includes the parser, normalisation, heuristic quality checks, mock-site generator and scraper. It does not yet implement the complete API, database, ESCO mapping or LLM validator described in the SRS; `app/` and `storage/` are placeholders.
+The pipeline supports local mock sites and the experimental real Profesia scraper described below.
+It includes structured extraction, versioned aliases, exact evidence, an LLM validation pass,
+and a local dashboard. The full REST API, database and account system remain outside this NLP branch.
+
+### Real postings from Profesia.sk (experimental)
+
+`scraper/profesia_live.py` downloads IT postings from the real Profesia.sk category *Informačné technológie* over plain HTTP:
+
+```sh
+uv run python -m scraper.profesia_live --limit 20
+uv run python -m parser.run --real
+```
+
+- It checks `robots.txt`, waits at least 3 s (default) between requests, sends an identifying User-Agent and stops on HTTP 403/429.
+- It is incremental. Already downloaded postings are skipped, and `--limit` caps new postings per run.
+- Only the `<main id="detail">` block is stored. The contact section, contact person names, e-mail addresses and phone numbers are removed before saving.
+- Real data lives in `data/real/` (git-ignored), separate from mock data. `parser.run --real` **never publishes automatically**. Publish manually with `scripts/publish_results.py --kind real` only after the team has confirmed permission to use the data.
+- LinkedIn is intentionally not scraped: its terms prohibit automated access without permission.
+- Real pages are longer than mock pages. With Ollama, set `OLLAMA_NUM_CTX=8192`.
+
+#### Evaluate against the gold set
+
+For gold validation, immutable JSON/Markdown/CSV reports, fixed dev/test cohorts and comparison of two saved runs, see [Evaluation guide](docs/EVALUATION.md). A synthetic demo runs locally without Ollama or real vacancy data.
+
+The team hand-annotated 50 real postings (`data/real/gold/`, git-ignored). `scripts/evaluate.py` compares `data/real/parsed/jobs.jsonl` with them: accuracy per field, micro precision / recall / F1 for skills, and whether `low_confidence` really marks worse records.
+
+```sh
+uv run python -m parser.run --real
+uv run python -m scripts.evaluate --json data/real/eval/report.json
+```
+
+`specialization` macro-F1 is reported in the NLP diagnostics. Agree on a shared taxonomy before using its score for acceptance; the existing gold set may use `other`.
 
 ### Automatic publishing settings
 
@@ -71,7 +102,7 @@ For local processing without uploading:
 uv run python -m parser.run --no-publish
 ```
 
-Alternatively set `AUTO_PUBLISH=false` in `.env`. `--limit N` processes at most N new postings; `--force` rebuilds local extraction output. A normal rerun skips already parsed URLs.
+Alternatively set `AUTO_PUBLISH=false` in `.env`. `--limit N` processes at most N new postings; `--force` rebuilds local extraction output. A normal rerun skips matching source text and NLP fingerprints, including already reviewed results. Changing the prompt, aliases, code, model name, context or model revision triggers reprocessing.
 
 Published jobs are merged by `source_url`, preserving results submitted by other participants. For the same URL, the newer `parsed_at` wins. Concurrent updates are re-read and retried up to three times. Unchanged data creates no commit. Synthetic and real datasets cannot be mixed. Publishing is additive: rebuilding local output does not delete records already published by others.
 
@@ -81,7 +112,9 @@ If uploading fails, the command reports an error and keeps local results. Run th
 
 **Live site: https://merl1nnnn.github.io/Timovy-Projekt/**
 
-The static dashboard in `frontend/` supports search, filters, technology frequencies, job details, quality flags and CSV export. The interface is available in **Slovak, English and Ukrainian**, with **light and dark themes**. Preferences are saved in the browser. Job titles and extracted data remain in their original language.
+The static dashboard in `frontend/` supports search, filters, frequencies of required and nice-to-have skills, job details (short English summary, minimum experience and education), quality flags and CSV export. The interface is available in **Slovak, English and Ukrainian**, with **light and dark themes**. Preferences are saved in the browser. Job titles and extracted data remain in their original language.
+
+A **Mock / Real** switch at the top selects the dataset. Mock data (lavender notice) comes from `frontend/data/jobs.json`; real Profesia.sk postings (green notice) come from `frontend/data/jobs_real.json`. Until real data is published, the Real view says so instead of showing anything. The choice is remembered and can be linked with `?data=real` or `?data=mock`.
 
 The initial dataset contains **101 synthetic postings from local mock sites**. LLM results may contain errors. These are not statistics from the real labour market.
 
@@ -89,7 +122,7 @@ The initial dataset contains **101 synthetic postings from local mock sites**. L
 
 Local NLP pipeline → public JSON in GitHub → GitHub Actions → GitHub Pages.
 
-The laptop is needed only to process and upload new results. Published data stays available when the laptop is off. Each upload publishes a merged JSON snapshot; this is not a database or a realtime API.
+After an explicitly enabled publication, the laptop is needed only to process and upload new results. Published data stays available when the laptop is off. Each upload publishes a merged JSON snapshot; this is not a database or a realtime API.
 
 The workflow in `.github/workflows/pages.yml` publishes only `frontend/` when that directory changes on `main`. GitHub Pages is configured to use GitHub Actions. To set this up in another repository, select **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
@@ -102,6 +135,12 @@ python3 -m http.server 8765 --directory frontend
 ```
 
 Open http://localhost:8765. Opening `index.html` through `file://` is not supported because the dashboard loads its JSON with `fetch`.
+
+To see your local real postings in the Real view, export them first. `frontend/data/jobs_real.json` is git-ignored, so it cannot be committed by accident:
+
+```sh
+python3 scripts/export_results.py --input data/real/parsed/jobs.jsonl --kind real
+```
 
 ## Publish local NLP results
 
@@ -118,7 +157,7 @@ Review `data/parsed/public_jobs.json` next to your input file, then publish:
 python3 scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl'
 ```
 
-The script merges results into `frontend/data/jobs.json` on `main`, preserving jobs from other participants. GitHub Actions then deploys the updated site. Earlier snapshots remain in Git history. Concurrent updates are retried; if all retries fail, local results remain available for a later upload.
+The script merges results into `frontend/data/jobs.json` (synthetic) or `frontend/data/jobs_real.json` (`--kind real`) on `main`, preserving jobs from other participants. The real file is created on its first publication. GitHub Actions then deploys the updated site. Earlier snapshots remain in Git history. Concurrent updates are retried; if all retries fail, local results remain available for a later upload.
 
 Datasets are marked as synthetic by default. Use `--kind real` only after checking publication permissions and removing personal data upstream.
 
@@ -136,4 +175,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The baseline and new automated tests cover extraction, normalisation, quality checks, mock sites, the Chromium scraper, export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. These checks do not establish the SRS quality metrics on real annotated postings.
+The 92 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. Unit tests do not measure quality on real postings; use `scripts/evaluate.py` with the gold set for that.

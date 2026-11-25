@@ -8,6 +8,7 @@ from parser.extract import extract
 from parser.html_text import html_to_text
 from parser.llm import make_client
 from parser.quality import check
+from parser.provenance import provenance
 from parser.validator import validate_posting
 
 
@@ -28,7 +29,7 @@ def main():
         if report.low_confidence:
             posting.review_required = True
             posting.validation_status = 'review'
-        output = {**posting.model_dump(), 'schema_version': 2, 'source_text': text,
+        output = {**posting.model_dump(), **provenance(client), 'source_text': text,
                   'quality': report.model_dump(), 'model': client.name, 'attempts': attempts,
                   'parsed_at': datetime.now(timezone.utc).isoformat()}
         args.output.parent.mkdir(parents=True, exist_ok=True)

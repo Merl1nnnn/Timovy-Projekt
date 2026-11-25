@@ -1,8 +1,209 @@
-<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SkillMiner — огляд вакансій</title><script>try{const theme=localStorage.getItem('skillminer-theme');document.documentElement.dataset.theme=theme==='dark'||theme==='light'?theme:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}catch{document.documentElement.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}</script><link rel="stylesheet" href="style.css?v=3"></head><body>
-<header><a class="brand" href="./">▦ SkillMiner</a><span>IT SKILLS OBSERVATORY</span><div class="toolbar"><label class="language-control"><span class="sr-only" data-i18n="language">Мова</span><select id="language"><option value="sk">SK</option><option value="en">EN</option><option value="uk">UA</option></select></label><button id="theme" class="secondary" type="button"></button><a href="https://github.com/Merl1nnnn/Timovy-Projekt">GitHub ↗</a></div></header>
-<main><div class="eyebrow" data-i18n="eyebrow"></div><section class="intro"><div><h1 data-i18n="hero"></h1><p data-i18n="intro"></p></div><div class="stamp"><span class="dot"></span> <span id="dataset">Завантаження даних…</span><small id="updated"></small></div></section>
-<div class="notice" id="notice">Демонстраційні дані: синтетичні вакансії з локальних мок-сайтів. Це не статистика реального ринку праці.</div>
-<section class="metrics" aria-label="Показники" data-i18n-aria="metrics"><article><span data-i18n="count">Вакансії у вибірці</span><strong id="count">—</strong></article><article><span data-i18n="skills">Унікальні технології</span><strong id="skills">—</strong></article><article><span data-i18n="review">Позначено для перевірки</span><strong id="review">—</strong></article><article><span data-i18n="remote">Дистанційно / гібрид</span><strong id="remote">—</strong></article></section>
-<section class="workspace"><aside><h2 data-i18n="filters">Фільтри</h2><label><span data-i18n="search">Пошук</span><input id="search" type="search" placeholder="Назва, компанія, навичка…" data-i18n-placeholder="searchPlaceholder"></label><label><span data-i18n="specialization">Спеціалізація</span><select id="specialization"><option value="" data-i18n="allSpecializations">Усі спеціалізації</option></select></label><label><span data-i18n="seniority">Рівень</span><select id="seniority"><option value="" data-i18n="allLevels">Усі рівні</option></select></label><label><span data-i18n="site">Джерело</span><select id="site"><option value="" data-i18n="allSources">Усі джерела</option></select></label><label class="check"><input id="doubtful" type="checkbox"> <span data-i18n="doubtful">Лише сумнівні</span></label><button id="reset" class="secondary" data-i18n="reset">Скинути фільтри</button><div class="aside-note" data-i18n="asideNote">Результати обробляються локально. На сайті показано останній опублікований набір.</div></aside><div><section class="ranking"><div class="section-title"><h2 data-i18n="technologiesSample">Технології у вибірці</h2><span data-i18n="jobCount">Кількість вакансій</span></div><div id="bars"></div></section><section class="postings"><div class="section-title"><h2><span data-i18n="postings">Вакансії</span> <span id="shown"></span></h2><button id="export" class="secondary" data-i18n="export">Експорт CSV ↓</button></div><div id="status" role="status"></div><div id="jobs"></div><button id="more" data-i18n="more" hidden>Показати ще</button></section></div></section>
-<footer><span data-i18n="footer"></span><span data-i18n="pipeline"></span></footer></main>
-<dialog id="detail"><button id="close" aria-label="Закрити" data-i18n-aria="close">✕</button><div id="detail-content"></div></dialog><script src="i18n.js?v=2" defer></script><script src="app.js?v=2" defer></script></body></html>
+<!doctype html>
+<html lang="sk" data-theme="original" data-mode="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkillMiner</title>
+  <script>
+    try {
+      const theme = localStorage.getItem('skillminer-theme');
+      if (['original', 'classic', 'zive', 'tuke', 'nik'].includes(theme)) {
+        document.documentElement.dataset.theme = theme;
+      }
+      const mode = localStorage.getItem('skillminer-mode');
+      document.documentElement.dataset.mode = (mode === 'light' || mode === 'dark')
+        ? mode : (theme === 'zive' || theme === 'dark' ? 'dark' : 'light');
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="style.css?v=9">
+  <script src="i18n.js?v=5" defer></script>
+  <script src="interface-i18n.js?v=4" defer></script>
+  <script src="jobs-model.js?v=2" defer></script>
+  <script src="app.js?v=8" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#/overview" aria-label="SkillMiner"><span class="brand-icon" aria-hidden="true">▦</span><span class="brand-name">SkillMiner</span></a>
+      <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-nav" data-i18n-aria="toggleMenu">☰</button>
+      <div class="sidebar-scroll">
+        <nav class="sidebar-nav" id="app-nav" data-i18n-aria="navigation">
+          <a href="#/overview" data-route="overview" data-i18n-aria="overview"><span aria-hidden="true">▦</span><span data-i18n="overview"></span></a>
+          <a href="#/postings" data-route="postings" data-i18n-aria="postings"><span aria-hidden="true">▤</span><span data-i18n="postings"></span></a>
+          <a href="#/analytics" data-route="analytics" data-i18n-aria="analytics"><span aria-hidden="true">▥</span><span data-i18n="analytics"></span></a>
+          <a href="#/settings" data-route="settings" data-i18n-aria="settings"><span aria-hidden="true">⚙</span><span data-i18n="settings"></span></a>
+          <a href="#/about" data-route="about" data-i18n-aria="about"><span aria-hidden="true">ⓘ</span><span data-i18n="about"></span></a>
+        </nav>
+        <button class="filter-toggle secondary" id="filter-toggle" type="button" aria-expanded="false"
+                aria-controls="filter-panel" data-i18n-aria="filters">☷</button>
+        <aside id="filter-panel" class="panel filter-panel" aria-labelledby="filters-title">
+          <div class="section-title">
+            <h2 id="filters-title" data-i18n="filters"></h2>
+            <div class="filter-actions">
+              <button id="reset" type="button" class="secondary" data-i18n="reset"></button>
+              <button class="filter-close secondary" id="filter-close" type="button" data-i18n-aria="close">✕</button>
+            </div>
+          </div>
+          <div class="filter-fields">
+            <label class="full-row"><span data-i18n="search"></span><input id="search" type="search"></label>
+            <label class="full-row"><span data-i18n="specialization"></span><select id="specialization"><option value="" data-i18n="allFilterValues"></option></select></label>
+            <label><span data-i18n="seniority"></span><select id="seniority"><option value="" data-i18n="allFilterValues"></option></select></label>
+            <label><span data-i18n="location"></span><select id="location"><option value="" data-i18n="allFilterValues"></option></select></label>
+            <label><span data-i18n="site"></span><select id="site"><option value="" data-i18n="allFilterValues"></option></select></label>
+            <label><span data-i18n="company_size"></span>
+              <select id="company_size">
+                <option value="" data-i18n="allFilterValues"></option><option value="small" data-i18n="small"></option>
+                <option value="medium" data-i18n="medium"></option><option value="large" data-i18n="large"></option>
+                <option value="unknown" data-i18n="unknown"></option>
+              </select>
+            </label>
+            <div class="filter-checks">
+              <label class="check"><input id="doubtful" type="checkbox"><span data-i18n="doubtful"></span></label>
+              <label class="check"><input id="duplicates" type="checkbox"><span data-i18n="possibleDuplicates"></span></label>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="sidebar-tools">
+        <label class="language-control"><span data-i18n="language"></span>
+          <select id="language" data-i18n-aria="language">
+            <option value="uk" lang="uk">UA</option><option value="sk" lang="sk">SK</option>
+            <option value="cs" lang="cs">CZ</option><option value="en" lang="en">EN</option>
+            <option value="de" lang="de">DE</option>
+          </select>
+        </label>
+        <button class="mode-toggle secondary" id="mode-toggle" type="button" aria-pressed="false" data-i18n-aria="darkMode">
+          <span id="mode-icon" aria-hidden="true">☀</span><span class="mode-label" id="mode-label"></span>
+        </button>
+      </div>
+    </aside>
+
+    <main id="main-content">
+      <div class="dataset-bar">
+        <span data-i18n="datasetSwitch"></span>
+        <div class="segmented" role="group" data-i18n-aria="datasetSwitch">
+          <button id="data-synthetic" type="button" class="active" aria-pressed="true" data-i18n="dataMock"></button>
+          <button id="data-real" type="button" aria-pressed="false" data-i18n="dataReal"></button>
+        </div>
+      </div>
+      <section class="screen" id="screen-overview" aria-labelledby="overview-title">
+        <header class="screen-heading">
+          <div><h1 id="overview-title" tabindex="-1" data-i18n="overview"></h1><p data-i18n="dashboardIntro"></p></div>
+          <div class="stamp" role="status"><span class="dot"></span><span id="dataset"></span><small id="updated"></small><small id="checked"></small></div>
+        </header>
+        <p class="notice" id="notice"></p>
+        <section class="metrics" data-i18n-aria="metrics">
+          <article><span data-i18n="count"></span><strong id="count">—</strong></article>
+          <article><span data-i18n="skills"></span><strong id="skills">—</strong></article>
+          <article><span data-i18n="review"></span><strong id="review">—</strong></article>
+          <article><span data-i18n="remote"></span><strong id="remote">—</strong></article>
+        </section>
+        <details class="panel changes" id="changes">
+          <summary><span class="changes-icon" aria-hidden="true">↻</span><span data-i18n="changes"></span><span id="change-count" class="pill">—</span></summary>
+          <div id="change-list" class="change-list"></div>
+        </details>
+      </section>
+
+      <section class="screen" id="screen-postings" aria-labelledby="postings-title" hidden>
+        <header class="screen-heading">
+          <h1 id="postings-title" tabindex="-1" data-i18n="postings"></h1>
+          <button id="export" type="button" class="secondary" data-i18n="export" disabled></button>
+        </header>
+        <div id="postings" class="panel postings">
+          <div class="section-title"><h2><span data-i18n="resultsLabel"></span> <span id="shown" class="pill"></span></h2></div>
+          <p id="status" role="status" hidden></p>
+          <div class="table-wrap" id="job-table" hidden>
+            <table>
+              <thead><tr><th data-i18n="position"></th><th data-i18n="company"></th><th data-i18n="salary"></th><th data-i18n="site"></th></tr></thead>
+              <tbody id="jobs"></tbody>
+            </table>
+          </div>
+          <button id="more" type="button" class="secondary more" data-i18n="more" hidden></button>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-analytics" aria-labelledby="analytics-title" hidden>
+        <header class="screen-heading">
+          <h1 id="analytics-title" tabindex="-1" data-i18n="analytics"></h1>
+        </header>
+        <div id="analytics" class="analytics">
+          <article class="panel chart-panel">
+            <div class="section-title">
+              <div><h2 data-i18n="activity"></h2><p data-i18n="activityNote"></p></div>
+              <label class="period"><span class="sr-only" data-i18n="period"></span>
+                <select id="period"><option value="7" data-i18n="last7"></option><option value="30" data-i18n="last30" selected></option><option value="90" data-i18n="last90"></option></select>
+              </label>
+            </div>
+            <div class="chart-legend" id="activity-legend"></div>
+            <div id="activity"></div>
+          </article>
+          <article class="panel chart-panel">
+            <div class="section-title"><div><h2 data-i18n="payComparison"></h2><p data-i18n="payMethod"></p></div></div>
+            <div id="pay-comparison"></div>
+          </article>
+          <div class="chart-grid">
+            <article class="panel chart-panel">
+              <div class="section-title"><h2 data-i18n="technologiesSample"></h2>
+                <div class="segmented" role="group" data-i18n-aria="rankMode">
+                  <button id="rank-required" type="button" class="active" aria-pressed="true" data-i18n="rankRequired"></button>
+                  <button id="rank-nice" type="button" aria-pressed="false" data-i18n="rankNice"></button>
+                </div>
+              </div>
+              <div id="bars"></div>
+            </article>
+            <article class="panel chart-panel">
+              <div class="section-title"><h2 data-i18n="distribution"></h2>
+                <label class="period"><span class="sr-only" data-i18n="distribution"></span>
+                  <select id="group-by"><option value="specialization" data-i18n="specialization"></option><option value="seniority" data-i18n="seniority"></option><option value="location" data-i18n="location"></option></select>
+                </label>
+              </div>
+              <div id="distribution"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-settings" aria-labelledby="settings-title" hidden>
+        <header class="screen-heading"><h1 id="settings-title" tabindex="-1" data-i18n="settings"></h1></header>
+        <div class="panel preferences">
+          <fieldset id="theme-choices">
+            <legend data-i18n="theme"></legend>
+            <div class="themes">
+              <label class="theme-choice"><input type="radio" name="theme" value="original"><span class="swatches swatch-original" aria-hidden="true"></span><span>Original</span></label>
+              <label class="theme-choice"><input type="radio" name="theme" value="classic"><span class="swatches swatch-classic" aria-hidden="true"></span><span>Classic</span></label>
+              <label class="theme-choice"><input type="radio" name="theme" value="zive"><span class="swatches swatch-zive" aria-hidden="true"></span><span>Zive IT</span></label>
+              <label class="theme-choice"><input type="radio" name="theme" value="tuke"><span class="swatches swatch-tuke" aria-hidden="true"></span><span>TUKE FEI</span></label>
+              <label class="theme-choice"><input type="radio" name="theme" value="nik"><span class="swatches swatch-nik" aria-hidden="true"></span><span>Nik</span></label>
+            </div>
+          </fieldset>
+          <div class="view-preferences">
+            <label><span data-i18n="rowsPerPage"></span>
+              <select id="rows-per-page"><option>10</option><option selected>15</option><option>25</option><option>50</option></select>
+            </label>
+            <label><span data-i18n="defaultPeriod"></span>
+              <select id="default-period"><option value="7" data-i18n="last7"></option><option value="30" data-i18n="last30" selected></option><option value="90" data-i18n="last90"></option></select>
+            </label>
+          </div>
+        </div>
+        <div class="panel preferences account-panel">
+          <button type="button" class="secondary" disabled aria-describedby="account-demo" data-i18n="account"></button>
+          <p id="account-demo" data-i18n="accountDemo"></p>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-about" aria-labelledby="about-title" hidden>
+        <header class="screen-heading"><h1 id="about-title" tabindex="-1" data-i18n="about"></h1></header>
+        <article class="panel preferences about-panel">
+          <h2>SkillMiner</h2>
+          <p data-i18n="aboutProject"></p>
+          <a href="https://github.com/Merl1nnnn/Timovy-Projekt" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        </article>
+      </section>
+    </main>
+  </div>
+  <dialog id="detail" aria-labelledby="detail-title">
+    <button id="close" class="secondary close" type="button" data-i18n-aria="close">✕</button>
+    <div id="detail-content"></div>
+  </dialog>
+</body>
+</html>

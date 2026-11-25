@@ -11,8 +11,8 @@ class ExportTests(unittest.TestCase):
     def test_allowlist_redaction_and_deduplication(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            record = {'schema_version': 2, 'validation_status': 'validated', 'review_required': False, 'title': 'Developer test@example.com +421 900 123 456',
-                      'source_url': 'http://localhost/job/1', 'technologies': ['Python'],
+            record = {'schema_version': 3, 'validation_status': 'validated', 'review_required': False, 'low_confidence': False, 'title': 'Developer test@example.com +421 900 123 456',
+                      'source_url': 'http://localhost/job/1', 'required_skills': ['Python'],
                       'raw_html': 'private raw text', 'api_key': 'SECRET'}
             source = root / 'in.jsonl'
             source.write_text('\n'.join([json.dumps(record)] * 2))
@@ -22,13 +22,23 @@ class ExportTests(unittest.TestCase):
             self.assertNotIn('api_key', result['jobs'][0])
             self.assertNotIn('raw_html', result['jobs'][0])
 
+    def test_salary_amounts_are_not_redacted_as_phones(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            record = {'schema_version': 3, 'validation_status': 'validated', 'review_required': False, 'low_confidence': False, 'title': 'Developer 2 000 - 2 500 EUR, call 00421 905 123 456',
+                      'source_url': 'http://localhost/job/1'}
+            source = root / 'in.jsonl'
+            source.write_text(json.dumps(record))
+            result = export(source, root / 'out.json', 'synthetic')
+            self.assertEqual(result['jobs'][0]['title'], 'Developer 2 000 - 2 500 EUR, call [phone removed]')
+
     def test_invalid_input_preserves_published_file(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             output = root / 'out.json'
             output.write_text('previous')
             source = root / 'in.jsonl'
-            for content in ['', '{"title":"job","technologies":"Python"}', 'invalid json']:
+            for content in ['', '{"title":"job","required_skills":"Python"}', 'invalid json']:
                 source.write_text(content)
                 with self.assertRaises(ValueError):
                     export(source, output, 'synthetic')

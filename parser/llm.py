@@ -1,7 +1,7 @@
-"""Клієнти LLM зі structured output. Провайдер обирається через .env (LLM_PROVIDER).
+"""LLM clients with structured output. The provider is selected in .env (LLM_PROVIDER).
 
-Обидва клієнти отримують ту саму JSON Schema і повертають сирий JSON-рядок;
-валідація й retry — у parser/extract.py, спільні для всіх провайдерів.
+Both clients receive the same JSON Schema and return a raw JSON string;
+validation and retry live in parser/extract.py and are shared by all providers.
 """
 
 import json
@@ -18,7 +18,7 @@ class LLMClient(Protocol):
     name: str
 
     def complete(self, system: str, messages: list[Message], schema: dict[str, Any]) -> str:
-        """Повертає відповідь моделі (очікується JSON за схемою)."""
+        """Returns the model's reply (expected to be JSON matching the schema)."""
         ...
 
 
@@ -27,11 +27,12 @@ class LLMError(RuntimeError):
 
 
 class OllamaClient:
-    def __init__(self, url: str, model: str, num_ctx: int = 4096, timeout: float = 600) -> None:
+    def __init__(self, url: str, model: str, num_ctx: int = 8192, timeout: float = 600) -> None:
         self.name = f"ollama:{model}"
         self.url = url.rstrip("/")
         self.model = model
         self.num_ctx = num_ctx
+        self.model_revision = os.getenv("OLLAMA_MODEL_REVISION", "")
         self.http = httpx.Client(timeout=timeout)
         self.last_prompt_tokens = 0
 
@@ -43,7 +44,7 @@ class OllamaClient:
         resp = self.http.post(f"{self.url}/api/chat", json={
             "model": self.model,
             "messages": [{"role": "system", "content": system}, *messages],
-            "format": schema,  # structured output: Ollama обмежує генерацію JSON Schema
+            "format": schema,  # structured output: Ollama constrains generation to the JSON Schema
             "stream": False,
             "keep_alive": "10m",
             "options": {"temperature": 0, "num_ctx": self.num_ctx},
@@ -59,14 +60,14 @@ class OllamaClient:
 
 class ClaudeClient:
     def __init__(self, model: str) -> None:
-        import anthropic  # імпорт лише коли обрано Claude
+        import anthropic  # imported only when Claude is selected
 
         self.name = f"claude:{model}"
         self.model = model
-        self.client = anthropic.Anthropic()  # ключ з ANTHROPIC_API_KEY у .env
+        self.client = anthropic.Anthropic()  # key from ANTHROPIC_API_KEY in .env
 
     def complete(self, system: str, messages: list[Message], schema: dict[str, Any]) -> str:
-        # Structured outputs (output_config.format) + серверний fallback на випадок відмови моделі.
+        # Structured outputs (output_config.format) + a server-side fallback in case the model refuses.
         response = self.client.beta.messages.create(
             model=self.model,
             max_tokens=4096,

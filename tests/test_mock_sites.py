@@ -20,9 +20,9 @@ def test_counts_and_files(tmp_path: Path) -> None:
         site_dir = tmp_path / "sites" / site / "site"
         for r in rows:
             assert (site_dir / detail_path(site, r["id"]).lstrip("/")).exists()
-        for page in range(1, (len(rows) + 9) // 10 + 1):  # по 10 на сторінці
+        for page in range(1, (len(rows) + 9) // 10 + 1):  # 10 per page
             assert (site_dir / list_path(site, page).lstrip("/")).exists()
-    assert len({r["source_url"] for r in gt}) == len(gt)  # ID складних вакансій не перетинаються з основними
+    assert len({r["source_url"] for r in gt}) == len(gt)  # edge-case IDs do not collide with the regular ones
 
 
 def test_edge_cases_are_appended_without_changing_main_jobs(tmp_path: Path) -> None:
@@ -32,10 +32,10 @@ def test_edge_cases_are_appended_without_changing_main_jobs(tmp_path: Path) -> N
     assert main == [{k: v for k, v in r.items() if k != "edge_case"} for r in plain]
     edge = [r for r in full if r["edge_case"]]
     assert {r["site"] for r in edge} == {"profesia", "linkedin"}
-    assert all(":" in r["edge_case"] for r in edge)  # "<назва>: <опис пастки>"
+    assert all(":" in r["edge_case"] for r in edge)  # "<name>: <trap description>"
     broken = next(r for r in edge if r["edge_case"].startswith("broken_html"))
     html = (tmp_path / "b/sites/profesia/site" / detail_path("profesia", broken["id"]).lstrip("/")).read_text(encoding="utf-8")
-    assert "<table>" in html and "</td>" not in html  # справді зламаний HTML, не шаблон
+    assert "<table>" in html and "</td>" not in html  # genuinely broken HTML, not the template
 
 
 def test_deterministic(tmp_path: Path) -> None:
@@ -48,7 +48,7 @@ def test_deterministic(tmp_path: Path) -> None:
 
 
 def test_data_is_varied_and_dirty(tmp_path: Path) -> None:
-    gt = [r for r in _gen(tmp_path) if not r["edge_case"]]  # складні вакансії навмисно нетипові
+    gt = [r for r in _gen(tmp_path) if not r["edge_case"]]  # edge cases are atypical on purpose
     assert {r["language"] for r in gt} == {"sk", "en"}
     assert {r["seniority"] for r in gt} == {"junior", "medior", "senior", "lead"}
     assert {r["location"] for r in gt} == {"Bratislava", "Košice", "Žilina", None}
@@ -56,7 +56,7 @@ def test_data_is_varied_and_dirty(tmp_path: Path) -> None:
     for r in gt:
         assert set(r["technologies"]) <= set(r["required_skills"]) | set(r["nice_to_have_skills"])
 
-    # У сирих HTML мають траплятися аліаси, а не лише канонічні назви.
+    # Raw HTML must contain aliases, not only canonical names.
     html = " ".join(p.read_text(encoding="utf-8") for p in (tmp_path / "sites").rglob("*.html"))
     aliases = {a for names in vocab.ALIASES.values() for a in names}
     assert sum(1 for a in aliases if f">{a}<" in html or f" {a}," in html or f" {a} " in html) >= 10

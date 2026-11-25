@@ -1,4 +1,4 @@
-"""NLP schema v2. Extraction is provisional until validate_posting passes.
+"""NLP schema v3. Extraction is provisional until validate_posting passes.
 
 Accepted records keep exact evidence spans and metadata quotes. Review records
 must not be used as accepted analytics data. Legacy lists are retained for consumers.
@@ -11,12 +11,14 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 Seniority = Literal["junior", "medior", "senior", "lead"]
 EmploymentType = Literal["full_time", "part_time", "contract"]
 Specialization = Literal["Python", "Java", "DevOps", "Data", "QA", "Frontend", "Backend", "ML", "Security", "Mobile", "Fullstack"]
+Education = Literal["secondary", "bachelor", "master", "phd"]
+RoleSpecialization = Literal["Backend", "Frontend", "Fullstack", "DevOps", "Data", "ML", "QA", "Security", "Mobile"]
 WorkplaceType = Literal["on-site", "hybrid", "remote"]
 
 
 class _SalaryCheck(BaseModel):
-    salary_min: float | None
-    salary_max: float | None
+    salary_min: float | None = Field(ge=0, allow_inf_nan=False)
+    salary_max: float | None = Field(ge=0, allow_inf_nan=False)
     salary_currency: str | None
 
     @model_validator(mode="after")
@@ -68,9 +70,7 @@ class RejectedItem(BaseModel):
 
 
 class JobExtraction(_SalaryCheck):
-    # extra="forbid" -> additionalProperties: false у схемі (вимога structured outputs).
-    # Усі поля без значень за замовчуванням -> усі в "required"; nullable через `| None`.
-    # Порядок полів = порядок генерації JSON моделлю.
+    # strict_schema requires every property for structured generation.
     model_config = ConfigDict(extra="forbid")
 
     title: str = Field(description="Job title exactly as written on the page, not translated")
@@ -82,11 +82,13 @@ class JobExtraction(_SalaryCheck):
     specialization: Specialization | None
     required_skills: list[str]
     nice_to_have_skills: list[str]
-    technologies: list[str]
-    salary_min: float | None = Field(description="Salary lower bound as written; period/basis are normalised separately")
-    salary_max: float | None = Field(description="Salary upper bound as written; null for 'from X'")
+    min_experience_years: int | None = None
+    education: Education | None = None
+    salary_min: float | None = Field(ge=0, allow_inf_nan=False, description="Salary lower bound as written; period/basis are normalised separately")
+    salary_max: float | None = Field(ge=0, allow_inf_nan=False, description="Salary upper bound as written; null for 'from X'")
     salary_currency: str | None = Field(description="ISO 4217 code, e.g. EUR")
     mentions: list[CandidateMention] = Field(default_factory=list)
+    summary: str = ""
     # language навмисно не питаємо в LLM: qwen2.5:7b стабільно ставила "Slovak" для англійських
     # вакансій (0.38-0.56 accuracy). Мову визначає правило parser/normalize.py:detect_language.
 
@@ -101,13 +103,17 @@ class JobPosting(_SalaryCheck):
     specialization: Specialization | None
     required_skills: list[str]
     nice_to_have_skills: list[str]
-    technologies: list[str]
-    salary_min: float | None
-    salary_max: float | None
+    salary_min: float | None = Field(ge=0, allow_inf_nan=False)
+    salary_max: float | None = Field(ge=0, allow_inf_nan=False)
     salary_currency: str | None
     language: Literal["sk", "en", "cs", "und"]
     source_url: str
 
+    min_experience_years: int | None = Field(default=None, ge=0, le=40)
+    education: Education | None = None
+    summary: str = ""
+    salary_original_min: float | None = Field(default=None, ge=0, allow_inf_nan=False)
+    salary_original_max: float | None = Field(default=None, ge=0, allow_inf_nan=False)
     skill_mentions: list[SkillMention] = Field(default_factory=list)
     certificates: list[str] = Field(default_factory=list)
     rejected_items: list[RejectedItem] = Field(default_factory=list)
@@ -116,7 +122,7 @@ class JobPosting(_SalaryCheck):
     alias_version: str = "nlp-1"
     language_confidence: float = 0
     region: str | None = None
-    role_specializations: list[str] = Field(default_factory=list)
+    role_specializations: list[RoleSpecialization] = Field(default_factory=list)
     salary_period: Literal["hour", "month", "year"] | None = None
     salary_basis: Literal["gross", "net", "unknown"] = "unknown"
     salary_monthly_min: float | None = None

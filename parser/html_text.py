@@ -1,7 +1,7 @@
-"""HTML -> чистий текст для LLM (stdlib html.parser, без BeautifulSoup).
+"""HTML -> clean text for the LLM (stdlib html.parser, no BeautifulSoup).
 
-Викидаємо службові частини сторінки (head, script, style, nav, header, footer),
-блокові теги перетворюємо на переноси рядків, пункти списку — на "- ".
+Drops non-content parts of the page (head, script, style, nav, header, footer),
+turns block tags into line breaks and list items into "- ".
 """
 
 import re
