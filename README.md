@@ -170,3 +170,44 @@ uv run pytest -q
 ```
 
 The 92 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. Unit tests do not measure quality on real postings; use `scripts/evaluate.py` with the gold set for that.
+
+## Local skill analytics prototype
+
+Run `python3 -m http.server 8773 --bind 127.0.0.1 --directory frontend`, then open
+`http://127.0.0.1:8773/?data=real#/analytics`. This local prototype reads the same
+published snapshots as Job postings; it does not scrape, run an LLM or publish results.
+
+Analytics uses deduplicated postings without a review flag, not human verification.
+Select any number of required/nice-to-have skill tags: every selected skill must occur
+in the same posting. Real and synthetic selections are kept separately. Date filters,
+median advertised minima, quartiles, salary distributions and matching postings update
+without reloading. Salary observations are converted into the chosen currency and period before aggregation. Missing dates/pay
+are excluded from the corresponding chart; processing dates are labelled as such.
+
+The skill funnel shows the remaining postings and losses after each added tag.
+Company-offer comparison accepts independent skills, role, seniority, city and gross
+base salary, then reports the median gap, percentile and comparable sample size.
+Two independent profiles can be compared by counts, companies, remote share and
+salary quartiles, with their overlap shown explicitly. All comparison forms share
+the selected dataset and dates; their requirements are independent of the main tags.
+Settings stay in this browser, separately for real and synthetic data. Salary
+comparisons use converted advertised minima, exclude explicitly net amounts,
+and do not imply a causal pay premium. Roles require an
+explicit role label or title wording; a programming language alone does not imply a role.
+
+Currency conversion uses the dated local ECB snapshot in `frontend/data/exchange-rates.json`.
+The same snapshot rates apply to all observations; this is not historical FX analysis.
+Refresh it locally with `python3 scripts/update_exchange_rates.py`, then reload the page.
+The browser reads only the local file and makes no external rate requests.
+Annual salary = monthly × 12; hourly estimates use 52 weeks/year and 40 h/week for
+`full_time` or 20 h/week for `part_time`. Unknown employment types cannot be converted
+between hourly and monthly/yearly pay. Missing legacy pay periods remain monthly.
+Bonuses and taxes are not estimated. Charts show salary sample coverage and exclude
+amounts with missing currency rates or required working hours. Posting rows retain
+the original advertised amount alongside the converted estimate.
+
+Run the frontend checks with `node --test tests/test_jobs_model.cjs tests/test_analytics_model.cjs tests/test_frontend_assets.cjs`.
+These checks also run in GitHub Actions on this feature branch and pull requests to `main`.
+GitHub Pages continues to publish only from `main`; after merging, the existing workflow
+uploads the complete `frontend` directory, including analytics modules and the local
+exchange-rate snapshot. Analytics needs no backend service, API keys or local `.env`.

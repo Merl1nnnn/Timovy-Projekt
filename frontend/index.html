@@ -15,11 +15,18 @@
         ? mode : (theme === 'zive' || theme === 'dark' ? 'dark' : 'light');
     } catch {}
   </script>
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=analytics-3">
   <script src="i18n.js?v=5" defer></script>
   <script src="interface-i18n.js?v=4" defer></script>
   <script src="jobs-model.js?v=2" defer></script>
-  <script src="app.js?v=8" defer></script>
+  <script src="analytics-model.js?v=2" defer></script>
+  <script src="analytics-i18n.js?v=1" defer></script>
+  <script src="analytics-comparison-i18n.js?v=1" defer></script>
+  <script src="analytics-salary-i18n.js?v=1" defer></script>
+  <script src="analytics-fx.js?v=1" defer></script>
+  <script src="analytics-comparison-ui.js?v=2" defer></script>
+  <script src="analytics-ui.js?v=3" defer></script>
+  <script src="app.js?v=analytics-1" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -124,42 +131,85 @@
 
       <section class="screen" id="screen-analytics" aria-labelledby="analytics-title" hidden>
         <header class="screen-heading">
-          <h1 id="analytics-title" tabindex="-1" data-i18n="analytics"></h1>
+          <div><span class="eyebrow" data-i18n="skillExplorer"></span><h1 id="analytics-title" tabindex="-1" data-i18n="analytics"></h1><p data-i18n="analyticsIntro"></p></div>
+          <span id="analytics-kind" class="analytics-dataset"></span>
         </header>
         <div id="analytics" class="analytics">
-          <article class="panel chart-panel">
-            <div class="section-title">
-              <div><h2 data-i18n="activity"></h2><p data-i18n="activityNote"></p></div>
-              <label class="period"><span class="sr-only" data-i18n="period"></span>
-                <select id="period"><option value="7" data-i18n="last7"></option><option value="30" data-i18n="last30" selected></option><option value="90" data-i18n="last90"></option></select>
-              </label>
+          <article class="panel skill-picker">
+            <div class="section-title"><div><h2 data-i18n="chooseSkills"></h2><p id="analytics-quality"></p></div><button id="skill-clear" type="button" class="secondary" data-i18n="clearSkills"></button></div>
+            <div class="skill-selected-row"><span class="and-badge">AND</span><div id="selected-skills" class="skill-chips" aria-live="polite"></div></div>
+            <p class="analytics-hint" data-i18n="allSelectedSkills"></p>
+            <label class="skill-search-label"><span class="sr-only" data-i18n="searchSkill"></span><input type="search" id="skill-search" autocomplete="off" data-i18n-placeholder="searchSkill"></label>
+            <div id="skill-catalog" class="skill-chips skill-catalog" role="group" data-i18n-aria="chooseSkills"></div>
+            <button id="skill-more" type="button" class="link-button"></button>
+            <div class="analytics-controls">
+              <label><span data-i18n="period"></span><select id="period"><option value="0" data-i18n="allDates" selected></option><option value="7" data-i18n="last7"></option><option value="30" data-i18n="last30"></option><option value="90" data-i18n="last90"></option></select></label>
+              <label><span data-i18n="dateFrom"></span><input type="date" id="analytics-from"></label>
+              <label><span data-i18n="dateTo"></span><input type="date" id="analytics-to"></label>
+              <label><span data-i18n="offerCurrency"></span><select id="analytics-pay-currency"></select></label>
+              <label><span data-i18n="offerPeriod"></span><select id="analytics-pay-period"><option value="month" data-i18n="month"></option><option value="year" data-i18n="year"></option><option value="hour" data-i18n="hour"></option></select></label>
             </div>
-            <div class="chart-legend" id="activity-legend"></div>
-            <div id="activity"></div>
+            <p id="analytics-scope" class="analytics-hint" aria-live="polite"></p>
+            <p id="analytics-conversion-note" class="analytics-hint"></p>
+            <p id="analytics-fx-note" class="analytics-hint"><a id="analytics-fx-source" href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener"></a></p>
           </article>
           <article class="panel chart-panel">
-            <div class="section-title"><div><h2 data-i18n="payComparison"></h2><p data-i18n="payMethod"></p></div></div>
-            <div id="pay-comparison"></div>
+            <div class="section-title"><div><h2 data-i18n="funnelTitle"></h2><p data-i18n="funnelIntro"></p></div></div>
+            <div id="skill-funnel" class="skill-funnel" aria-live="polite"></div>
+            <p id="skill-funnel-note" class="analytics-hint"></p>
           </article>
+          <div id="analytics-metrics" class="metrics analytics-metrics" aria-live="polite">
+            <article><span data-i18n="matchingJobs"></span><strong id="analytics-count">—</strong><small id="analytics-total"></small></article>
+            <article><span data-i18n="demandShare"></span><strong id="analytics-share">—</strong><small data-i18n="withinChecked"></small></article>
+            <article><span data-i18n="medianMinimum"></span><strong id="analytics-median">—</strong><small id="analytics-pay-sample"></small></article>
+            <article><span data-i18n="company"></span><strong id="analytics-companies">—</strong><small id="analytics-remote"></small></article>
+          </div>
+          <p id="analytics-pay-coverage" class="analytics-hint"></p>
+          <p id="analytics-empty" class="analytics-empty" data-i18n="noSkillMatches" hidden></p>
           <div class="chart-grid">
-            <article class="panel chart-panel">
-              <div class="section-title"><h2 data-i18n="technologiesSample"></h2>
-                <div class="segmented" role="group" data-i18n-aria="rankMode">
-                  <button id="rank-required" type="button" class="active" aria-pressed="true" data-i18n="rankRequired"></button>
-                  <button id="rank-nice" type="button" aria-pressed="false" data-i18n="rankNice"></button>
+            <article class="panel chart-panel"><div class="section-title"><div><h2 data-i18n="observedDemand"></h2><p data-i18n="demandMethod"></p></div></div><div id="activity-legend" class="chart-legend"></div><div id="activity"></div></article>
+            <article class="panel chart-panel"><div class="section-title"><div><h2 data-i18n="salaryTrend"></h2><p data-i18n="salaryMethod"></p></div></div><div id="analytics-pay-trend"></div></article>
+          </div>
+          <p id="analytics-date-note" class="analytics-hint"></p>
+          <div class="chart-grid">
+            <article class="panel chart-panel"><div class="section-title"><div><h2 data-i18n="salaryDistribution"></h2><p id="analytics-pay-range"></p></div></div><div id="analytics-histogram"></div></article>
+            <article class="panel chart-panel"><div class="section-title"><h2 data-i18n="distribution"></h2><label class="period"><span class="sr-only" data-i18n="distribution"></span><select id="group-by"><option value="seniority" data-i18n="seniority"></option><option value="location" data-i18n="location"></option><option value="specialization" data-i18n="specialization"></option></select></label></div><div id="distribution"></div></article>
+          </div>
+          <div class="chart-grid">
+            <article class="panel chart-panel related-skills-panel"><div class="section-title"><div><h2 data-i18n="relatedSkills"></h2><p data-i18n="relatedSkillsNote"></p></div><div class="segmented" role="group" data-i18n-aria="rankMode"><button id="rank-required" type="button" class="active" aria-pressed="true" data-i18n="rankRequired"></button><button id="rank-nice" type="button" aria-pressed="false" data-i18n="rankNice"></button></div></div><div id="bars"></div></article>
+            <article class="panel chart-panel"><div class="section-title"><div><h2 data-i18n="payComparison"></h2><p data-i18n="payMethod"></p></div></div><div id="pay-comparison"></div></article>
+          </div>
+          <article class="panel chart-panel"><div class="section-title"><div><h2 data-i18n="matchingPostings"></h2><p data-i18n="matchingPostingsNote"></p></div><span id="analytics-result-count" class="pill"></span></div><div id="analytics-results" class="table-wrap"></div><button id="analytics-more" type="button" class="secondary" data-i18n="more"></button></article>
+          <article class="panel chart-panel comparison-panel" id="company-offer">
+            <div class="section-title"><div><h2 data-i18n="firmOffer"></h2><p data-i18n="firmOfferIntro"></p></div></div>
+            <p class="analytics-hint comparison-scope" data-i18n="independentProfiles"></p>
+            <div class="offer-layout">
+              <div>
+                <h3 data-i18n="offerRequirements"></h3><div id="offer-profile-controls" class="profile-controls"></div>
+                <div class="offer-pay-fields">
+                  <label><span data-i18n="offerGross"></span><input id="offer-amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="2600" autocomplete="off"></label>
+                  <label><span data-i18n="offerCurrency"></span><select id="offer-currency"></select></label>
+                  <label><span data-i18n="offerPeriod"></span><select id="offer-period"><option value="month" data-i18n="month"></option><option value="year" data-i18n="year"></option><option value="hour" data-i18n="hour"></option></select></label>
                 </div>
               </div>
-              <div id="bars"></div>
-            </article>
-            <article class="panel chart-panel">
-              <div class="section-title"><h2 data-i18n="distribution"></h2>
-                <label class="period"><span class="sr-only" data-i18n="distribution"></span>
-                  <select id="group-by"><option value="specialization" data-i18n="specialization"></option><option value="seniority" data-i18n="seniority"></option><option value="location" data-i18n="location"></option></select>
-                </label>
-              </div>
-              <div id="distribution"></div>
-            </article>
-          </div>
+              <div id="offer-result" class="offer-result" aria-live="polite"></div>
+            </div>
+            <p class="analytics-hint" data-i18n="profileScopeNote"></p>
+            <p class="analytics-hint" data-i18n="comparisonLocal"></p>
+          </article>
+          <article class="panel chart-panel comparison-panel" id="profile-comparison">
+            <div class="section-title"><div><h2 data-i18n="comparisonProfiles"></h2><p data-i18n="comparisonProfilesIntro"></p></div></div>
+            <p class="analytics-hint comparison-scope" data-i18n="independentProfiles"></p>
+            <div class="profiles-grid">
+              <section class="profile-card profile-a" aria-labelledby="profile-a-title"><div class="section-title"><h3 id="profile-a-title" data-i18n="profileA"></h3><button type="button" id="profile-a-example" class="link-button"></button></div><div id="profile-a-profile-controls" class="profile-controls"></div></section>
+              <section class="profile-card profile-b" aria-labelledby="profile-b-title"><div class="section-title"><h3 id="profile-b-title" data-i18n="profileB"></h3><button type="button" id="profile-b-example" class="link-button"></button></div><div id="profile-b-profile-controls" class="profile-controls"></div></section>
+            </div>
+            <div class="profile-unit-fields"><label><span data-i18n="offerCurrency"></span><select id="profiles-currency"></select></label><label><span data-i18n="offerPeriod"></span><select id="profiles-period"><option value="month" data-i18n="month"></option><option value="year" data-i18n="year"></option><option value="hour" data-i18n="hour"></option></select></label></div>
+            <div class="profiles-grid profile-plots"><section><h3 data-i18n="comparisonCounts"></h3><div id="profiles-count-chart"></div></section><section><h3 id="profiles-pay-title"></h3><div id="profiles-pay-chart"></div></section></div>
+            <div id="profiles-table" class="table-wrap" aria-live="polite"></div>
+            <p id="profiles-overlap" class="analytics-hint"></p><p id="profiles-difference" class="profile-difference"></p>
+            <p class="analytics-hint" data-i18n="comparisonMethod"></p><p class="analytics-hint" data-i18n="profileScopeNote"></p>
+          </article>
         </div>
       </section>
 

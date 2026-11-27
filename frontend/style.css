@@ -394,3 +394,120 @@ body[data-dataset="real"] .notice { background: var(--real-bg); color: var(--rea
 body[data-dataset="real"] .dot { background: var(--real); }
 .detail-content .summary, #detail-content .summary { color: var(--ink); line-height: 1.5; }
 
+
+/* Skill-based analytics */
+.skill-picker { padding: 22px; }
+.skill-picker .section-title { align-items: flex-start; gap: 14px; }
+.skill-picker .section-title p { margin-top: 6px; font-size: .75rem; line-height: 1.55; }
+.analytics-dataset { flex-shrink: 0; padding: 8px 13px; border: 1px solid var(--line); border-radius: 99px; background: var(--soft); color: var(--accent); font-size: .75rem; font-weight: 650; }
+.skill-selected-row { display: flex; align-items: center; gap: 12px; min-height: 61px; margin: 20px 0 8px; padding: 12px; border-radius: 10px; background: var(--page); border: 1px solid var(--line); }
+.and-badge { padding: 5px 7px; font-size: .625rem; letter-spacing: .08em; font-weight: 800; border: 1px solid var(--accent); border-radius: 5px; color: var(--accent); }
+.skill-chips { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.skill-chip { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font-size: .75rem; font-weight: 550; }
+.skill-chip:hover { border-color: var(--accent); background: var(--soft); }
+.skill-chip[aria-pressed="true"], .skill-chip.selected { color: var(--inverse); background: var(--accent); border-color: var(--accent); }
+.skill-chip-count { color: var(--muted); font-size: .6875rem; }
+.skill-chip[aria-pressed="true"] .skill-chip-count { color: inherit; opacity: .85; }
+.analytics-hint { color: var(--muted); font-size: .75rem; line-height: 1.6; }
+.skill-search-label { display: block; margin: 18px 0 12px; max-width: 440px; }
+.skill-search-label input { width: 100%; }
+.skill-catalog { min-height: 36px; }
+#skill-more { margin-top: 12px; font-size: .75rem; }
+.analytics-controls { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end; gap: 13px; padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--line); }
+.analytics-controls label { min-width: 0; }
+.analytics-controls label > span { font-size: .75rem; }
+.analytics-controls input, .analytics-controls select { width: 100%; min-width: 0; }
+#analytics-scope { margin-top: 11px; }
+.analytics-metrics { margin: 0; }
+.analytics-metrics small { display: block; margin-top: 7px; font-size: .6875rem; color: var(--muted); line-height: 1.5; }
+.analytics-empty { padding: 17px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); color: var(--accent); font-size: .8125rem; }
+.analytics-chart-preview { min-height: 22px; font-size: .6875rem; color: var(--muted); padding: 4px 0; }
+.analytics-result-skills { display: flex; flex-wrap: wrap; gap: 4px; max-width: 390px; }
+.analytics-result-skills .tag { font-size: .625rem; }
+.analytics-highlight { box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); font-weight: 700; }
+#analytics-results td { white-space: normal; min-width: 110px; }
+#analytics-results td:first-child { min-width: 200px; }
+#analytics-results td:last-child { min-width: 240px; }
+#analytics-more { margin-top: 15px; }
+#analytics-histogram { margin-top: 16px; }
+#analytics-date-note { margin: -3px 2px 3px; }
+#analytics .chart-panel .section-title { flex-wrap: wrap; align-items: flex-start; }
+#analytics .chart-panel .section-title > div:not(.segmented) { min-width: 0; flex: 1 1 220px; }
+#analytics .chart-panel .section-title h2, #analytics .chart-panel .section-title p { overflow-wrap: anywhere; }
+#analytics .chart-panel .section-title p { line-height: 1.55; }
+.related-skills-panel .section-title .segmented { flex: 0 0 auto; max-width: 100%; }
+.related-skills-panel .segmented button { flex: 0 0 auto; white-space: nowrap; }
+#analytics-fx-note a { overflow-wrap: anywhere; }
+#analytics-histogram .bar-label { font-variant-numeric: tabular-nums; }
+.skill-funnel { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 12px; }
+.funnel-step { flex: 1 1 145px; min-width: 0; padding: 15px; border: 1px solid var(--line); border-radius: 9px; background: var(--page); }
+.funnel-step.is-final { border-color: var(--accent); background: var(--soft); }
+.funnel-name { display: block; font-size: .75rem; overflow-wrap: anywhere; }
+.funnel-step strong { display: block; font-size: 1.65rem; margin: 7px 0; font-variant-numeric: tabular-nums; }
+.funnel-removed, .funnel-step small { display: block; color: var(--muted); font-size: .6875rem; line-height: 1.6; }
+.funnel-track { height: 5px; margin-top: 12px; border-radius: 9px; background: var(--line); overflow: hidden; }
+.funnel-track span { display: block; height: 100%; background: var(--accent); }
+.comparison-panel h3 { font-size: .875rem; margin: 0 0 14px; }
+.comparison-scope { padding: 10px 12px; border-radius: 7px; background: var(--page); margin-bottom: 20px; }
+.offer-layout, .profiles-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.offer-layout > *, .profiles-grid > * { min-width: 0; }
+.comparison-selected { min-height: 40px; margin-bottom: 12px; }
+.profile-controls input, .profile-controls select, .offer-pay-fields input, .offer-pay-fields select, .profile-unit-fields select { width: 100%; min-width: 0; }
+.comparison-options { margin-top: 12px; }
+.comparison-options .skill-chip { font-size: .6875rem; padding: 7px 9px; }
+.profile-actions { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 14px 0; }
+.profile-actions button, .profile-card .link-button { font-size: .6875rem; text-align: left; }
+.profile-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.profile-filters label:last-child { grid-column: 1 / -1; }
+.profile-filters label, .offer-pay-fields label, .profile-unit-fields label { min-width: 0; }
+.profile-filters label > span, .offer-pay-fields label > span, .profile-unit-fields label > span { font-size: .6875rem; }
+.offer-pay-fields { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.offer-result { padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--page); }
+.offer-status { font-size: .875rem; font-weight: 650; line-height: 1.6; }
+.offer-status[data-status="within_range"], .offer-status[data-status="above_range"] { color: var(--accent); }
+.offer-status[data-status="below_range"] { color: var(--warning); }
+.offer-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; }
+.comparison-metric { min-width: 0; }
+.comparison-metric > span, .comparison-metric small { display: block; color: var(--muted); font-size: .6875rem; line-height: 1.5; }
+.comparison-metric strong { display: block; font-size: 1.25rem; margin: 8px 0 5px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.offer-percentile-label { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-top: 24px; font-size: .75rem; }
+.offer-percentile-label strong { color: var(--accent); font-size: 1.25rem; }
+.offer-percentile { position: relative; height: 12px; margin-top: 17px; border-radius: 20px; background: var(--line); }
+.offer-percentile::before { content: ""; position: absolute; left: 25%; width: 50%; height: 100%; background: var(--accent); opacity: .4; }
+.offer-marker { position: absolute; top: -5px; height: 22px; width: 4px; border-radius: 3px; background: var(--ink); transform: translateX(-50%); }
+.offer-percentile-scale { display: flex; justify-content: space-between; margin-top: 10px; font-size: .625rem; color: var(--muted); }
+.profile-card { padding: 18px; background: var(--page); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 9px; }
+.profile-b { border-top-color: var(--blue); }
+.profile-card .section-title { flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+.profile-card h3 { margin: 0; }
+.profile-unit-fields { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0; }
+.profile-unit-fields label { width: 150px; }
+.profile-plots { margin: 20px 0; padding-top: 20px; border-top: 1px solid var(--line); }
+.profile-plots .bars > div:nth-child(2) .bar-fill { background: var(--blue); }
+.profile-difference { font-size: .875rem; color: var(--accent); font-weight: 650; line-height: 1.6; }
+#profiles-table th, #profiles-table td { white-space: normal; font-variant-numeric: tabular-nums; }
+@media (max-width: 1150px) {
+  .analytics-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .analytics-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .offer-layout, .profiles-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 580px) {
+  .skill-picker { padding: 15px; }
+  #screen-analytics .screen-heading { align-items: flex-start; }
+  .analytics-dataset { font-size: .625rem; padding: 6px 9px; }
+  .skill-picker .section-title { flex-wrap: wrap; }
+  .skill-selected-row { align-items: flex-start; }
+  .skill-chip { padding: 8px 10px; font-size: .6875rem; }
+  .analytics-controls { gap: 10px; }
+  .analytics-controls label:last-child { grid-column: 1 / -1; }
+  .analytics-metrics article { padding: 14px; }
+  .skill-funnel { gap: 8px; }
+  .funnel-step { flex-basis: 110px; padding: 12px; }
+  .offer-pay-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .offer-pay-fields label:first-child { grid-column: 1 / -1; }
+  .offer-result, .profile-card { padding: 13px; }
+  .offer-metrics { grid-template-columns: minmax(0, 1fr); }
+  .comparison-metric { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .comparison-metric strong { margin-top: 4px; }
+  .profile-unit-fields label { width: calc(50% - 6px); }
+}

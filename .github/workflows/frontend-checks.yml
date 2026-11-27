@@ -1,0 +1,22 @@
+name: Check SkillMiner frontend
+
+on:
+  push:
+    branches: [main, feature/analytics]
+    paths: ['frontend/**', 'tests/*.cjs', '.github/workflows/frontend-checks.yml']
+  pull_request:
+    branches: [main]
+    paths: ['frontend/**', 'tests/*.cjs', '.github/workflows/frontend-checks.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - run: node --test tests/test_jobs_model.cjs tests/test_analytics_model.cjs tests/test_frontend_assets.cjs

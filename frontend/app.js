@@ -12,7 +12,7 @@ const colors = ['--accent', '--blue', '--green'];
 const statePrefix = 'skillminer-history-v1-';
 const routes = {overview: 'overview', postings: 'postings', analytics: 'analytics',
   settings: 'settings', about: 'about'};
-const filterRoutes = new Set(['overview', 'postings', 'analytics']);
+const filterRoutes = new Set(['overview', 'postings']);
 let pageSize = Number(restoreSelection('rows-per-page', 'skillminer-page-size'));
 $('period').value = restoreSelection('default-period', 'skillminer-default-period');
 let preferredMode = readPreference('skillminer-mode');
@@ -389,48 +389,7 @@ function periodLabel(point) {
 }
 
 function renderActivity(jobs) {
-  $('activity-legend').replaceChildren();
-  if (!state.history.length) {
-    clearChart($('activity'), element('p', t('queueEmpty'), 'empty'));
-    return;
-  }
-  const days = Number($('period').value);
-  const anchor = Math.max(state.anchor, state.history.at(-1).at);
-  const end = (Math.floor(anchor / DAY) + 1) * DAY;
-  const start = end - days * DAY;
-  const step = (days > 30 ? 7 : 1) * DAY;
-  const series = [
-    {key: 'active', label: t('active'), color: colors[0]},
-    {key: 'added', label: t('added'), color: colors[1]},
-    {key: 'updated', label: t('updatedSeries'), color: colors[2]}
-  ];
-  for (const item of series) {
-    const key = element('span', '', 'legend-key');
-    const dot = element('span', '', 'legend-dot');
-    dot.style.setProperty('--series', 'var(' + item.color + ')');
-    key.append(dot, item.label);
-    $('activity-legend').append(key);
-  }
-  const activityChoices = countHistory(state, start, end, step, matches);
-  if (selectedPeriod) selectedPeriod = activityChoices.find(point => point.at === selectedPeriod.at);
-  const preview = element('p', '', 'activity-selection');
-  const select = point => {
-    selectedPeriod = point;
-    visible = pageSize;
-    renderPostings(jobs);
-    location.hash = '/postings';
-  };
-  const plot = chart(activityChoices, series, {
-    zero: true, select,
-    preview: point => {
-      preview.textContent = point ? [periodLabel(point), ...series.map(item =>
-        item.label + ' ' + number(point[item.key]))].join(' · ') : '';
-    }
-  });
-  const values = chartTable([t('date'), ...series.map(item => item.label)], activityChoices.map(point => [
-    button(periodLabel(point), () => select(point)), ...series.map(item => number(point[item.key]))
-  ]));
-  clearChart($('activity'), plot, preview, values);
+  renderSkillTrend(jobs);
 }
 
 function renderPayComparison(jobs) {
@@ -450,12 +409,8 @@ function renderPayComparison(jobs) {
   }
 }
 
-function renderAnalytics(jobs) {
-  bars($('bars'), rank(jobs, job => (rankMode === 'nice' ? job.nice_to_have_skills : job.required_skills) ?? []), jobs.length);
-  const field = $('group-by').value;
-  bars($('distribution'), rank(jobs, job => [job[field] || t('unknown')]), jobs.length);
-  renderPayComparison(jobs);
-  renderActivity(jobs);
+function renderAnalytics() {
+  renderSkillAnalytics();
 }
 
 function render() {
@@ -641,6 +596,7 @@ function showSnapshot(data, current) {
   state = current;
   baseJobs = canonicalJobs(Object.values(state.current));
   populateFilters();
+  syncAnalyticsSelection();
   render();
 }
 
@@ -705,6 +661,7 @@ async function refreshSnapshot(checkMock = true) {
 function switchDataset(next) {
   if (next === kind) return;
   kind = next;
+  resetAnalyticsDataset();
   loadToken += 1;
   savePreference('skillminer-dataset-kind', kind);
   const url = new URL(location.href);
@@ -731,6 +688,7 @@ function switchDataset(next) {
   populateFilters();
   restoreSnapshot();
   renderMetadata();
+  if (activeScreen === 'analytics') renderSkillAnalytics();
   refreshSnapshot();
 }
 
@@ -874,3 +832,5 @@ showScreen();
 applyLanguage();
 restoreSnapshot();
 refreshSnapshot();
+
+initSkillAnalytics();
