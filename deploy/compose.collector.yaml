@@ -1,0 +1,19 @@
+# Coolify: Docker Compose resource, "Docker Compose Location" = /deploy/compose.collector.yaml.
+# Set COLLECTOR_TOKEN in Coolify's environment variables; the domain goes to service "collector", port 8000.
+services:
+  collector:
+    build:
+      context: ..
+      dockerfile: deploy/collector.Dockerfile
+    environment:
+      - COLLECTOR_TOKEN=${COLLECTOR_TOKEN}
+      - COLLECT_AT_UTC=${COLLECT_AT_UTC:-03:30}
+      - COLLECT_ENABLED=${COLLECT_ENABLED:-1}
+    volumes:
+      - collector-data:/app/data/real
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+volumes:
+  collector-data:

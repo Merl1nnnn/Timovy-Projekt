@@ -66,6 +66,55 @@ uv run python -m parser.run --real
 - LinkedIn is intentionally not scraped: its terms prohibit automated access without permission.
 - Real pages are longer than mock pages. With Ollama, set `OLLAMA_NUM_CTX=8192`.
 
+#### Daily collection on a server
+
+`scraper/profesia_daily.py` only collects pages and never runs the parser. It is meant to run once a day, so data builds up over a longer period:
+
+```sh
+uv run python -m scraper.profesia_daily
+```
+
+Each run:
+
+- walks the whole category list (about 60 pages) and records which postings are still listed (`last_seen`);
+- downloads new postings;
+- re-checks listed postings once every 7 days (`--refresh-days`). If the text changed, the new version replaces `<id>.html` and the previous one moves to `history/<id>/`;
+- sets `removed_at` on postings missing from two complete list walks in a row, or answering 404;
+- appends its statistics to `runs.jsonl`.
+
+It writes to the same `data/real/raw/profesia/` as `profesia_live`, with the same politeness rules. The extra index fields (`first_seen`, `last_seen`, `checked_at`, `updated_at`, `removed_at`, `versions`) are ignored by the parser, and `profesia_live` works as before. The first run downloads the whole category (about 1,100 postings, roughly 1.5 h). Later runs take about 15–20 minutes.
+
+#### Collection service on TUKE Coolify
+
+`scraper/collector_server.py` wraps the daily collection in a small HTTP service for a container. It runs the collection every day at `COLLECT_AT_UTC` (default 03:30 UTC). After a start or redeploy it also runs right away if the last run began more than 20 hours ago. Every endpoint except `/health` needs `Authorization: Bearer <COLLECTOR_TOKEN>`, because the repository is public and the collected postings must not be:
+
+| Endpoint | What it does |
+| --- | --- |
+| `GET /health` | `ok`, for the container health check |
+| `GET /status` | posting counts, next run, the last 10 runs (failed runs have `error`) |
+| `GET /download` | the whole `data/real/raw/` as `.tar.gz` |
+| `POST /collect` | starts a run now (`409` while one is running) |
+
+The image (`deploy/collector.Dockerfile`) contains only the collector and `httpx`. Data lives in the named volume `collector-data`, mounted at `/app/data/real`.
+
+1. Generate a token: `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
+2. In Coolify, create a new resource: **Public Repository** `https://github.com/Merl1nnnn/Timovy-Projekt`, branch `feature/daily-collector` (or `main` once merged), build pack **Docker Compose**, Docker Compose Location `/deploy/compose.collector.yaml`.
+3. In the resource's environment variables, set `COLLECTOR_TOKEN` (and optionally `COLLECT_AT_UTC`). Without a token of at least 16 characters, the service does not start.
+4. Give the `collector` service a domain with port 8000, e.g. `https://skillminer-data.student.kpi.fei.tuke.sk:8000`, then deploy. The first collection starts immediately and is visible in the resource's logs.
+
+Check progress and download the data (PowerShell, `curl.exe` is part of Windows):
+
+```powershell
+$h = "Authorization: Bearer <token>"
+curl.exe -H $h https://skillminer-data.student.kpi.fei.tuke.sk/status
+curl.exe -H $h https://skillminer-data.student.kpi.fei.tuke.sk/download -o server_raw.tar.gz
+mkdir data/real/server_raw; tar xzf server_raw.tar.gz -C data/real/server_raw
+```
+
+Extract it next to the local data, not over `data/real/raw/`. The gold set's postings may have newer versions on the server. The volume is the only copy, so download a backup from time to time. Deleting the resource together with its volume deletes the data.
+
+Without Coolify, `deploy/skillminer-collect.service` and `.timer` run `scraper.profesia_daily` once a day under systemd. Copy them to `/etc/systemd/system/` and run `systemctl enable --now skillminer-collect.timer`.
+
 #### Evaluate against the gold set
 
 The team hand-annotated 50 real postings (`data/real/gold/`, git-ignored). `scripts/evaluate.py` compares `data/real/parsed/jobs.jsonl` with them: accuracy per field, micro precision / recall / F1 for skills, and whether `low_confidence` really marks worse records.
