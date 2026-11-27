@@ -92,7 +92,8 @@ Defaults in `.env.example`:
 ```dotenv
 AUTO_PUBLISH=false
 SKILLMINER_REPOSITORY=Merl1nnnn/Timovy-Projekt
-SKILLMINER_BRANCH=feature/nlp
+SKILLMINER_BRANCH=
+SKILLMINER_OFFLINE=true
 DATASET_KIND=synthetic
 ```
 
@@ -139,7 +140,7 @@ Open http://localhost:8765. Opening `index.html` through `file://` is not suppor
 To see your local real postings in the Real view, export them first. `frontend/data/jobs_real.json` is git-ignored, so it cannot be committed by accident:
 
 ```sh
-python3 scripts/export_results.py --input data/real/parsed/jobs.jsonl --kind real
+uv run python scripts/export_results.py --input data/real/parsed/jobs.jsonl --kind real
 ```
 
 ## Publish local NLP results
@@ -148,16 +149,19 @@ Install [GitHub CLI](https://cli.github.com/) and sign in with write access to t
 
 ```sh
 gh auth login
-python3 scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl' --dry-run
+uv run python scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl' --dry-run
 ```
 
-Review `data/parsed/public_jobs.json` next to your input file, then publish:
+Review `public_jobs.json` next to your input file. Publication reads the repository's
+`.env` even when the script is started from another directory; existing process
+variables take priority. The local default is `SKILLMINER_OFFLINE=true`. Only when
+intentionally publishing, set it to `false`, then select the destination explicitly:
 
 ```sh
-python3 scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl'
+uv run python scripts/publish_results.py --input '/absolute/path/to/data/parsed/jobs.jsonl' --branch main
 ```
 
-The script merges results into `frontend/data/jobs.json` (synthetic) or `frontend/data/jobs_real.json` (`--kind real`) on `main`, preserving jobs from other participants. The real file is created on its first publication. GitHub Actions then deploys the updated site. Earlier snapshots remain in Git history. Concurrent updates are retried; if all retries fail, local results remain available for a later upload.
+The script merges results into `frontend/data/jobs.json` (synthetic) or `frontend/data/jobs_real.json` (`--kind real`) on the selected branch (`--branch` or `SKILLMINER_BRANCH`). There is no implicit destination. It preserves jobs from other participants. The real file is created on its first publication. Publishing to `main` triggers GitHub Pages; publishing to a development branch does not. Earlier snapshots remain in Git history. Concurrent updates are retried; if all retries fail, local results remain available for a later upload.
 
 Datasets are marked as synthetic by default. Use `--kind real` only after checking publication permissions and removing personal data upstream.
 
@@ -166,7 +170,7 @@ Authentication uses GitHub CLI or `GITHUB_TOKEN` with **Contents: write** access
 To prepare JSON without making network requests:
 
 ```sh
-python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
+uv run python scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 ```
 
 ## Tests
@@ -175,4 +179,4 @@ python3 scripts/export_results.py --input '/absolute/path/to/jobs.jsonl'
 uv run pytest -q
 ```
 
-The 92 automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. Unit tests do not measure quality on real postings; use `scripts/evaluate.py` with the gold set for that.
+The automated tests cover extraction, normalisation, rule-based salary fallback, quality checks, mock sites, the Chromium scraper, the real Profesia scraper (offline, on synthetic HTML), export redaction, shared-result merging, upload conflicts, automatic publishing, opt-out and local-data preservation on failure. Unit tests use fake LLM responses and do not require Ollama. Browser checks cover language and theme switching, saved preferences, filters and job details. Unit tests do not measure quality on real postings; use `scripts/evaluate.py` with the gold set for that.

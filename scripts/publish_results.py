@@ -11,6 +11,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from dotenv import load_dotenv
+
+ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
+
 if __package__:
     from .export_results import export
 else:
@@ -93,13 +97,17 @@ def merge_snapshots(previous, local):
 
 
 def publish(source, *, output=None, kind='synthetic', repository=None, branch=None, token=None, request=None):
-    if request is None and os.getenv('SKILLMINER_OFFLINE', '').lower() in {'1', 'true', 'yes'}:
+    load_dotenv(ENV_FILE, override=False)
+    if request is None and os.getenv('SKILLMINER_OFFLINE', 'true').strip().lower() not in {'0', 'false', 'no'}:
         raise RuntimeError('Publication is disabled in this isolated workspace (SKILLMINER_OFFLINE)')
+    branch = branch or os.getenv('SKILLMINER_BRANCH')
+    if not branch or not branch.strip():
+        raise RuntimeError('Choose a publication branch explicitly: --branch or SKILLMINER_BRANCH')
+    branch = branch.strip()
     output = output or source.parent / 'public_jobs.json'
     local = export(source, output, kind)
     token = token or auth_token()
     repository = repository or os.getenv('SKILLMINER_REPOSITORY', REPOSITORY)
-    branch = branch or os.getenv('SKILLMINER_BRANCH', 'main')
     request = request or api
     endpoint = f'/repos/{repository}/contents/{PATHS[kind]}'
     for attempt in range(3):

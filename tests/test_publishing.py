@@ -40,7 +40,7 @@ class PublishingTests(unittest.TestCase):
                 self.assertEqual({j['source_url'] for j in data['jobs']}, {'local', 'other'})
                 self.assertEqual(body['sha'], '3')
                 return {'commit': {'html_url': 'https://github.com/example/commit'}}
-            result = publish(source, token='fake', request=api)
+            result = publish(source, branch='test-branch', token='fake', request=api)
             self.assertTrue(result['changed'])
             self.assertEqual([m for m, _ in requests], ['GET', 'PUT', 'GET', 'PUT'])
 
@@ -52,7 +52,7 @@ class PublishingTests(unittest.TestCase):
             def api(token, method, endpoint, body=None):
                 self.assertEqual(method, 'GET')
                 return encoded(snapshot([record]))
-            self.assertFalse(publish(source, token='fake', request=api)['changed'])
+            self.assertFalse(publish(source, branch='test-branch', token='fake', request=api)['changed'])
 
     def test_failure_keeps_local_file(self):
         with tempfile.TemporaryDirectory() as d:
@@ -62,7 +62,7 @@ class PublishingTests(unittest.TestCase):
             def unavailable(*args):
                 raise RuntimeError('offline')
             with self.assertRaisesRegex(RuntimeError, 'offline'):
-                publish(source, token='fake', request=unavailable)
+                publish(source, branch='test-branch', token='fake', request=unavailable)
             self.assertEqual(source.read_text(), original)
 
     def test_real_data_goes_to_its_own_file_and_creates_it(self):
@@ -77,7 +77,7 @@ class PublishingTests(unittest.TestCase):
                 self.assertNotIn('sha', body)
                 self.assertEqual(json.loads(base64.b64decode(body['content']))['dataset_kind'], 'real')
                 return {'commit': {'html_url': 'https://github.com/example/commit'}}
-            self.assertTrue(publish(source, kind='real', token='fake', request=api)['changed'])
+            self.assertTrue(publish(source, kind='real', branch='test-branch', token='fake', request=api)['changed'])
             self.assertTrue(all(e.split('?')[0].endswith('/frontend/data/jobs_real.json') for _, e, _ in calls))
 
     def test_synthetic_data_keeps_the_original_file(self):
@@ -90,7 +90,7 @@ class PublishingTests(unittest.TestCase):
                 if method == 'GET':
                     return encoded(snapshot([]))
                 return {'commit': {'html_url': 'https://github.com/example/commit'}}
-            publish(source, token='fake', request=api)
+            publish(source, branch='test-branch', token='fake', request=api)
             self.assertTrue(endpoints and all(e.endswith('/contents/frontend/data/jobs.json') for e in endpoints))
 
     def test_mixed_datasets_are_rejected(self):

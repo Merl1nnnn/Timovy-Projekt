@@ -38,6 +38,9 @@ still need agreement with the mentor.
   in the original currency. Explicit annual gross amounts are divided by 12. Hourly,
   net or ambiguous amounts leave these fields null. No working hours, currency rate,
   or net-to-gross conversion is guessed. Missing units/basis require review.
+- Public JSON uses `salary_period=month` with the legacy monthly amounts and preserves
+  the source unit separately as `salary_original_period`. Internal results retain the
+  source period in `salary_period` for validation and inspection.
 - Conflicting salary offers are not resolved by taking the first EUR line. Clear meal
   vouchers/allowances are excluded. Ambiguous combinations still require inspection.
 - Experts edit `parser/resources/aliases.json` and its version. Ambiguous aliases fail
@@ -110,5 +113,8 @@ human-annotated jobs still require team measurement and a frozen test set.
 ## Publication safety
 
 Defaults remain `AUTO_PUBLISH=false`, `SKILLMINER_OFFLINE=true` and
-`SKILLMINER_BRANCH=feature/nlp`. Real processing never auto-publishes. No deployment,
+an empty `SKILLMINER_BRANCH`. The publisher loads the repository `.env`, respects
+existing process variables, and requires an explicitly selected branch when publication
+is enabled. Missing/unknown offline configuration blocks publication. Dry runs stay local.
+Real processing never auto-publishes. No deployment,
 real-site crawl or LLM inference is needed for the offline test suite.

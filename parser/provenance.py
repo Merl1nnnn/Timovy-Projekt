@@ -7,11 +7,11 @@ from parser.aliases import VERSION
 from parser.extract import PROMPT_VERSION
 from parser.validator import VALIDATOR_VERSION
 
-SCHEMA_VERSION = 3
+from parser.records import SCHEMA_VERSION, is_accepted
 ROOT = Path(__file__).resolve().parent
 INPUTS = ('extract.py', 'schema.py', 'normalize.py', 'context.py', 'evidence.py',
           'validator.py', 'quality.py', 'html_text.py', 'llm.py', 'aliases.py',
-          'resources/aliases.json', 'provenance.py', 'run.py')
+          'resources/aliases.json', 'provenance.py', 'run.py', 'records.py')
 
 
 def provenance(client):
@@ -21,9 +21,3 @@ def provenance(client):
             'validator_version': VALIDATOR_VERSION, 'alias_version': VERSION,
             'model_revision': config['model_revision'],
             'pipeline_fingerprint': sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()}
-
-
-def is_accepted(record):
-    return (record.get('schema_version') == SCHEMA_VERSION
-            and record.get('validation_status') == 'validated'
-            and record.get('review_required') is False and record.get('low_confidence') is False)

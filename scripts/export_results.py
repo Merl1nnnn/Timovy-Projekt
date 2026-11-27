@@ -4,8 +4,12 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import re
+import sys
 
-from parser.provenance import is_accepted
+if not __package__:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from parser.records import is_accepted
 
 FIELDS = ('title', 'company', 'location', 'remote', 'employment_type', 'seniority',
           'specialization', 'required_skills', 'nice_to_have_skills', 'min_experience_years',
@@ -58,7 +62,9 @@ def export(source: Path, output: Path, kind: str) -> dict:
                     continue
                 job[stamp] = record[stamp]
         if record.get('salary_period') in ('hour', 'month', 'year'):
-            job['salary_period'] = record['salary_period']
+            job['salary_original_period'] = record['salary_period']
+            # The current frontend pairs salary_period with monthly gross salary_min/max.
+            job['salary_period'] = 'month'
         if type(record.get('company_headcount')) is int and record['company_headcount'] > 0:
             job['company_headcount'] = record['company_headcount']
         digest = record.get('text_hash')
