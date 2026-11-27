@@ -1,0 +1,16 @@
+# Daily collection of Profesia.sk postings (no parsing). See README, "Daily collection on a server".
+# Adjust User, WorkingDirectory and the uv path (`which uv`), then:
+#   sudo cp deploy/skillminer-collect.* /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now skillminer-collect.timer
+[Unit]
+Description=SkillMiner: daily Profesia.sk collection
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=skillminer
+WorkingDirectory=/opt/skillminer
+ExecStart=/home/skillminer/.local/bin/uv run --locked python -m scraper.profesia_daily
+# A full first run (~1,100 postings at 3-4.5 s each) takes about 1.5 h.
+TimeoutStartSec=4h

@@ -1,0 +1,11 @@
+[Unit]
+Description=SkillMiner: run the Profesia.sk collection once a day
+
+[Timer]
+OnCalendar=*-*-* 04:30
+RandomizedDelaySec=30min
+# Run a missed collection after the server was off.
+Persistent=true
+
+[Install]
+WantedBy=timers.target
